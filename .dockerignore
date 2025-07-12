@@ -1,0 +1,38 @@
+# Python cache files
+*.log
+*.pot
+*.pyc
+__pycache__/
+
+# Local development files
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+
+# Don't ignore media directory as it needs to be mounted
+# media
+
+# Environment files
+venv/
+.env
+.env.*
+!.env.example
+
+# Node modules and build artifacts
+node_modules/
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+
+# Local development directories
+.git/
+.github/
+.idea/
+.vscode/
+
+# Test and documentation
+htmlcov/
+.coverage
+.pytest_cache/
+docs/_build/
+data/
