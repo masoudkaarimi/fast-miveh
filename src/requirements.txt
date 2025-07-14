@@ -3,6 +3,7 @@ asgiref==3.9.1
 attrs==25.3.0
 billiard==4.2.1
 celery==5.5.3
+celery-types==0.23.0
 certifi==2025.7.9
 charset-normalizer==3.4.2
 click==8.2.1
@@ -10,12 +11,16 @@ click-didyoumean==0.3.1
 click-plugins==1.1.1.2
 click-repl==0.3.0
 colorama==0.4.6
+confusable-homoglyphs==3.3.1
 Django==5.2.4
 django-cors-headers==4.7.0
+django-countries==7.6.1
 django-environ==0.12.0
 django-filter==25.1
+django-phonenumber-field==8.1.0
 django-rosetta==0.10.2
 djangorestframework==3.16.0
+djangorestframework_simplejwt==5.5.0
 drf-spectacular==0.28.0
 idna==3.10
 inflection==0.5.1
@@ -26,10 +31,12 @@ jsonschema-specifications==2025.4.1
 kombu==5.5.4
 Markdown==3.8.2
 packaging==25.0
+phonenumbers==9.0.9
 pillow==11.3.0
 polib==1.2.0
 prompt_toolkit==3.0.51
 psycopg2-binary==2.9.10
+PyJWT==2.9.0
 python-dateutil==2.9.0.post0
 PyYAML==6.0.2
 referencing==0.36.2
@@ -41,5 +48,6 @@ typing_extensions==4.14.1
 tzdata==2025.2
 uritemplate==4.2.0
 urllib3==2.5.0
+username_validator==0.0.1
 vine==5.1.0
 wcwidth==0.2.13
