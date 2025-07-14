@@ -1,0 +1,648 @@
+{
+	"info": {
+		"_postman_id": "3281b263-6e68-4ac9-91fa-e5ee38277e99",
+		"name": "Fast Miveh API Docs",
+		"description": "A comprehensive Postman collection for the complete, phone-first dynamic authentication API.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "21165246"
+	},
+	"item": [
+		{
+			"name": "Account",
+			"item": [
+				{
+					"name": "1. Authentication Flow",
+					"item": [
+						{
+							"name": "Step 1: Check Identifier Status",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "identifier",
+											"value": "+12345678910",
+											"type": "text"
+										},
+										{
+											"key": "identifier",
+											"value": "john.doe@example.com",
+											"type": "text",
+											"disabled": true
+										}
+									]
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/v1/auth/status/",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"auth",
+										"status",
+										""
+									]
+								},
+								"description": "Checks if a user exists with the given phone number or email."
+							},
+							"response": []
+						},
+						{
+							"name": "Step 2a: Request OTP (for Login/Register)",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "phone_number",
+											"value": "+12345678912",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/v1/auth/otp/request/",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"auth",
+										"otp",
+										"request",
+										""
+									]
+								},
+								"description": "Requests an OTP for a phone number. Creates an inactive user if they don't exist."
+							},
+							"response": []
+						},
+						{
+							"name": "Step 2b: Login with Password",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "identifier",
+											"value": "+12345678910",
+											"type": "text"
+										},
+										{
+											"key": "identifier",
+											"value": "john.doe@example.com",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "password",
+											"value": "NewStrongPassword123",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/v1/auth/login/",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"auth",
+										"login",
+										""
+									]
+								},
+								"description": "Logs in a user with their phone number and password."
+							},
+							"response": []
+						},
+						{
+							"name": "Step 3: Verify OTP & Complete Login/Registration",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "phone_number",
+											"value": "+12345678912",
+											"type": "text"
+										},
+										{
+											"key": "code",
+											"value": "271126",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/v1/auth/otp/verify/",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"auth",
+										"otp",
+										"verify",
+										""
+									]
+								},
+								"description": "Verifies the OTP. Returns tokens and an `is_new_user` flag."
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "2. Account Management (Authenticated)",
+					"item": [
+						{
+							"name": "Get My Profile",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{accessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/v1/profile/me/",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"profile",
+										"me",
+										""
+									]
+								},
+								"description": "Get (GET) or update (PUT/PATCH) the authenticated user's profile."
+							},
+							"response": []
+						},
+						{
+							"name": "Update My Profile / Partial Update My Profile",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{accessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "username",
+											"value": "new_username_1231",
+											"type": "text"
+										},
+										{
+											"key": "first_name",
+											"value": "John",
+											"type": "text"
+										},
+										{
+											"key": "last_name",
+											"value": "Doe",
+											"type": "text"
+										},
+										{
+											"key": "profile.gender",
+											"value": "male",
+											"type": "text"
+										},
+										{
+											"key": "profile.birthdate",
+											"value": "1990-01-15",
+											"type": "text"
+										},
+										{
+											"key": "profile.avatar",
+											"type": "file",
+											"src": "/D:/Dev/Archive/Pictures/avatar/masoud-12.jpg"
+										},
+										{
+											"key": "profile.national_code",
+											"value": "0123456789",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/v1/profile/me/",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"profile",
+										"me",
+										""
+									]
+								},
+								"description": "Get (GET) or update (PUT/PATCH) the authenticated user's profile."
+							},
+							"response": []
+						},
+						{
+							"name": "Set Password (for new users)",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{accessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "password1",
+											"value": "YourStrongPassword123",
+											"type": "text"
+										},
+										{
+											"key": "password2",
+											"value": "YourStrongPassword123",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/v1/profile/set-password/",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"profile",
+										"set-password",
+										""
+									]
+								},
+								"description": "Allows a user who registered via OTP to set a password for the first time."
+							},
+							"response": []
+						},
+						{
+							"name": "Change Password",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{accessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "old_password",
+											"value": "YourStrongPassword123",
+											"type": "text"
+										},
+										{
+											"key": "new_password1",
+											"value": "NewStrongPassword123",
+											"type": "text"
+										},
+										{
+											"key": "new_password2",
+											"value": "NewStrongPassword123",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/v1/profile/change-password/",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"profile",
+										"change-password",
+										""
+									]
+								},
+								"description": "Allows a user who registered via OTP to set a password for the first time."
+							},
+							"response": []
+						},
+						{
+							"name": "Add/Change Email",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{accessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "email",
+											"value": "jain.doe2@example.com",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/v1/profile/email/add/",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"profile",
+										"email",
+										"add",
+										""
+									]
+								},
+								"description": "Sets the user's email and sends a verification OTP."
+							},
+							"response": []
+						},
+						{
+							"name": "Verify Email",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{accessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "code",
+											"value": "330408",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/v1/profile/email/verify/",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"profile",
+										"email",
+										"verify",
+										""
+									]
+								},
+								"description": "Verifies the user's email address with the OTP sent."
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "3. Standalone Flows",
+					"item": [
+						{
+							"name": "Request Password Reset",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "identifier",
+											"value": "+12345678910",
+											"type": "text"
+										},
+										{
+											"key": "identifier",
+											"value": "john.doe@example.com",
+											"type": "text",
+											"disabled": true
+										}
+									]
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/v1/password-reset/request/",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"password-reset",
+										"request",
+										""
+									]
+								},
+								"description": "Sends a password reset link to a *verified* email address."
+							},
+							"response": []
+						},
+						{
+							"name": "Confirm Password Reset",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "uidb64",
+											"value": "Mg",
+											"type": "text"
+										},
+										{
+											"key": "token",
+											"value": "csyj4r-b07285f4776fe3f4ec6f59f49a9bc5fb",
+											"type": "text"
+										},
+										{
+											"key": "password",
+											"value": "NewSecurePassword456",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/v1/password-reset/confirm/",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"password-reset",
+										"confirm",
+										""
+									]
+								},
+								"description": "Sets a new password using the uid and token from the reset link."
+							},
+							"response": []
+						},
+						{
+							"name": "Confirm Password Reset OTP",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "code",
+											"value": "273443",
+											"type": "text"
+										},
+										{
+											"key": "phone_number",
+											"value": "+12345678910",
+											"type": "text"
+										},
+										{
+											"key": "password",
+											"value": "NewStrongPassword123",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/v1/password-reset/confirm-otp/",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"password-reset",
+										"confirm-otp",
+										""
+									]
+								},
+								"description": "Sets a new password using the uid and token from the reset link."
+							},
+							"response": []
+						},
+						{
+							"name": "Refresh Access Token",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "refresh",
+											"value": "{{refreshToken}}",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/v1/auth/token/refresh/",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"auth",
+										"token",
+										"refresh",
+										""
+									]
+								},
+								"description": "Gets a new access token using a valid refresh token."
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://127.0.0.1:8000"
+		},
+		{
+			"key": "accessToken",
+			"value": ""
+		},
+		{
+			"key": "refreshToken",
+			"value": ""
+		}
+	]
+}
