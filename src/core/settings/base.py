@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 import os
+from datetime import timedelta
 from pathlib import Path
 
 from django.utils.translation import gettext_lazy as _
@@ -46,13 +47,15 @@ THIRD_PARTY_APPS = [
     "rest_framework",
     # "rest_framework_simplejwt",
     # "phonenumber_field",
+    "celery",
     "rosetta",
 ]
 
 LOCAL_APPS = [
     "apps.common",
     "apps.account",
-    "apps.store",
+    "apps.notification",
+    # "apps.store",
     # "apps.inventory",
     # "apps.checkout",
 ]
@@ -128,27 +131,42 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 ALLOW_UNICODE_SLUGS = True
 
 # User model
-# AUTH_USER_MODEL = "account.User"
+AUTH_USER_MODEL = "account.User"
 
 # Authentication backends
 AUTHENTICATION_BACKENDS = [
-    'django.contrib.auth.backends.ModelBackend',
-    # 'apps.account.backends.EmailBackend',
-    # 'apps.account.backends.PhoneNumberBackend',
+    'apps.account.backends.IdentifierBackend',  # Custom backend for identifier (email or phone) + password login
+    'apps.account.backends.OTPBackend',  # Custom backend for OTP login
+    'django.contrib.auth.backends.ModelBackend',  # Default Django auth backend
 ]
 
 LOGIN_URL = 'account:login'
 
+# Password Reset Configuration (Default: 259200 seconds = 3 days)
+PASSWORD_RESET_TIMEOUT = 259200
+
 # Site Configuration
 SITE_NAME = _("Fast Miveh")
+FRONTEND_URL = {
+    'PASSWORD_RESET_CONFIRM': env.str("FRONTEND_URL_PASSWORD_RESET"),
+}
 
-# File Configuration
+# File Upload Configuration
+MAX_IMAGE_UPLOAD_SIZE_MB = 5
 ALLOWED_IMAGE_EXTENSIONS = ["jpg", "jpeg", "png", "gif", "webp"]
-MAX_IMAGE_UPLOAD_SIZE = 1024  # in KB
+
+MAX_FILES_UPLOAD_SIZE_MB = 50
+ALLOWED_FILE_EXTENSIONS = ["pdf", "doc", "docx", "xls", "xlsx", "txt", "zip", "rar"]
 
 # Celery Configuration
+# set the celery broker url
 CELERY_BROKER_URL = f'redis://redis:{env("REDIS_PORT")}/0'
+
+# set the celery result backend
 CELERY_RESULT_BACKEND = f'redis://redis:{env("REDIS_PORT")}'
+
+# set the celery timezone
+CELERY_TIMEZONE = 'UTC'
 
 # Celery Beat Schedule
 CELERY_BEAT_SCHEDULE = {
@@ -192,20 +210,25 @@ REST_FRAMEWORK = {
     # 'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     # 'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
     # 'PAGE_SIZE': 10,
-    # 'DEFAULT_AUTHENTICATION_CLASSES': [
-    #     'rest_framework.authentication.SessionAuthentication',
-    #     'rest_framework_simplejwt.authentication.JWTAuthentication',
-    # ],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        # 'rest_framework.authentication.SessionAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
     # 'DEFAULT_PERMISSION_CLASSES': [
     #     # 'rest_framework.permissions.IsAuthenticated',
     # ],
     # 'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+
+    'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.URLPathVersioning',
+    'DEFAULT_VERSION': 'v1',
+    'ALLOWED_VERSIONS': ['v1', 'v2'],
+    'VERSION_PARAM': 'version',
 }
 
 # Simple JWT Configuration
 SIMPLE_JWT = {
-    # 'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
-    # 'REFRESH_TOKEN_LIFETIME': timedelta(days=30),
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
 
     # # 'ROTATE_REFRESH_TOKENS': False,
     # # 'BLACKLIST_AFTER_ROTATION': True,
@@ -248,28 +271,61 @@ SPECTACULAR_SETTINGS = {
 # PHONENUMBER_DEFAULT_REGION = "IR"
 
 # OTP configuration
-# If you want to change default values, require migrating the database
 OTP_SETTINGS = {
-    "CODE_LENGTH": 5,  # Length of the OTP code
-    "EXPIRATION_TIME": 120,  # Seconds (2 minutes)
-    'EMAIL_BACKEND': 'otp_service.backends.email.EmailBackend',
-    'SMS_BACKEND': 'otp_service.backends.sms.ConsoleSMSBackend',
-    'SMS_SETTINGS': {
-        # 'FROM_NUMBER': '+1234567890',  # Example: your SMS sender number
-        # 'SMS_TEMPLATE': 'otp_service/otp_sms.txt',
-        # 'SMS_SUBJECT': 'Your One-Time Password',
-        # 'SMS_PROVIDER': 'twilio',  # Example: 'twilio', 'nexmo', etc.
-        # 'SMS_API_KEY': env.str('SMS_API_KEY', default=''),
+    'OTP_LENGTH': 6,
+    'OTP_EXPIRY_MINUTES': 2,
+    'MAX_ATTEMPTS': 5,
+    'COOLDOWN_SECONDS': 60,
+}
+
+# Notification settings
+NOTIFICATIONS_SETTINGS = {
+    'ACTIVE_EMAIL_PROVIDER': 'default',
+    'EMAIL_PROVIDERS': {
+        'default': {
+            'CHANNEL_CLASS': 'apps.notification.channels.email.EmailChannel',
+            'CONFIG': {}
+        },
+        # You can add other providers like SendGrid here in the future
+        # 'sendgrid': {
+        #     'CHANNEL_CLASS': 'apps.notification.channels.email.SendGridEmailChannel',
+        #     'CONFIG': { 'API_KEY': 'YOUR_SENDGRID_API_KEY' }
+        # },
     },
-    'EMAIL_SETTINGS': {
-        # 'FROM_EMAIL': 'no-reply@example.com',
-        # 'EMAIL_SUBJECT': 'Your One-Time Password',
-        # 'EMAIL_TEMPLATE': 'otp_service/otp_email.html',
+
+    # --- SMS CHANNEL ---
+    'ACTIVE_SMS_PROVIDER': 'console',  # Switch to 'kavenegar', 'twilio' or 'console' as needed
+    'SMS_PROVIDERS': {
+        'console': {
+            'CHANNEL_CLASS': 'apps.notification.channels.sms.ConsoleSMSChannel',
+            'CONFIG': {}
+        },
+        'twilio': {
+            'CHANNEL_CLASS': 'apps.notification.channels.sms.TwilioSMSChannel',
+            'CONFIG': {
+                'ACCOUNT_SID': 'YOUR_TWILIO_ACCOUNT_SID',
+                'AUTH_TOKEN': 'YOUR_TWILIO_AUTH_TOKEN',
+                'FROM_NUMBER': 'YOUR_TWILIO_PHONE_NUMBER',
+            }
+        },
+        'kavenegar': {
+            'CHANNEL_CLASS': 'apps.notification.channels.sms.KavenegarSMSChannel',
+            'CONFIG': {
+                'API_KEY': 'YOUR_KAVENEGAR_API_KEY',
+            }
+        },
     },
-    "MAX_ATTEMPTS": 5,  # Maximum number of attempts to verify the OTP
-    "LOCK_TIME": 3600,  # Seconds (1 hour)
-    "TOKEN_LENGTH": 32,  # Length of the token
-    "ALLOWED_CHARS": "1234567890",  # Characters allowed in the OTP code
+
+    # --- TELEGRAM CHANNEL (NEW) ---
+    'ACTIVE_TELEGRAM_PROVIDER': 'default',
+    'TELEGRAM_PROVIDERS': {
+        'default': {
+            'CHANNEL_CLASS': 'apps.notification.channels.telegram.TelegramBotChannel',
+            'CONFIG': {
+                'BOT_TOKEN': 'YOUR_TELEGRAM_BOT_TOKEN',
+            }
+        }
+    },
 }
 
 # Logging
