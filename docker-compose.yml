@@ -1,0 +1,119 @@
+services:
+  # --- Database Service ---
+  db:
+    image: postgres:15-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    env_file:
+      - ./backend/.env
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - fast_miveh_network
+
+  # --- In-memory Store ---
+  redis:
+    image: redis:7-alpine
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - fast_miveh_network
+
+  # --- Backend Services ---
+  backend:
+    build:
+      context: ./backend
+    env_file:
+      - ./backend/.env
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - fast_miveh_network
+
+  celery-worker:
+    build:
+      context: ./backend
+    env_file:
+      - ./backend/.env
+    depends_on:
+      redis:
+        condition: service_healthy
+      db:
+        condition: service_healthy
+    networks:
+      - fast_miveh_network
+
+  celery-beat:
+    build:
+      context: ./backend
+    env_file:
+      - ./backend/.env
+    depends_on:
+      redis:
+        condition: service_healthy
+      db:
+        condition: service_healthy
+    networks:
+      - fast_miveh_network
+
+  # ---Flower (Celery Monitoring) ---
+  flower:
+    build:
+      context: ./backend
+    env_file:
+      - ./backend/.env
+    depends_on:
+      - redis
+      - celery-worker
+    networks:
+      - fast_miveh_network
+
+  # --- Frontend Service ---
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      target: production # Build the production stage
+    env_file:
+      - ./frontend/.env.local
+    networks:
+      - fast_miveh_network
+
+  # --- Web Server ---
+  nginx:
+    build:
+      context: ./nginx
+    depends_on:
+      - backend
+      - frontend
+      # - flower
+    networks:
+      - fast_miveh_network
+
+  # --- Utility Services ---
+  pgadmin:
+    image: dpage/pgadmin4
+    env_file:
+      - ./backend/.env
+    networks:
+      - fast_miveh_network
+
+networks:
+  fast_miveh_network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  static_volume:
+  media_volume:
+  nginx_logs:
+  django_logs:

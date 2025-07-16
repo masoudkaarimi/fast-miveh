@@ -1,0 +1,24 @@
+{
+  "LoginPage": {
+    "title": "Login | Register",
+    "subtitle": "Enter your mobile number to continue.",
+    "identifierLabel": "Mobile Number",
+    "identifierPlaceholder": "e.g., 09123456789",
+    "continueButton": "Continue",
+    "loadingButton": "Sending...",
+    "otpTitle": "Enter Verification Code",
+    "otpSubtitle": "Enter the 6-digit code sent to {identifier}.",
+    "otpInputLabel": "Verification Code",
+    "otpVerifyButton": "Verify & Login",
+    "passwordTitle": "Login with Password",
+    "passwordSubtitle": "Enter the password for your account with number {identifier}.",
+    "passwordLabel": "Password",
+    "passwordLoginButton": "Login"
+  },
+  "Errors": {
+    "requiredField": "This field is required",
+    "invalidOtp": "The verification code is invalid.",
+    "invalidCredentials": "Incorrect username or password.",
+    "genericError": "An error occurred. Please try again."
+  }
+}

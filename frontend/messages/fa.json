@@ -1,0 +1,24 @@
+{
+  "LoginPage": {
+    "title": "ورود | ثبت‌نام",
+    "subtitle": "برای ادامه، شماره موبایل خود را وارد کنید.",
+    "identifierLabel": "شماره موبایل",
+    "identifierPlaceholder": "مثال: 09123456789",
+    "continueButton": "ادامه",
+    "loadingButton": "در حال ارسال...",
+    "otpTitle": "کد تایید را وارد کنید",
+    "otpSubtitle": "کد ۶ رقمی ارسال شده به {identifier} را وارد کنید.",
+    "otpInputLabel": "کد تایید",
+    "otpVerifyButton": "تایید و ورود",
+    "passwordTitle": "ورود با رمز عبور",
+    "passwordSubtitle": "رمز عبور حساب کاربری خود برای شماره {identifier} را وارد کنید.",
+    "passwordLabel": "رمز عبور",
+    "passwordLoginButton": "ورود"
+  },
+  "Errors": {
+    "requiredField": "این فیلد اجباری است",
+    "invalidOtp": "کد تایید نامعتبر است.",
+    "invalidCredentials": "نام کاربری یا رمز عبور اشتباه است.",
+    "genericError": "خطایی رخ داد. لطفا دوباره تلاش کنید."
+  }
+}

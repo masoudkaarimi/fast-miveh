@@ -1,0 +1,53 @@
+services:
+  # --- Backend Services ---
+  backend:
+    entrypoint: /home/appuser/app/entrypoint.prod.sh
+    command: gunicorn core.wsgi:application --bind 0.0.0.0:8000
+    # command: gunicorn -c /home/appuser/app/core/gunicorn.py core.wsgi:application
+    volumes:
+      - static_volume:/home/appuser/app/static
+      - media_volume:/home/appuser/app/media
+      - django_logs:/var/log/django
+    restart: unless-stopped
+
+  celery-worker:
+    command: celery -A core worker -l info
+    restart: unless-stopped
+
+  celery-beat:
+    command: celery -A core beat -l info --scheduler django_celery_beat.schedulers:DatabaseScheduler
+    restart: unless-stopped
+
+  flower:
+    command: >
+      celery -A core flower
+      --address=0.0.0.0
+      --port=5555
+      --basic_auth=${FLOWER_BASIC_AUTH}
+    restart: unless-stopped
+
+  # --- Frontend Service ---
+  frontend:
+    restart: unless-stopped
+
+  # --- Web Server ---
+  nginx:
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - static_volume:/home/appuser/app/static:ro
+      - media_volume:/home/appuser/app/media:ro
+      - ./nginx/production.conf:/etc/nginx/conf.d/default.conf # Mount the production config file
+      - ./nginx/certs:/etc/nginx/certs:ro  # Mount your SSL certs
+      - nginx_logs:/var/log/nginx
+    restart: unless-stopped
+
+  # --- Utility Services ---
+  pgadmin:
+    restart: unless-stopped
+
+
+# ---These commands are for initial setup and should be run once after the containers are up. ---
+# docker-compose -f docker-compose.yml -f docker-compose.prod.yml run --rm backend python manage.py load_data
+# docker-compose -f docker-compose.yml -f docker-compose.prod.yml run --rm backend python manage.py shell < create_superuser.py
