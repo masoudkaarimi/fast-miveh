@@ -18,10 +18,12 @@ django-countries==7.6.1
 django-environ==0.12.0
 django-filter==25.1
 django-phonenumber-field==8.1.0
+django-redis==6.0.0
 django-rosetta==0.10.2
 djangorestframework==3.16.0
 djangorestframework_simplejwt==5.5.0
 drf-spectacular==0.28.0
+gunicorn==23.0.0
 idna==3.10
 inflection==0.5.1
 jalali_core==1.0.0
@@ -39,6 +41,7 @@ psycopg2-binary==2.9.10
 PyJWT==2.9.0
 python-dateutil==2.9.0.post0
 PyYAML==6.0.2
+redis==6.2.0
 referencing==0.36.2
 requests==2.32.4
 rpds-py==0.26.0

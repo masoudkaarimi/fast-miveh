@@ -11,6 +11,7 @@ from apps.notification.channels.base import BaseNotificationChannel
 class EmailChannel(BaseNotificationChannel):
     def send(self, recipient: str, **kwargs: Any) -> None:
         subject: str = kwargs.get('subject', 'Notification')
+        message: str | None = kwargs.get('message')
         template_name: str | None = kwargs.get('template_name')
         context: dict[str, Any] = kwargs.get('context', {})
 
@@ -20,7 +21,7 @@ class EmailChannel(BaseNotificationChannel):
         try:
             from_email: str = str(self.config.get('FROM_EMAIL', ''))
             html_message: str = render_to_string(template_name, context)
-            plain_message: str = strip_tags(html_message)
+            plain_message: str = strip_tags(message)
 
             send_mail(
                 subject,

@@ -247,10 +247,12 @@ class EmailAddSerializer(serializers.Serializer):
     """Serializer to add or change a user's email address and send OTP."""
     email = serializers.EmailField(required=True)
 
+
     def validate_email(self, value):
-        if User.objects.filter(email__iexact=value, is_email_verified=True).exclude(pk=self.context['request'].user.pk).exists():
-            raise serializers.ValidationError(_("This email address is already in use by another account."))
+        if User.objects.filter(email__iexact=value).exclude(pk=self.context['request'].user.pk).exists():
+            raise serializers.ValidationError(_("This email address is already in use."))
         return value
+
 
     def save(self):
         user = self.context['request'].user

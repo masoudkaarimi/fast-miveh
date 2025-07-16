@@ -9,10 +9,10 @@ from apps.notification.channels.base import BaseNotificationChannel
 class TelegramBotChannel(BaseNotificationChannel):
     def __init__(self, **config: Any) -> None:
         super().__init__(**config)
-        self.bot_token: str | None = self.config.get('BOT_TOKEN')
-        if not self.bot_token:
-            raise NotificationError("Telegram 'BOT_TOKEN' is not configured in NOTIFICATIONS_SETTINGS.")
-        self.api_url: str = f"https://api.telegram.org/bot{self.bot_token}/sendMessage"
+        self.telegram_bot_token: str | None = self.config.get('TELEGRAM_BOT_TOKEN')
+        if not self.telegram_bot_token:
+            raise NotificationError("Telegram 'TELEGRAM_BOT_TOKEN' is not configured in NOTIFICATIONS_SETTINGS.")
+        self.api_url: str = f"https://api.telegram.org/bot{self.telegram_bot_token}/sendMessage"
 
     def send(self, recipient: str, **kwargs: Any) -> None:
         message: str = kwargs.get('message', '')
