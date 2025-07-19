@@ -1,24 +1,36 @@
 {
-  "LoginPage": {
-    "title": "ورود | ثبت‌نام",
-    "subtitle": "برای ادامه، شماره موبایل خود را وارد کنید.",
-    "identifierLabel": "شماره موبایل",
-    "identifierPlaceholder": "مثال: 09123456789",
-    "continueButton": "ادامه",
-    "loadingButton": "در حال ارسال...",
-    "otpTitle": "کد تایید را وارد کنید",
-    "otpSubtitle": "کد ۶ رقمی ارسال شده به {identifier} را وارد کنید.",
-    "otpInputLabel": "کد تایید",
-    "otpVerifyButton": "تایید و ورود",
-    "passwordTitle": "ورود با رمز عبور",
-    "passwordSubtitle": "رمز عبور حساب کاربری خود برای شماره {identifier} را وارد کنید.",
-    "passwordLabel": "رمز عبور",
-    "passwordLoginButton": "ورود"
-  },
-  "Errors": {
-    "requiredField": "این فیلد اجباری است",
-    "invalidOtp": "کد تایید نامعتبر است.",
-    "invalidCredentials": "نام کاربری یا رمز عبور اشتباه است.",
-    "genericError": "خطایی رخ داد. لطفا دوباره تلاش کنید."
-  }
+    "Metadata": {
+        "title": "Fast Miveh | Fresh Fruit Delivery",
+        "description": "Order fresh fruit online for fast delivery."
+    },
+    "LoginPage": {
+        "title": "Login | Register",
+        "subtitle": "Enter your mobile number to continue.",
+        "identifierLabel": "Mobile Number",
+        "identifierPlaceholder": "e.g., 09123456789",
+        "continueButton": "Continue",
+        "loadingButton": "Sending...",
+        "otpTitle": "Enter Verification Code",
+        "otpSubtitle": "Enter the 6-digit code sent to {identifier}.",
+        "otpInputLabel": "Verification Code",
+        "otpVerifyButton": "Verify & Login",
+        "passwordTitle": "Login with Password",
+        "passwordSubtitle": "Enter the password for your account with number {identifier}.",
+        "passwordLabel": "Password",
+        "passwordLoginButton": "Login"
+    },
+    "Errors": {
+        "requiredField": "This field is required",
+        "invalidOtp": "The verification code is invalid.",
+        "invalidCredentials": "Incorrect username or password.",
+        "genericError": "An error occurred. Please try again."
+    },
+    "Api": {
+        "Auth": {
+            "Login": {
+                "success": "Successfully logged in!",
+                "error": "Login failed. Please check your credentials."
+            }
+        }
+    }
 }

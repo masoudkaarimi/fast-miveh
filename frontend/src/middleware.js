@@ -1,11 +1,35 @@
-import createMiddleware from 'next-intl/middleware';
-import {routing} from './i18n/routing';
+import {NextResponse} from 'next/server';
 
-export default createMiddleware(routing);
+const protectedRoutes = [
+    '/user',
+];
+const guestRoutes = [
+    '/login',
+    // '/password/forgot',
+    // '/password/reset'
+];
+
+export function middleware(req) {
+    const refreshToken = req.cookies.get('refreshToken')?.value;
+    const {pathname} = req.nextUrl;
+
+
+    // Redirect authenticated users from guest routes
+    if (refreshToken && guestRoutes.some(path => pathname.startsWith(path))) {
+        return NextResponse.redirect(new URL('/user', req.url));
+    }
+
+    // Redirect unauthenticated users from protected routes
+    if (!refreshToken && protectedRoutes.some(path => pathname.startsWith(path))) {
+        return NextResponse.redirect(new URL('/login', req.url));
+    }
+
+    return NextResponse.next();
+}
 
 export const config = {
-    // Match all pathnames except for
-    // - … if they start with `/api`, `/trpc`, `/_next` or `/_vercel`
-    // - … the ones containing a dot (e.g. `favicon.ico`)
-    matcher: '/((?!api|trpc|_next|_vercel|.*\\..*).*)'
+    matcher: [
+        // Match all routes except for static assets and API routes
+        '/((?!api|_next/static|_next/image|favicon.ico).*)',
+    ]
 };
