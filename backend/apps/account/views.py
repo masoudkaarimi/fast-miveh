@@ -42,7 +42,7 @@ class RequestOTPView(generics.GenericAPIView):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        return Response({"detail": _("An OTP has been sent to the provided phone number.")}, status=status.HTTP_200_OK)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class VerifyOTPAndLoginView(generics.GenericAPIView):
@@ -83,7 +83,8 @@ class PasswordSetView(generics.GenericAPIView):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        return Response({"detail": _("The password has been set successfully.")}, status=status.HTTP_200_OK)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+        # return Response({"detail": _("The password has been set successfully.")}, status=status.HTTP_200_OK)
 
 
 class PasswordChangeView(generics.GenericAPIView):
@@ -107,7 +108,7 @@ class EmailAddView(generics.GenericAPIView):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        return Response({"detail": _("A verification code has been sent to your new email address.")}, status=status.HTTP_200_OK)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class EmailVerifyView(generics.GenericAPIView):

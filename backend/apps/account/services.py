@@ -12,12 +12,30 @@ class OTPService:
         self.user = user
 
     def _check_cooldown(self, otp_type, recipient):
-        """Prevents sending OTPs too frequently."""
+        """Prevents sending OTPs too frequently and calculates remaining time."""
         cooldown_seconds = settings.OTP_SETTINGS.get('COOLDOWN_SECONDS', 60)
         cooldown_time = timezone.now() - timedelta(seconds=cooldown_seconds)
 
-        if OTP.objects.filter(user=self.user, type=otp_type, recipient=recipient, created_at__gte=cooldown_time).exists():
-            raise OTPCooldownError(_("Please wait %(seconds)d seconds before requesting a new code.") % {'seconds': cooldown_seconds})
+        latest_otp = OTP.objects.filter(
+            user=self.user,
+            type=otp_type,
+            recipient=recipient,
+            created_at__gte=cooldown_time
+        ).order_by('-created_at').first()
+
+        if latest_otp:
+            cooldown_end_time = latest_otp.created_at + timedelta(seconds=cooldown_seconds)
+            remaining_cooldown = cooldown_end_time - timezone.now()
+            remaining_seconds = max(0, int(remaining_cooldown.total_seconds()))
+
+            if remaining_seconds > 0:
+                raise OTPCooldownError(
+                    _("Please wait %(seconds)d seconds before requesting a new code.") % {'seconds': remaining_seconds},
+                    remaining_seconds=remaining_seconds
+                )
+
+        # if OTP.objects.filter(user=self.user, type=otp_type, recipient=recipient, created_at__gte=cooldown_time).exists():
+        #     raise OTPCooldownError(_("Please wait %(seconds)d seconds before requesting a new code.") % {'seconds': cooldown_seconds})
 
     def generate_and_send_otp(self, otp_type, recipient):
         """Main method to generate, store, and trigger the sending of an OTP."""

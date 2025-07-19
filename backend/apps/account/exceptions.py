@@ -15,4 +15,10 @@ class OTPGenerationError(OTPException):
 
 class OTPCooldownError(OTPGenerationError):
     """Raised when trying to resend an OTP too quickly."""
-    pass
+
+    def __init__(self, message, remaining_seconds=None):
+        self.remaining_seconds = remaining_seconds
+        super().__init__(message)
+
+# class OTPCooldownError(OTPGenerationError):
+#     pass
