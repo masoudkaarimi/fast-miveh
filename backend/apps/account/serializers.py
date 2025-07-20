@@ -390,7 +390,7 @@ class PasswordResetRequestSerializer(serializers.Serializer):
 
         # IMPORTANT: This URL should point to your frontend password reset confirmation page.
         frontend_url = settings.FRONTEND_URL.get('PASSWORD_RESET_CONFIRM')
-        reset_url = f"{frontend_url}?uid={uid}&token={token}"
+        reset_url = f"{frontend_url}?uidb64={uid}&token={token}"
 
         user.email_user(
             subject=_("Password Reset Request"),
