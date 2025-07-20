@@ -4,7 +4,7 @@ import {ChevronLeft} from "lucide-react";
 
 import {Button} from "@/components/ui/button";
 import {Heading} from "@/components/shared/Heading";
-import {useAuthFlow} from "../../context/AuthFlowContext";
+import {useAuthFlow} from "@/features/auth/context/AuthFlowContext";
 import {InputOTP, InputOTPGroup, InputOTPSlot} from "@/components/ui/input-otp";
 import {Form, FormControl, FormField, FormItem, FormMessage} from "@/components/ui/form";
 
@@ -29,12 +29,7 @@ export function OtpStep() {
                             <FormControl>
                                 <InputOTP autoFocus maxLength={6} {...field}>
                                     <InputOTPGroup>
-                                        <InputOTPSlot index={0}/>
-                                        <InputOTPSlot index={1}/>
-                                        <InputOTPSlot index={2}/>
-                                        <InputOTPSlot index={3}/>
-                                        <InputOTPSlot index={4}/>
-                                        <InputOTPSlot index={5}/>
+                                        {[...Array(6)].map((_, i) => <InputOTPSlot key={i} index={i}/>)}
                                     </InputOTPGroup>
                                 </InputOTP>
                             </FormControl>

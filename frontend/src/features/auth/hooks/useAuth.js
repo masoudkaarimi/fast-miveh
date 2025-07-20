@@ -70,7 +70,7 @@ export const useLoginWithPassword = () => {
     });
 };
 
-
+// --- User logout ---
 export const useLogout = () => {
 // Todo
 }

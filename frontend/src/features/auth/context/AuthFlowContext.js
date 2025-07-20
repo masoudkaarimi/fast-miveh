@@ -1,28 +1,12 @@
 "use client";
 
-import * as z from "zod";
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {createContext, useContext, useState, useMemo, useEffect} from 'react';
 
 import {formatPhoneNumber, getErrorMessage, getIdentifierType} from "@/lib/utils";
+import {IdentifierSchema, OtpSchema, LoginPasswordSchema} from "@/lib/validators";
 import {useCheckIdentifierStatus, useRequestOtp, useVerifyOtpAndLogin, useLoginWithPassword} from "@/features/auth/hooks/useAuth";
-
-// --- Zod Schemas ---
-const identifierSchema = z.object({
-    identifier: z.union([
-        z.string().email({message: "Please enter a valid email address."}),
-        z.string().regex(/^09\d{9}$/, {message: "Please enter a valid 11-digit mobile number starting with 09."})
-    ], {
-        errorMap: () => ({message: "Please enter a valid email or phone number."})
-    })
-});
-const otpSchema = z.object({
-    code: z.string().min(6, "Code must be 6 digits.")
-});
-const passwordSchema = z.object({
-    password: z.string().min(8, "Password must be at least 8 characters.")
-});
 
 const STEPS = {
     IDENTIFIER_INPUT: "IDENTIFIER_INPUT",
@@ -61,22 +45,16 @@ export const AuthFlowProvider = ({children}) => {
 
     // --- Forms ---
     const identifierForm = useForm({
-        resolver: zodResolver(identifierSchema),
-        defaultValues: {
-            identifier: ""
-        }
+        resolver: zodResolver(IdentifierSchema),
+        defaultValues: {identifier: ""}
     });
     const otpForm = useForm({
-        resolver: zodResolver(otpSchema),
-        defaultValues: {
-            code: ""
-        }
+        resolver: zodResolver(OtpSchema),
+        defaultValues: {code: ""}
     });
     const passwordForm = useForm({
-        resolver: zodResolver(passwordSchema),
-        defaultValues: {
-            password: ""
-        }
+        resolver: zodResolver(LoginPasswordSchema),
+        defaultValues: {password: ""}
     });
 
     // --- Handlers ---

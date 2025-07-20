@@ -1,38 +1,19 @@
 "use client";
 
-import * as z from "zod";
 import Link from "next/link";
 import {useState} from "react";
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
-import {CheckCircle2, Circle, ChevronLeft, Eye, EyeOff} from "lucide-react";
+import {ChevronLeft, Eye, EyeOff} from "lucide-react";
 
 import {Input} from "@/components/ui/input";
 import {Button} from "@/components/ui/button";
 import {Heading} from "@/components/shared/Heading";
+import {NewPasswordSchema} from "@/lib/validators";
 import {useSetPassword} from "@/features/user/profile/hooks/useProfile";
+import {PasswordStrengthIndicator} from "@/components/shared/PasswordStrengthIndicator";
 import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage} from "@/components/ui/form";
 
-// --- Zod Schemas ---
-const passwordSetSchema = z.object({
-    password: z.string()
-        .min(8, "Must be at least 8 characters")
-        .regex(/[A-Z]/, "Must contain at least one uppercase letter")
-        .regex(/[a-z]/, "Must contain at least one lowercase letter")
-        .regex(/[0-9]/, "Must contain at least one number"),
-    password2: z.string()
-}).refine((data) => data.password === data.password2, {
-    message: "Passwords don't match",
-    path: ["password2"],
-});
-
-// --- Password Criteria ---
-const passwordCriteria = [
-    {text: "At least 8 characters", regex: /.{8,}/},
-    {text: "At least one uppercase letter", regex: /[A-Z]/},
-    {text: "At least one lowercase letter", regex: /[a-z]/},
-    {text: "At least one number", regex: /[0-9]/},
-];
 
 export function PasswordSetForm() {
     const [showPassword, setShowPassword] = useState(false);
@@ -42,7 +23,7 @@ export function PasswordSetForm() {
 
     // --- Forms ---
     const form = useForm({
-        resolver: zodResolver(passwordSetSchema),
+        resolver: zodResolver(NewPasswordSchema),
         defaultValues: {password: "", password2: ""},
         mode: "onTouched",
     });
@@ -85,44 +66,22 @@ export function PasswordSetForm() {
                             <FormMessage/>
                         </FormItem>
                     )}/>
-
-                    {/* Real-time Password Strength Indicator */}
-                    <div className="space-y-2">
-                        {passwordCriteria.map((criterion, index) => {
-                            const isMet = criterion.regex.test(passwordValue || "");
-                            return (
-                                <div key={index} className="flex items-center text-sm">
-                                    {isMet ? (
-                                        <CheckCircle2 className="size-4 mr-2 text-green-500"/>
-                                    ) : (
-                                        <Circle className="size-4 mr-2 text-muted-foreground"/>
-                                    )}
-                                    <span className={isMet ? "text-foreground" : "text-muted-foreground"}>{criterion.text}</span>
+                    <PasswordStrengthIndicator passwordValue={passwordValue}/>
+                    <FormField control={form.control} name="password2" render={({field}) => (
+                        <FormItem>
+                            <FormLabel>Confirm New Password</FormLabel>
+                            <div className="relative">
+                                <FormControl>
+                                    <Input type={showPassword ? "text" : "password"} {...field} />
+                                </FormControl>
+                                <div className="absolute inset-y-0 right-0 flex cursor-pointer items-center p-3 text-muted-foreground"
+                                     onClick={() => setShowPassword((prev) => !prev)}>
+                                    {showPassword ? <EyeOff className="size-4"/> : <Eye className="size-4"/>}
                                 </div>
-                            );
-                        })}
-                    </div>
-
-                    <FormField
-                        control={form.control}
-                        name="password2"
-                        render={({field}) => (
-                            <FormItem>
-                                <FormLabel>Confirm New Password</FormLabel>
-                                <div className="relative">
-                                    <FormControl>
-                                        <Input type={showPassword ? "text" : "password"} {...field} />
-                                    </FormControl>
-                                    <div className="absolute inset-y-0 right-0 flex cursor-pointer items-center p-3 text-muted-foreground"
-                                         onClick={() => setShowPassword((prev) => !prev)}>
-                                        {showPassword ? <EyeOff className="size-4"/> : <Eye className="size-4"/>}
-                                    </div>
-                                </div>
-                                <FormMessage/>
-                            </FormItem>
-                        )}
-                    />
-
+                            </div>
+                            <FormMessage/>
+                        </FormItem>
+                    )}/>
                     <Button type="submit" disabled={setPassword.isPending} className="w-full">
                         {setPassword.isPending ? "Setting Password..." : "Set Password and Continue"}
                     </Button>

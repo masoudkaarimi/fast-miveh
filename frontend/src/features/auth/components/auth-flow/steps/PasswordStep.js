@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import {ChevronLeft, ChevronRight, Eye, EyeOff} from "lucide-react";
-import {useAuthFlow} from "../../context/AuthFlowContext";
+import {useAuthFlow} from "@/features/auth/context/AuthFlowContext";
 import {Button} from "@/components/ui/button";
 import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage} from "@/components/ui/form";
 import {Heading} from "@/components/shared/Heading";

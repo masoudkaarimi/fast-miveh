@@ -7,7 +7,6 @@ export default function HomePage() {
         <div className="container mx-auto p-4">
             <h1 className="text-xl font-bold">Home Page</h1>
             <ul className="my-10 text-lg divide-y divide-gray-300 list-group">
-                <li className="py-3"><Link href="/">Home</Link></li>
                 <li className="py-3"><Link href="/login">Login</Link></li>
                 {/*<li className="py-3"}><Link href="/logout">Logout</Link></li>*/}
                 <li className="py-3"><Link href="/password/forgot">Forgot Password</Link></li>

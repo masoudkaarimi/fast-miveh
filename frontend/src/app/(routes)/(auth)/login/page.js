@@ -1,4 +1,4 @@
-import {AuthFlow} from "@/features/auth/components/AuthFlow";
+import {AuthFlow} from "@/features/auth/components/auth-flow/AuthFlow";
 
 export default function LoginPage() {
     return (

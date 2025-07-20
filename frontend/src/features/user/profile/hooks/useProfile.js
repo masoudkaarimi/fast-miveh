@@ -39,9 +39,10 @@ export const useSetPassword = () => {
     return useMutation({
         mutationFn: (passwords) => axios.post('/secure/profile/set-password/', passwords),
         onSuccess: (response) => {
-            toast.success(getSuccessMessage(response, "Password set successfully. Please complete your profile."));
+            toast.success(getSuccessMessage(response, "Password set successfully."));
+            toast.info("Please complete your profile.");
             queryClient.invalidateQueries({queryKey: ['userProfile']});
-            router.push('/user/welcome');
+            router.push('/user/welcome?source=set-password');
         },
         onError: (error) => {
             toast.error(getErrorMessage(error));
