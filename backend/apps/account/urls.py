@@ -1,5 +1,6 @@
-from django.urls import path
+from django.urls import path, include
 
+from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt.views import TokenRefreshView
 
 from apps.account.views import (
@@ -15,9 +16,13 @@ from apps.account.views import (
     PasswordResetRequestView,
     IdentifierStatusCheckView,
     PasswordResetConfirmWithOTPView,
+    AddressViewSet
 )
 
 app_name = 'account'
+
+router = DefaultRouter()
+router.register(r'addresses', AddressViewSet, basename='address')
 
 urlpatterns = [
     # --- Login/Registration ---
@@ -40,4 +45,10 @@ urlpatterns = [
     path('password-reset/request/', PasswordResetRequestView.as_view(), name='password_reset_request'),
     path('password-reset/confirm/', PasswordResetConfirmView.as_view(), name='password_reset_confirm_link'),
     path('password-reset/confirm-otp/', PasswordResetConfirmWithOTPView.as_view(), name='password_reset_confirm_otp'),
+
+    # --- Wishlist and Address Management (New additions) ---
+    # path('wishlist/', WishlistAPIView.as_view(), name='wishlist'),
+
+    # --- Address Management ---
+    path('', include(router.urls)),
 ]

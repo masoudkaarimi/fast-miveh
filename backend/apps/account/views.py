@@ -1,10 +1,11 @@
 from django.contrib.auth import get_user_model
 from django.utils.translation import gettext_lazy as _
 
-from rest_framework import generics, status
 from rest_framework.response import Response
+from rest_framework import generics, viewsets, status
 from rest_framework.permissions import IsAuthenticated, AllowAny
 
+from apps.account.models import Address
 from apps.account.permissions import IsOwnerOrReadOnly
 from apps.account.serializers import (
     EmailAddSerializer,
@@ -18,7 +19,7 @@ from apps.account.serializers import (
     PasswordResetRequestSerializer,
     PasswordResetConfirmSerializer,
     IdentifierStatusCheckSerializer,
-    PasswordResetConfirmWithOTPSerializer,
+    PasswordResetConfirmWithOTPSerializer, AddressSerializer,
 )
 
 User = get_user_model()
@@ -158,3 +159,66 @@ class PasswordResetConfirmWithOTPView(generics.GenericAPIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response({"detail": _("The password has been reset successfully.")}, status=status.HTTP_200_OK)
+
+
+class AddressViewSet(viewsets.ModelViewSet):
+    """A ViewSet for viewing and editing user addresses. Provides list, create, retrieve, update, destroy."""
+    serializer_class = AddressSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        """This view should return a list of all addresses for the currently authenticated user. Excludes snapshots."""
+        return Address.objects.filter(user=self.request.user, is_snapshot=False)
+
+    def perform_create(self, serializer):
+        """Assign the current user to the address when creating it."""
+        serializer.save(user=self.request.user)
+
+# class WishlistAPIView(generics.RetrieveAPIView):
+#     """
+#     API view to retrieve wishlist and add/remove products from it.
+#     - GET: Retrieve the full wishlist.
+#     - POST: Add a product to the wishlist.
+#     - DELETE: Remove a product from the wishlist.
+#     """
+#     permission_classes = [IsAuthenticated]
+#
+#     def get_serializer_class(self):
+#         if self.request.method == 'GET':
+#             return WishlistSerializer
+#         return WishlistActionSerializer
+#
+#     def get_object(self):
+#         # Get or create a wishlist for the user.
+#         wishlist, created = Wishlist.objects.get_or_create(user=self.request.user)
+#         return wishlist
+#
+#     def get(self, request, *args, **kwargs):
+#         """Retrieve the user's wishlist."""
+#         wishlist = self.get_object()
+#         serializer = WishlistSerializer(wishlist)
+#         return Response(serializer.data)
+#
+#     def post(self, request, *args, **kwargs):
+#         """Add a product to the wishlist."""
+#         wishlist = self.get_object()
+#         serializer = self.get_serializer_class()(data=request.data)
+#         serializer.is_valid(raise_exception=True)
+#         product_id = serializer.validated_data['product_id']
+#
+#         # Add the product to the wishlist
+#         wishlist.products.add(product_id)
+#
+#         return Response({"status": "Product added to wishlist"}, status=status.HTTP_200_OK)
+#
+#     def delete(self, request, *args, **kwargs):
+#         """Remove a product from the wishlist."""
+#         wishlist = self.get_object()
+#         serializer = self.get_serializer_class()(data=request.data)
+#         serializer.is_valid(raise_exception=True)
+#         product_id = serializer.validated_data['product_id']
+#
+#         # Remove the product from the wishlist
+#         wishlist.products.remove(product_id)
+#
+#         return Response({"status": "Product removed from wishlist"}, status=status.HTTP_204_NO_CONTENT)

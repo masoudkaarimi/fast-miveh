@@ -1,86 +1,74 @@
+# apps/account/admin.py
+
 from django.contrib import admin
-from django.contrib.auth.admin import UserAdmin
-from django.utils.translation import gettext_lazy as _
-
-from apps.account.models import User, Profile, OTP
+from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
+from .models import User, Profile, Address, Wishlist, OTP
 
 
-class UserProfileInline(admin.StackedInline):
+# This allows the Profile to be edited directly within the User admin page
+class ProfileInline(admin.StackedInline):
     model = Profile
     can_delete = False
-    verbose_name_plural = _('Profile')
+    verbose_name_plural = 'Profile'
     fk_name = 'user'
-    fields = ('avatar', 'gender', 'birthdate', 'national_code')
 
 
 @admin.register(User)
-class UserAdmin(UserAdmin):
-    inlines = (UserProfileInline,)
-    list_select_related = ('profile',)
-    list_display = (
-        'phone_number',
-        'email',
-        'username',
-        'first_name',
-        'last_name',
-        'is_staff',
-        'is_active',
-        'is_phone_number_verified'
-    )
+class UserAdmin(BaseUserAdmin):
+    # Combines default User admin with custom fields and the Profile inline
+    list_display = ('username', 'phone_number', 'email', 'is_staff', 'is_active', 'created_at')
     list_filter = ('is_staff', 'is_superuser', 'is_active', 'groups')
-    search_fields = ('phone_number', 'email', 'username', 'first_name', 'last_name')
+    search_fields = ('username', 'first_name', 'last_name', 'email', 'phone_number')
     ordering = ('-created_at',)
-    fieldsets = (
-        (None, {'fields': ('phone_number', 'password')}),
-        (_('Personal Info'), {'fields': ('username', 'first_name', 'last_name', 'email')}),
-        (
-            _('Permissions'),
-            {
-                'fields': (
-                    'is_active',
-                    'is_staff',
-                    'is_superuser',
-                    'groups',
-                    'user_permissions',
-                ),
-            },
-        ),
-        (_('Verification Status'), {'fields': ('is_phone_number_verified', 'is_email_verified')}),
-        (_('Important dates'), {'fields': ('last_login_ip', 'last_login_at', 'created_at', 'updated_at')}),
-    )
-    readonly_fields = ('last_login_at','last_login_ip', 'created_at', 'updated_at')
+    inlines = (ProfileInline,)
 
-    def get_inline_instances(self, request, obj=None):
-        if not obj:
-            return list()
-        return super().get_inline_instances(request, obj)
+    # Adding custom fields to the admin view
+    fieldsets = BaseUserAdmin.fieldsets + (
+        ('Extra Info', {'fields': ('phone_number', 'is_phone_number_verified', 'is_email_verified')}),
+        ('Login Info', {'fields': ('last_login_at', 'last_login_ip')}),
+    )
+    add_fieldsets = BaseUserAdmin.add_fieldsets + (
+        (None, {'fields': ('phone_number', 'email')}),
+    )
+
+
+@admin.register(Address)
+class AddressAdmin(admin.ModelAdmin):
+    # Optimized for performance and usability
+    list_display = ('id', 'user', 'title', 'city', 'country', 'is_default', 'is_snapshot')
+    list_filter = ('is_default', 'is_snapshot', 'country', 'city')
+    search_fields = ('user__username', 'city', 'state', 'zip_code', 'address_line_1')
+    # Use raw_id_fields for better performance on ForeignKey fields with many related objects
+    raw_id_fields = ('user',)
+
+
+@admin.register(Wishlist)
+class WishlistAdmin(admin.ModelAdmin):
+    # Provides a better UI for the ManyToMany relationship
+    list_display = ('id', 'user',)
+    search_fields = ('user__username',)
+    # Use filter_horizontal for a user-friendly way to manage ManyToMany fields
+    filter_horizontal = ('products',)
+    raw_id_fields = ('user',)
 
 
 @admin.register(OTP)
 class OTPAdmin(admin.ModelAdmin):
-    list_display = (
-        'user',
-        'recipient',
-        'type',
-        'status',
-        'code',
-        'created_at',
-        'expires_at',
-        'attempts'
-    )
-    list_filter = ('status', 'type', 'created_at')
-    search_fields = ('recipient', 'user__phone_number', 'user__email')
-    ordering = ('-created_at',)
-
-    def get_readonly_fields(self, request, obj=None):
-        """Hook to make all fields read-only."""
-        # This makes all fields read-only, preventing any edits from the admin.
-        return [field.name for field in self.model._meta.fields]
+    # A secure, read-only view for debugging OTP records
+    list_display = ('recipient', 'user', 'type', 'status', 'created_at', 'expires_at')
+    list_filter = ('status', 'type')
+    search_fields = ('recipient', 'user__username')
+    # Make all fields read-only to prevent accidental changes
+    readonly_fields = [f.name for f in OTP._meta.fields]
 
     def has_add_permission(self, request):
-        """Prevent manual creation of OTPs from the admin."""
+        # Disables the "Add" button
+        return False
+
+    def has_change_permission(self, request, obj=None):
+        # Disables the "Save" and "Save and continue editing" buttons
         return False
 
     def has_delete_permission(self, request, obj=None):
-        """Prevent deletion of OTPs from the admin for audit purposes."""
+        # Disables the "Delete" action
         return False

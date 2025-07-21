@@ -9,6 +9,7 @@ from django.contrib.auth.models import AbstractUser
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.validators import UnicodeUsernameValidator
 
+from django_countries.fields import CountryField
 from phonenumber_field.modelfields import PhoneNumberField
 
 from apps.common.models import TimeStampedModel
@@ -225,3 +226,123 @@ class OTP(TimeStampedModel):
     def mark_as_failed(self):
         self.status = self.StatusChoices.FAILED
         self.save(update_fields=['status'])
+
+
+class Address(TimeStampedModel):
+    user = models.ForeignKey(
+        "account.User",
+        on_delete=models.CASCADE,
+        related_name="addresses",
+        verbose_name=_("User"),
+        help_text=_("The user this address belongs to.")
+    )
+    title = models.CharField(
+        max_length=50,
+        blank=True,
+        verbose_name=_("Address Title"),
+        help_text=_("A short title for the address, e.g., 'Home', 'Office'. (Optional)")
+    )
+    full_name = models.CharField(
+        max_length=255,
+        verbose_name=_("Full Name"),
+        help_text=_("Full name of the recipient.")
+    )
+    phone_number = PhoneNumberField(
+        verbose_name=_("Phone Number"),
+        help_text=_("Phone number of the recipient.")
+    )
+    country = CountryField(
+        blank=False,
+        null=False,
+        blank_label=_('(select country)'),
+        verbose_name=_("Country/Region"),
+        help_text=_("The country or region of the address. (Required)")
+    )
+    city = models.CharField(
+        max_length=100,
+        blank=False,
+        null=False,
+        verbose_name=_("City"),
+        help_text=_("The city of the address. (Required)")
+    )
+    state = models.CharField(
+        max_length=100,
+        blank=False,
+        null=False,
+        verbose_name=_("State/Province"),
+        help_text=_("The state or province of the address. (Required)")
+    )
+    zip_code = models.CharField(
+        max_length=20,
+        blank=False,
+        null=False,
+        verbose_name=_("Zip/Postal Code"),
+        help_text=_("The zip or postal code of the address. (Required)")
+    )
+    address_line_1 = models.CharField(
+        max_length=255,
+        blank=False,
+        null=False,
+        verbose_name=_("Address Line 1"),
+        help_text=_("Additional address line, e.g., apartment or suite number. (Optional)")
+    )
+    address_line_2 = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+        verbose_name=_("Address Line 2 (Optional)"),
+        help_text=_("e.g., apartment, suite, or unit number.")
+    )
+    is_default = models.BooleanField(
+        default=False,
+        verbose_name=_("Default Address"),
+        help_text=_("Set as the default shipping or billing address for the user.")
+    )
+    is_snapshot = models.BooleanField(
+        default=False,
+        verbose_name=_("Snapshot Address"),
+        help_text=_("Indicates if this address is a snapshot of a previous address.")
+    )
+
+    class Meta:
+        verbose_name = _("Address")
+        verbose_name_plural = _("Addresses")
+        ordering = ['-is_default', '-created_at']
+
+    def __str__(self):
+        user_str = str(self.user) if self.user else "Snapshot"
+        return f"Address for {user_str}: {self.city}, {self.address_line_1}"
+
+    def save(self, *args, **kwargs):
+        if self.user and self.is_default:
+            self.user.addresses.filter(is_snapshot=False, is_default=True).exclude(pk=self.pk).update(is_default=False)
+        super().save(*args, **kwargs)
+
+    def get_full_address(self):
+        """A property to return the formatted full address."""
+        parts = [self.address_line_1, self.address_line_2, self.city, self.state, self.zip_code, self.country.name]
+        return ", ".join(part for part in parts if part)
+
+
+class Wishlist(TimeStampedModel):
+    user = models.OneToOneField(
+        "account.User",
+        on_delete=models.CASCADE,
+        related_name='wishlist',
+        verbose_name=_("User"),
+        help_text=_("The user who owns this wishlist.")
+    )
+    products = models.ManyToManyField(
+        'products.Product',
+        related_name='wishlisted_by',
+        verbose_name=_("Products"),
+        blank=True,
+        help_text=_("Products that the user has added to their wishlist.")
+    )
+
+    class Meta:
+        verbose_name = _("Wishlist")
+        verbose_name_plural = _("Wishlists")
+
+    def __str__(self):
+        return f"Wishlist of {self.user}"

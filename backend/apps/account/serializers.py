@@ -13,7 +13,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from phonenumber_field.serializerfields import PhoneNumberField
 
 from apps.common.utils import get_client_ip
-from apps.account.models import OTP, Profile
+from apps.account.models import OTP, Profile, Address
 from apps.account.services import OTPService
 from apps.account.utils import get_identifier_info
 from apps.account.tokens import password_reset_token_generator
@@ -164,8 +164,11 @@ class LoginWithPasswordSerializer(serializers.Serializer):
         if identifier_type == 'email' and not user.is_email_verified:
             raise serializers.ValidationError(_("The email address is not verified. Please log in with your phone number or verify your email."))
 
+        # Todo: Add this logic to otp login serializer
         user.last_login_at = timezone.now()
-        user.last_login_ip = get_client_ip(request=self.context.get('request'))
+        request = self.context.get('request')
+        if request:
+            user.last_login_ip = get_client_ip(request=request)
         user.save(update_fields=['last_login_at', 'last_login_ip'])
 
         refresh_token = RefreshToken.for_user(user)
@@ -471,3 +474,54 @@ class PasswordResetConfirmWithOTPSerializer(serializers.Serializer):
         user.set_password(self.validated_data['password'])
         user.save(update_fields=['password'])
         return user
+
+
+class AddressSerializer(serializers.ModelSerializer):
+    """
+    Serializer for creating, listing, and updating user addresses.
+    The user is automatically set to the currently authenticated user.
+    """
+
+    class Meta:
+        model = Address
+        fields = ('id', 'title', 'full_name', 'phone_number', 'country', 'city', 'state', 'zip_code', 'address_line_1', 'address_line_2', 'is_default')
+
+    def create(self, validated_data):
+        # Ensure the address is created for the current user and is not a snapshot
+        validated_data['user'] = self.context['request'].user
+        validated_data['is_snapshot'] = False
+        return super().create(validated_data)
+
+#
+# class WishlistProductSerializer(serializers.ModelSerializer):
+#     """
+#     A simple serializer to represent a product within the wishlist.
+#     This will be replaced by the actual ProductSerializer from the 'products' app later.
+#     """
+#
+#     class Meta:
+#         # NOTE: This assumes a 'Product' model exists. This will be moved to the 'products' app.
+#         model = Product
+#         fields = ('id', 'name', 'slug')  # Add more fields like image, price as needed
+
+# class WishlistSerializer(serializers.ModelSerializer):
+#     """Serializer for retrieving the user's wishlist details."""
+#     products = WishlistProductSerializer(many=True, read_only=True)
+#
+#     class Meta:
+#         model = Wishlist
+#         fields = ('id', 'user', 'products')
+#         read_only_fields = ('id', 'user',)
+
+
+# class WishlistActionSerializer(serializers.Serializer):
+#     """
+#     Serializer for adding or removing a product from the wishlist.
+#     """
+#     product_id = serializers.IntegerField(required=True)
+#
+#     def validate_product_id(self, value):
+#         # Check if the product exists
+#         if not Product.objects.filter(pk=value).exists():
+#             raise serializers.ValidationError("Product with this ID does not exist.")
+#         return value
