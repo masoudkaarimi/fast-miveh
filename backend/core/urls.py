@@ -6,6 +6,7 @@ from django.conf.urls.i18n import i18n_patterns
 
 api_urlpatterns = [
     re_path(r'^(?P<version>v\d+)/', include('apps.account.urls', namespace='account')),
+    re_path(r'^(?P<version>v\d+)/', include('apps.products.urls', namespace='products')),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 ]
 
