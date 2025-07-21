@@ -16,7 +16,8 @@ from apps.account.views import (
     PasswordResetRequestView,
     IdentifierStatusCheckView,
     PasswordResetConfirmWithOTPView,
-    AddressViewSet
+    AddressViewSet,
+    WishlistAPIView,
 )
 
 app_name = 'account'
@@ -41,14 +42,12 @@ urlpatterns = [
     path('profile/email/add/', EmailAddView.as_view(), name='profile_email_add'),
     path('profile/email/verify/', EmailVerifyView.as_view(), name='profile_email_verify'),
 
+    # --- Wishlist and Address Management ---
+    path('profile/wishlist/', WishlistAPIView.as_view(), name='wishlist_api'),
+    path('profile/', include(router.urls)),
+
     # --- Standalone Password Reset Flow (Unauthenticated) ---
     path('password-reset/request/', PasswordResetRequestView.as_view(), name='password_reset_request'),
     path('password-reset/confirm/', PasswordResetConfirmView.as_view(), name='password_reset_confirm_link'),
     path('password-reset/confirm-otp/', PasswordResetConfirmWithOTPView.as_view(), name='password_reset_confirm_otp'),
-
-    # --- Wishlist and Address Management (New additions) ---
-    # path('wishlist/', WishlistAPIView.as_view(), name='wishlist'),
-
-    # --- Address Management ---
-    path('', include(router.urls)),
 ]

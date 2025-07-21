@@ -18,7 +18,7 @@ class OTPService:
 
         latest_otp = OTP.objects.filter(
             user=self.user,
-            type=otp_type,
+            otp_type=otp_type,
             recipient=recipient,
             created_at__gte=cooldown_time
         ).order_by('-created_at').first()
@@ -34,7 +34,7 @@ class OTPService:
                     remaining_seconds=remaining_seconds
                 )
 
-        # if OTP.objects.filter(user=self.user, type=otp_type, recipient=recipient, created_at__gte=cooldown_time).exists():
+        # if OTP.objects.filter(user=self.user, otp_type=otp_type, recipient=recipient, created_at__gte=cooldown_time).exists():
         #     raise OTPCooldownError(_("Please wait %(seconds)d seconds before requesting a new code.") % {'seconds': cooldown_seconds})
 
     def generate_and_send_otp(self, otp_type, recipient):

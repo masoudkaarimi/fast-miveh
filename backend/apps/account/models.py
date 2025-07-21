@@ -128,7 +128,7 @@ class Profile(TimeStampedModel):
         PREFER_NOT_TO_SAY = 'prefer_not_to_say', _('Prefer Not To Say')
 
     user = models.OneToOneField(
-        "account.User",
+        "User",
         on_delete=models.CASCADE,
         related_name="profile",
         verbose_name=_("User")
@@ -181,9 +181,9 @@ class OTP(TimeStampedModel):
         EXPIRED = 'expired', _('Expired')
         FAILED = 'failed', _('Failed')
 
-    user = models.ForeignKey("account.User", on_delete=models.CASCADE, related_name='otps', verbose_name=_("User"))
+    user = models.ForeignKey("User", on_delete=models.CASCADE, related_name='otps', verbose_name=_("User"))
     code = models.CharField(max_length=settings.OTP_SETTINGS.get('OTP_LENGTH', 6), verbose_name=_("OTP Code"))
-    type = models.CharField(max_length=10, choices=TypeChoices.choices, verbose_name=_("OTP Type"))
+    otp_type = models.CharField(max_length=10, choices=TypeChoices.choices, verbose_name=_("OTP Type"))
     status = models.CharField(max_length=10, choices=StatusChoices.choices, default=StatusChoices.PENDING, verbose_name=_("Status"))
     recipient = models.CharField(max_length=255, verbose_name=_("Recipient"))
     attempts = models.PositiveIntegerField(default=0, verbose_name=_("Attempt Count"))
@@ -197,7 +197,7 @@ class OTP(TimeStampedModel):
         verbose_name_plural = _("One-Time Passwords")
         ordering = ['-created_at']
         indexes = [
-            models.Index(fields=['user', 'type', 'status']),
+            models.Index(fields=['user', 'otp_type', 'status']),
             models.Index(fields=['recipient', 'code', 'status']),
         ]
 
@@ -230,7 +230,7 @@ class OTP(TimeStampedModel):
 
 class Address(TimeStampedModel):
     user = models.ForeignKey(
-        "account.User",
+        "User",
         on_delete=models.CASCADE,
         related_name="addresses",
         verbose_name=_("User"),
@@ -325,19 +325,20 @@ class Address(TimeStampedModel):
 
 
 class Wishlist(TimeStampedModel):
+    """Represents a user's wishlist, containing specific product variants."""
     user = models.OneToOneField(
-        "account.User",
+        "User",
         on_delete=models.CASCADE,
         related_name='wishlist',
         verbose_name=_("User"),
         help_text=_("The user who owns this wishlist.")
     )
-    products = models.ManyToManyField(
-        'products.Product',
+    variants = models.ManyToManyField(
+        'products.ProductVariant',
         related_name='wishlisted_by',
-        verbose_name=_("Products"),
         blank=True,
-        help_text=_("Products that the user has added to their wishlist.")
+        verbose_name=_("Product Variants"),
+        help_text=_("The specific product variants that the user has added to their wishlist.")
     )
 
     class Meta:

@@ -41,9 +41,13 @@ LOCAL_APPS = [
     "apps.common",
     "apps.account",
     "apps.notification",
-    # "apps.store",
-    # "apps.inventory",
-    # "apps.checkout",
+    "apps.media",
+    "apps.products",
+    # "apps.reviews",
+    # "apps.orders",
+    # "apps.payments",
+    # "apps.discounts",
+    # "apps.analytics",
 ]
 
 INSTALLED_APPS = DEFAULT_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -199,9 +203,11 @@ ROSETTA_SHOW_AT_ADMIN_PANEL = True
 # --- File Upload Configuration ---
 MAX_IMAGE_UPLOAD_SIZE_MB = 5
 ALLOWED_IMAGE_EXTENSIONS = ["jpg", "jpeg", "png", "gif", "webp"]
+ALLOWED_VIDEO_EXTENSIONS = ['mp4', 'mov', 'avi', 'webm']
+ALLOWED_DOCUMENT_EXTENSIONS = ['pdf', 'doc', 'docx', 'txt']
 
 MAX_FILES_UPLOAD_SIZE_MB = 50
-ALLOWED_FILE_EXTENSIONS = ["pdf", "doc", "docx", "xls", "xlsx", "txt", "zip", "rar"]
+ALLOWED_FILE_EXTENSIONS = ALLOWED_IMAGE_EXTENSIONS + ALLOWED_VIDEO_EXTENSIONS + ALLOWED_DOCUMENT_EXTENSIONS
 
 # --- Phone Number Fields Configuration ---
 # PHONENUMBER_DEFAULT_REGION = "IR"

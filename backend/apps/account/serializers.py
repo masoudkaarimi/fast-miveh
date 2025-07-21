@@ -13,9 +13,10 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from phonenumber_field.serializerfields import PhoneNumberField
 
 from apps.common.utils import get_client_ip
-from apps.account.models import OTP, Profile, Address
 from apps.account.services import OTPService
+from apps.products.models import ProductVariant
 from apps.account.utils import get_identifier_info
+from apps.account.models import OTP, Profile, Address, Wishlist
 from apps.account.tokens import password_reset_token_generator
 from apps.account.exceptions import OTPValidationError, OTPGenerationError, OTPCooldownError
 
@@ -492,36 +493,34 @@ class AddressSerializer(serializers.ModelSerializer):
         validated_data['is_snapshot'] = False
         return super().create(validated_data)
 
-#
-# class WishlistProductSerializer(serializers.ModelSerializer):
-#     """
-#     A simple serializer to represent a product within the wishlist.
-#     This will be replaced by the actual ProductSerializer from the 'products' app later.
-#     """
-#
-#     class Meta:
-#         # NOTE: This assumes a 'Product' model exists. This will be moved to the 'products' app.
-#         model = Product
-#         fields = ('id', 'name', 'slug')  # Add more fields like image, price as needed
 
-# class WishlistSerializer(serializers.ModelSerializer):
-#     """Serializer for retrieving the user's wishlist details."""
-#     products = WishlistProductSerializer(many=True, read_only=True)
-#
-#     class Meta:
-#         model = Wishlist
-#         fields = ('id', 'user', 'products')
-#         read_only_fields = ('id', 'user',)
+# NOTE: This is a simplified serializer for the variant.
+# In the future, we would import a more complete serializer from the 'products' app.
+class WishlistVariantSerializer(serializers.ModelSerializer):
+    """A simple serializer to represent a product variant within the wishlist."""
+    product_name = serializers.CharField(source='product.name', read_only=True)
+
+    class Meta:
+        model = ProductVariant
+        fields = ('id', 'name', 'sku', 'product_name')
 
 
-# class WishlistActionSerializer(serializers.Serializer):
-#     """
-#     Serializer for adding or removing a product from the wishlist.
-#     """
-#     product_id = serializers.IntegerField(required=True)
-#
-#     def validate_product_id(self, value):
-#         # Check if the product exists
-#         if not Product.objects.filter(pk=value).exists():
-#             raise serializers.ValidationError("Product with this ID does not exist.")
-#         return value
+class WishlistSerializer(serializers.ModelSerializer):
+    """Serializer for retrieving the user's wishlist details."""
+    variants = WishlistVariantSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Wishlist
+        fields = ('id', 'user', 'variants')
+        read_only_fields = ('id', 'user',)
+
+
+class WishlistActionSerializer(serializers.Serializer):
+    """Serializer for validating the variant_id when adding or removing from the wishlist."""
+    variant_id = serializers.IntegerField(required=True)
+
+    def validate_variant_id(self, value):
+        """Check if the product variant exists."""
+        if not ProductVariant.objects.filter(pk=value, is_active=True).exists():
+            raise serializers.ValidationError("Product variant with this ID does not exist or is not active.")
+        return value

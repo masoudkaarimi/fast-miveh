@@ -52,17 +52,17 @@ class OTPManager(models.Manager):
     def create_otp(self, user, otp_type, recipient):
         from apps.account.utils import generate_numeric_otp
 
-        # Deactivate previous OTPs for the same user, type, and recipient
+        # Deactivate previous OTPs for the same user, otp type, and recipient
         self.filter(
             user=user,
-            type=otp_type,
+            otp_type=otp_type,
             recipient=recipient,
             status=self.model.StatusChoices.PENDING
         ).update(status=self.model.StatusChoices.EXPIRED)
 
         otp_code = generate_numeric_otp()
-        otp_instance = self.create(user=user, code=otp_code, type=otp_type, recipient=recipient)
+        otp_instance = self.create(user=user, code=otp_code, otp_type=otp_type, recipient=recipient)
         return otp_instance
 
     def get_latest_otp(self, user, otp_type, recipient):
-        return self.filter(user=user, type=otp_type, recipient=recipient).order_by('-created_at').first()
+        return self.filter(user=user, otp_type=otp_type, recipient=recipient).order_by('-created_at').first()
