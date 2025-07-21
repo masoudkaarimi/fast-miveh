@@ -16,8 +16,9 @@ from apps.common.utils import get_client_ip
 from apps.account.services import OTPService
 from apps.products.models import ProductVariant
 from apps.account.utils import get_identifier_info
-from apps.account.models import OTP, Profile, Address, Wishlist
+from apps.products.serializers import ProductListSerializer
 from apps.account.tokens import password_reset_token_generator
+from apps.account.models import OTP, Profile, Address, Wishlist
 from apps.account.exceptions import OTPValidationError, OTPGenerationError, OTPCooldownError
 
 logger = logging.getLogger(__name__)
@@ -506,8 +507,11 @@ class WishlistVariantSerializer(serializers.ModelSerializer):
 
 
 class WishlistSerializer(serializers.ModelSerializer):
-    """Serializer for retrieving the user's wishlist details."""
-    variants = WishlistVariantSerializer(many=True, read_only=True)
+    """
+    Serializer for retrieving the user's wishlist details.
+    It uses the comprehensive ProductListSerializer to represent each variant.
+    """
+    variants = ProductListSerializer(many=True, read_only=True)
 
     class Meta:
         model = Wishlist
@@ -519,7 +523,8 @@ class WishlistActionSerializer(serializers.Serializer):
     """Serializer for validating the variant_id when adding or removing from the wishlist."""
     variant_id = serializers.IntegerField(required=True)
 
-    def validate_variant_id(self, value):
+    @staticmethod
+    def validate_variant_id(value):
         """Check if the product variant exists."""
         if not ProductVariant.objects.filter(pk=value, is_active=True).exists():
             raise serializers.ValidationError("Product variant with this ID does not exist or is not active.")

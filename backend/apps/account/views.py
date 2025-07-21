@@ -177,7 +177,7 @@ class AddressViewSet(viewsets.ModelViewSet):
 
 class WishlistAPIView(generics.GenericAPIView):
     """
-    API view to retrieve, add, and remove items from the user's wishlist.
+    A single API view to manage the user's wishlist.
     - GET: Retrieve the full wishlist.
     - POST: Add a variant to the wishlist.
     - DELETE: Remove a variant from the wishlist.
@@ -185,23 +185,27 @@ class WishlistAPIView(generics.GenericAPIView):
     permission_classes = [IsAuthenticated]
 
     def get_serializer_class(self):
+        """
+        Return the appropriate serializer class based on the request method.
+        """
         if self.request.method == 'GET':
             return WishlistSerializer
+        # For both POST (add) and DELETE (remove), we validate the variant_id
         return WishlistActionSerializer
 
     def get_object(self):
         """Get or create a wishlist for the current user."""
-        wishlist, created = Wishlist.objects.get_or_create(user=self.request.user)
+        wishlist, _ = Wishlist.objects.get_or_create(user=self.request.user)
         return wishlist
 
     def get(self, request, *args, **kwargs):
-        """Retrieve the user's wishlist."""
+        """Handle GET request to retrieve the wishlist."""
         wishlist = self.get_object()
-        serializer = WishlistSerializer(wishlist)
-        return Response(serializer.data)
+        serializer = self.get_serializer(wishlist)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request, *args, **kwargs):
-        """Add a product variant to the wishlist."""
+        """Handle POST request to add a variant to the wishlist."""
         wishlist = self.get_object()
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -209,10 +213,10 @@ class WishlistAPIView(generics.GenericAPIView):
 
         wishlist.variants.add(variant_id)
 
-        return Response({"status": "Variant added to wishlist"}, status=status.HTTP_200_OK)
+        return Response({"detail": "Variant added to wishlist successfully."}, status=status.HTTP_200_OK)
 
     def delete(self, request, *args, **kwargs):
-        """Remove a product variant from the wishlist."""
+        """Handle DELETE request to remove a variant from the wishlist."""
         wishlist = self.get_object()
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -220,4 +224,4 @@ class WishlistAPIView(generics.GenericAPIView):
 
         wishlist.variants.remove(variant_id)
 
-        return Response({"status": "Variant removed from wishlist"}, status=status.HTTP_204_NO_CONTENT)
+        return Response(status=status.HTTP_204_NO_CONTENT)
