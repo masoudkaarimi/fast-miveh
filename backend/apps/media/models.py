@@ -11,9 +11,7 @@ from apps.common.validators import FileSizeValidator, FileExtensionValidator
 
 
 class Media(TimeStampedModel):
-    """
-    A generic model to store media files that can be attached to any other model
-    """
+    """A generic model to store media files that can be attached to any other model"""
 
     class MediaTypeChoices(models.TextChoices):
         IMAGE = 'image', _("Image")

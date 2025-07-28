@@ -1,23 +1,34 @@
+from django.db.models import Q
+from django.utils import timezone
 from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
 
+from apps.products.filters import ProductFilter
 from apps.products.services import ProductService
 from apps.products.exceptions import ProductNotFound
 from apps.products.models import Product, Category, Brand, Tag, ProductCollection
-from apps.products.serializers import (ProductListSerializer, ProductDetailSerializer, CategorySerializer, BrandSerializer, TagSerializer, )
+from apps.products.serializers import (
+    ProductListSerializer, ProductDetailSerializer, CategorySerializer, BrandSerializer,
+    TagSerializer, ProductCollectionDetailSerializer, ProductCollectionSerializer,
+)
 
 
-# --- Product Views ---
 class ProductListView(generics.ListAPIView):
     """
-    API view to list all published products. Supports filtering.
+    API view to list all published products. Supports advanced filtering and ordering.
     e.g., /api/products/?category_slug=laptops&brand_slug=apple
     """
-    queryset = Product.objects.published().with_details()
     serializer_class = ProductListSerializer
     permission_classes = [AllowAny]
-    # NOTE: Filtering logic will be added later using a filter backend.
+    filterset_class = ProductFilter
+
+    def get_queryset(self):
+        """
+        Return the queryset for the product list, ensuring no duplicates
+        are returned when filtering across multiple related tables.
+        """
+        return Product.objects.published().with_details().distinct()
 
 
 class ProductDetailView(generics.GenericAPIView):
@@ -36,7 +47,6 @@ class ProductDetailView(generics.GenericAPIView):
             return Response({"detail": str(e)}, status=status.HTTP_404_NOT_FOUND)
 
 
-# --- Category Views ---
 class CategoryListView(generics.ListAPIView):
     """API view to list all active categories."""
     queryset = Category.objects.filter(is_active=True)
@@ -52,7 +62,6 @@ class CategoryDetailView(generics.RetrieveAPIView):
     lookup_field = 'slug'
 
 
-# --- Brand Views ---
 class BrandListView(generics.ListAPIView):
     """API view to list all active brands."""
     queryset = Brand.objects.filter(is_active=True)
@@ -68,12 +77,12 @@ class BrandDetailView(generics.RetrieveAPIView):
     lookup_field = 'slug'
 
 
-# --- Tag Views ---
 class TagListView(generics.ListAPIView):
     """API view to list all active tags."""
     queryset = Tag.objects.filter(is_active=True)
     serializer_class = TagSerializer
     permission_classes = [AllowAny]
+
 
 class TagDetailView(generics.RetrieveAPIView):
     """API view to retrieve a single tag by its slug."""
@@ -82,3 +91,26 @@ class TagDetailView(generics.RetrieveAPIView):
     permission_classes = [AllowAny]
     lookup_field = 'slug'
 
+
+class ProductCollectionListView(generics.ListAPIView):
+    serializer_class = ProductCollectionSerializer
+    permission_classes = [AllowAny]
+
+    def get_queryset(self):
+        """
+        Returns collections that are active and currently within their
+        start and end dates (if specified).
+        """
+        now = timezone.now()
+        return ProductCollection.objects.filter(
+            is_active=True,
+            start_date__lte=now
+        ).filter(Q(end_date__gte=now) | Q(end_date__isnull=True))
+
+
+class ProductCollectionDetailView(generics.RetrieveAPIView):
+    """API view to retrieve a single product collection by its slug."""
+    queryset = ProductCollection.objects.filter(is_active=True)
+    serializer_class = ProductCollectionDetailSerializer
+    permission_classes = [AllowAny]
+    lookup_field = 'slug'

@@ -77,7 +77,7 @@ class ProductService:
                 'discount_amount': price_info['discount_amount'],
                 'currency_symbol': price_info['currency_symbol'],
                 'is_in_stock': inventory_info.is_in_stock(),
-                'attributes': {attr.attribute.name: attr.value for attr in variant.attributes.all()}
+                'attributes': {attr.attribute.slug: attr.value for attr in variant.attributes.all()}
             }
         return variant_map
 
@@ -94,7 +94,7 @@ class ProductService:
             # Get all unique values for this attribute across all active variants of this product
             values = set(variants.filter(attributes__attribute=attr).values_list('attributes__value', flat=True))
             if values:
-                options[attr.name] = sorted(list(values))
+                options[attr.slug] = sorted(list(values))
         return options
 
     def _get_media_gallery(self) -> list:

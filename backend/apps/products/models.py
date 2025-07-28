@@ -1,6 +1,5 @@
 from functools import cached_property
 
-from django.contrib.contenttypes.fields import GenericRelation
 from django.db import models
 from django.urls import reverse
 from django.conf import settings
@@ -8,6 +7,7 @@ from django.utils import timezone
 from django.templatetags.static import static
 from django.core.validators import MinValueValidator
 from django.utils.translation import gettext_lazy as _
+from django.contrib.contenttypes.fields import GenericRelation
 
 from mptt.fields import TreeManyToManyField
 from mptt.models import MPTTModel, TreeForeignKey
@@ -48,6 +48,7 @@ class Currency(TimeStampedModel):
     )
     is_active = models.BooleanField(
         default=True,
+        db_index=True,
         verbose_name=_("is active"),
         help_text=_("Controls whether this currency is available for customers.")
     )
@@ -129,6 +130,7 @@ class Category(MPTTModel, TimeStampedModel):
     )
     is_active = models.BooleanField(
         default=True,
+        db_index=True,
         verbose_name=_("is active"),
         help_text=_("Controls whether the category is visible to customers.")
     )
@@ -201,6 +203,7 @@ class Brand(TimeStampedModel):
     )
     is_active = models.BooleanField(
         default=True,
+        db_index=True,
         verbose_name=_("is active"),
         help_text=_("Controls whether the brand is visible to customers.")
     )
@@ -242,6 +245,7 @@ class Tag(TimeStampedModel):
     )
     is_active = models.BooleanField(
         default=True,
+        db_index=True,
         verbose_name=_("is active"),
         help_text=_("Controls whether the tag is visible to customers.")
     )
@@ -328,6 +332,7 @@ class Attribute(TimeStampedModel):
     )
     is_active = models.BooleanField(
         default=True,
+        db_index=True,
         verbose_name=_("is active"),
         help_text=_("Controls whether this attribute is globally active and can be used.")
     )
@@ -535,11 +540,13 @@ class Product(TimeStampedModel):
     published_at = models.DateTimeField(
         blank=True,
         null=True,
+        db_index=True,
         verbose_name=_("Published At"),
         help_text=_("The date and time this product will become visible. If blank, it's considered published upon activation.")
     )
     is_active = models.BooleanField(
         default=False,
+        db_index=True,
         verbose_name=_("is active"),
         help_text=_("Designates whether this product should be visible in the store. Use this for drafts or archives.")
     )
@@ -620,6 +627,7 @@ class ProductVariant(TimeStampedModel):
     )
     is_active = models.BooleanField(
         default=True,
+        db_index=True,
         verbose_name=_("is active"),
         help_text=_("Controls whether this specific variant is available for sale.")
     )
@@ -711,6 +719,7 @@ class ProductCollection(TimeStampedModel):
     )
     is_active = models.BooleanField(
         default=False,
+        db_index=True,
         verbose_name=_("is active"),
         help_text=_("Manually activate or deactivate this collection.")
     )
@@ -770,7 +779,7 @@ class Price(TimeStampedModel):
     )
     currency = models.ForeignKey(
         "Currency",
-        on_delete=models.PROTECT,  # Prevent deleting a currency that is in use
+        on_delete=models.PROTECT,
         related_name='prices',
         verbose_name=_("currency"),
         help_text=_("The currency in which this price is expressed. Must be an active currency.")

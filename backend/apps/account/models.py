@@ -131,7 +131,8 @@ class Profile(TimeStampedModel):
         "User",
         on_delete=models.CASCADE,
         related_name="profile",
-        verbose_name=_("User")
+        verbose_name=_("User"),
+        help_text=_("The user this profile belongs to.")
     )
     avatar = models.ImageField(
         upload_to=GenerateUploadPath('profiles', 'avatars'),
@@ -152,9 +153,29 @@ class Profile(TimeStampedModel):
             max_size=settings.MAX_IMAGE_UPLOAD_SIZE_MB
         )
     )
-    gender = models.CharField(max_length=17, choices=GenderChoices.choices, default=GenderChoices.PREFER_NOT_TO_SAY, blank=True, null=True, verbose_name=_('Gender'))
-    birthdate = models.DateField(blank=True, null=True, validators=[BirthdateValidator()], verbose_name=_("Birth Date"))
-    national_code = models.CharField(max_length=10, blank=True, null=True, verbose_name=_("National Code"))
+    gender = models.CharField(
+        max_length=17,
+        choices=GenderChoices.choices,
+        default=GenderChoices.PREFER_NOT_TO_SAY,
+        blank=True,
+        null=True,
+        verbose_name=_('Gender'),
+        help_text=_("The user's gender. (Optional) Used for personalization and analytics.")
+    )
+    birthdate = models.DateField(
+        blank=True,
+        null=True,
+        validators=[BirthdateValidator()],
+        verbose_name=_("Birth Date"),
+        help_text=_("The user's birth date. (Optional) Must be in the past.")
+    )
+    national_code = models.CharField(
+        max_length=10,
+        blank=True,
+        null=True,
+        verbose_name=_("National Code"),
+        help_text=_("The user's national identification code. (Optional) Must be unique if provided.")
+    )
 
     class Meta:
         verbose_name = _("profile")
@@ -181,14 +202,51 @@ class OTP(TimeStampedModel):
         EXPIRED = 'expired', _('Expired')
         FAILED = 'failed', _('Failed')
 
-    user = models.ForeignKey("User", on_delete=models.CASCADE, related_name='otps', verbose_name=_("User"))
-    code = models.CharField(max_length=settings.OTP_SETTINGS.get('OTP_LENGTH', 6), verbose_name=_("OTP Code"))
-    otp_type = models.CharField(max_length=10, choices=TypeChoices.choices, verbose_name=_("OTP Type"))
-    status = models.CharField(max_length=10, choices=StatusChoices.choices, default=StatusChoices.PENDING, verbose_name=_("Status"))
-    recipient = models.CharField(max_length=255, verbose_name=_("Recipient"))
-    attempts = models.PositiveIntegerField(default=0, verbose_name=_("Attempt Count"))
-    expires_at = models.DateTimeField(verbose_name=_("Expires At"))
-    verified_at = models.DateTimeField(null=True, blank=True, verbose_name=_("Verified At"))
+    user = models.ForeignKey(
+        "User",
+        on_delete=models.CASCADE,
+        related_name='otps',
+        verbose_name=_("User"),
+        help_text=_("The user this OTP is associated with.")
+    )
+    code = models.CharField(
+        max_length=settings.OTP_SETTINGS.get('OTP_LENGTH', 6),
+        verbose_name=_("OTP Code"),
+        help_text=_("The one-time password code. Generated randomly and sent to the user.")
+    )
+    otp_type = models.CharField(
+        max_length=10,
+        choices=TypeChoices.choices,
+        verbose_name=_("OTP Type"),
+        help_text=_("The type of OTP. Used to determine how the OTP is sent (SMS or Email).")
+    )
+    status = models.CharField(
+        max_length=10,
+        choices=StatusChoices.choices,
+        default=StatusChoices.PENDING,
+        verbose_name=_("Status"),
+        help_text=_("The current status of the OTP. Indicates whether it is pending, verified, expired, or failed.")
+    )
+    recipient = models.CharField(
+        max_length=255,
+        verbose_name=_("Recipient"),
+        help_text=_("The recipient of the OTP. This could be a phone number or email address depending on the otp_type.")
+    )
+    attempts = models.PositiveIntegerField(
+        default=0,
+        verbose_name=_("Attempt Count"),
+        help_text=_("The number of attempts made to verify this OTP. Used to limit the number of verification attempts.")
+    )
+    expires_at = models.DateTimeField(
+        verbose_name=_("Expires At"),
+        help_text=_("The date and time when this OTP will expire. After this time, the OTP cannot be used for verification.")
+    )
+    verified_at = models.DateTimeField(
+        null=True,
+        blank=True,
+        verbose_name=_("Verified At"),
+        help_text=_("The date and time when this OTP was successfully verified. This field is set when the OTP status changes to VERIFIED.")
+    )
 
     objects = OTPManager()
 

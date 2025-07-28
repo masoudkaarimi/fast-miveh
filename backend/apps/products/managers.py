@@ -20,9 +20,13 @@ class ProductQuerySet(models.QuerySet):
         needed for list or detail pages.
         """
         return self.select_related(
-            'category', 'brand', 'product_type'
+            'brand', 'product_type'  # Only ForeignKey and OneToOneField here
         ).prefetch_related(
-            'variants__prices', 'variants__inventory', 'media'
+            'categories',  # Moved ManyToManyField here
+            'tags',
+            'variants__prices',
+            'variants__inventory',
+            'media_links__media'
         )
 
 

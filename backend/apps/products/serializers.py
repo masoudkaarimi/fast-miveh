@@ -1,10 +1,9 @@
 from rest_framework import serializers
 
 from apps.products.services import PricingService
-from apps.products.models import Product, Brand, Category, Tag, Currency, AttributeValue, Attribute, ProductType, Price, Inventory, ProductVariant
+from apps.products.models import Product, Brand, Category, Tag, Currency, AttributeValue, Attribute, ProductType, Price, Inventory, ProductVariant, ProductCollection
 
 
-# --- Foundational Model Serializers ---
 class CurrencySerializer(serializers.ModelSerializer):
     """Serializer for the Currency model."""
 
@@ -37,7 +36,6 @@ class TagSerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'slug')
 
 
-# --- Attribute and ProductType Serializers ---
 class AttributeValueSerializer(serializers.ModelSerializer):
     """Serializer for AttributeValue, showing its value and meta data."""
 
@@ -64,7 +62,6 @@ class ProductTypeSerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'slug', 'attributes')
 
 
-# --- Price and Inventory Serializers ---
 class PriceSerializer(serializers.ModelSerializer):
     """Serializer for the Price model, showing all price fields."""
     currency = CurrencySerializer(read_only=True)
@@ -86,7 +83,6 @@ class InventorySerializer(serializers.ModelSerializer):
         fields = ('id', 'quantity', 'is_in_stock', 'available_quantity', 'allow_backorders')
 
 
-# --- Core Product and Variant Serializers ---
 class ProductVariantSerializer(serializers.ModelSerializer):
     """
     A detailed serializer for the ProductVariant model, nesting price,
@@ -116,9 +112,7 @@ class ProductListSerializer(serializers.ModelSerializer):
 
     @staticmethod
     def get_price_info(obj: Product) -> dict:
-        """
-        Gets the price information for the product's default variant.
-        """
+        """Gets the price information for the product's default variant."""
         default_variant = obj.default_variant
         if default_variant:
             # Use the PricingService to get consistent price data
@@ -132,9 +126,7 @@ class ProductListSerializer(serializers.ModelSerializer):
         }
 
     def get_featured_image_url(self, obj: Product) -> str | None:
-        """
-        Gets the URL for the product's featured image.
-        """
+        """Gets the URL for the product's featured image."""
         featured_image = obj.featured_image
         if featured_image:
             # Check if the request context is available to build a full URL
@@ -145,7 +137,6 @@ class ProductListSerializer(serializers.ModelSerializer):
         return None
 
 
-# --- The Main Detail Page Serializer (Service-Driven) ---
 class ProductDetailSerializer(serializers.Serializer):
     """
     Read-only serializer for the product detail page, based on the context
@@ -158,7 +149,20 @@ class ProductDetailSerializer(serializers.Serializer):
     brand = serializers.CharField(read_only=True, allow_null=True)
     categories = serializers.ListField(child=serializers.CharField(), read_only=True)
 
-    # These fields contain the complex, nested data prepared by the service
     variants_map = serializers.DictField(read_only=True)
     options = serializers.DictField(read_only=True)
     media = serializers.ListField(child=serializers.DictField(), read_only=True)
+
+
+class ProductCollectionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProductCollection
+        fields = ['id', 'name', 'slug', 'description', 'image', ]
+
+
+class ProductCollectionDetailSerializer(serializers.ModelSerializer):
+    products = ProductListSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = ProductCollection
+        fields = ['id', 'name', 'slug', 'description', 'image', 'products', ]
