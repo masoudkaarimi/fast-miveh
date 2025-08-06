@@ -1,13 +1,9 @@
 from django.utils.translation import gettext_lazy as _
-
-from rest_framework.permissions import BasePermission, SAFE_METHODS
+from rest_framework.permissions import SAFE_METHODS, BasePermission
 
 
 class IsOwnerOrReadOnly(BasePermission):
-    """
-    custom permission to only allow owners of an object to edit it.
-    assumes the model instance has a `user` attribute.
-    """
+    """Custom permission to only allow owners of a profile to edit it."""
     message = _("You do not have permission to perform this action on another user's profile.")
 
     def has_object_permission(self, request, view, obj):

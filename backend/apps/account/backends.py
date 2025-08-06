@@ -1,7 +1,8 @@
 import logging
-from django.db.models import Q
+
 from django.contrib.auth import get_user_model
 from django.contrib.auth.backends import ModelBackend
+from django.db.models import Q
 
 logger = logging.getLogger(__name__)
 
@@ -12,7 +13,7 @@ class IdentifierBackend(ModelBackend):
     """A custom authentication backend that allows users to log in using either their verified email address or their phone number."""
 
     def authenticate(self, request, username=None, password=None, **kwargs):
-        """Authenticates a user based on a provided identifier (email or phone) and password."""
+        """Authenticates a user based on a provided identifier (email or phone number) and password."""
         if username is None:
             return None
 

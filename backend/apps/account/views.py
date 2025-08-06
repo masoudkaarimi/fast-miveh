@@ -1,25 +1,27 @@
 from django.contrib.auth import get_user_model
 from django.utils.translation import gettext_lazy as _
-
+from rest_framework import generics, status, viewsets
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
-from rest_framework import generics, viewsets, status
-from rest_framework.permissions import IsAuthenticated, AllowAny
 
 from apps.account.models import Address, Wishlist
 from apps.account.permissions import IsOwnerOrReadOnly
 from apps.account.serializers import (
+    AddressSerializer,
     EmailAddSerializer,
-    RequestOTPSerializer,
     EmailVerifySerializer,
-    PasswordSetSerializer,
-    UserProfileSerializer,
-    PasswordChangeSerializer,
-    LoginWithPasswordSerializer,
-    VerifyOTPAndLoginSerializer,
-    PasswordResetRequestSerializer,
-    PasswordResetConfirmSerializer,
     IdentifierStatusCheckSerializer,
-    PasswordResetConfirmWithOTPSerializer, AddressSerializer, WishlistSerializer, WishlistActionSerializer,
+    LoginWithPasswordSerializer,
+    PasswordChangeSerializer,
+    PasswordResetConfirmSerializer,
+    PasswordResetConfirmWithOTPSerializer,
+    PasswordResetRequestSerializer,
+    PasswordSetSerializer,
+    RequestOTPSerializer,
+    UserProfileSerializer,
+    VerifyOTPAndLoginSerializer,
+    WishlistActionSerializer,
+    WishlistSerializer,
 )
 
 User = get_user_model()
@@ -28,6 +30,7 @@ User = get_user_model()
 class IdentifierStatusCheckView(generics.GenericAPIView):
     permission_classes = [AllowAny]
     serializer_class = IdentifierStatusCheckSerializer
+    throttle_scope = 'identifier_status_check'
 
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -38,12 +41,13 @@ class IdentifierStatusCheckView(generics.GenericAPIView):
 class RequestOTPView(generics.GenericAPIView):
     permission_classes = [AllowAny]
     serializer_class = RequestOTPSerializer
+    throttle_scope = 'request_otp'
 
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.validated_data, status=status.HTTP_200_OK)
 
 
 class VerifyOTPAndLoginView(generics.GenericAPIView):
@@ -59,6 +63,7 @@ class VerifyOTPAndLoginView(generics.GenericAPIView):
 class LoginWithPasswordView(generics.GenericAPIView):
     permission_classes = [AllowAny]
     serializer_class = LoginWithPasswordSerializer
+    throttle_scope = 'login_with_password'
 
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -84,8 +89,7 @@ class PasswordSetView(generics.GenericAPIView):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        return Response(serializer.data, status=status.HTTP_200_OK)
-        # return Response({"detail": _("The password has been set successfully.")}, status=status.HTTP_200_OK)
+        return Response({"detail": _("The password has been set successfully.")}, status=status.HTTP_200_OK)
 
 
 class PasswordChangeView(generics.GenericAPIView):
@@ -109,7 +113,7 @@ class EmailAddView(generics.GenericAPIView):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.validated_data, status=status.HTTP_200_OK)
 
 
 class EmailVerifyView(generics.GenericAPIView):
@@ -162,7 +166,7 @@ class PasswordResetConfirmWithOTPView(generics.GenericAPIView):
 
 
 class AddressViewSet(viewsets.ModelViewSet):
-    """A ViewSet for viewing and editing user addresses. Provides list, create, retrieve, update, destroy."""
+    """A viewset for managing user addresses."""
     serializer_class = AddressSerializer
     permission_classes = [IsAuthenticated]
 
@@ -175,6 +179,7 @@ class AddressViewSet(viewsets.ModelViewSet):
         serializer.save(user=self.request.user)
 
 
+# # TODO: Check it
 class WishlistAPIView(generics.GenericAPIView):
     """
     A single API view to manage the user's wishlist.
@@ -202,7 +207,7 @@ class WishlistAPIView(generics.GenericAPIView):
         """Handle GET request to retrieve the wishlist."""
         wishlist = self.get_object()
         serializer = self.get_serializer(wishlist)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.validated_data, status=status.HTTP_200_OK)
 
     def post(self, request, *args, **kwargs):
         """Handle POST request to add a variant to the wishlist."""

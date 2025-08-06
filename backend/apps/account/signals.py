@@ -1,19 +1,18 @@
 import logging
-from PIL import Image
-from django.utils import timezone
-from django.dispatch import receiver
-from django.contrib.auth import user_logged_in
-from django.db.models.signals import post_save, pre_save
 
-from apps.common.utils import get_client_ip
+from django.contrib.auth import user_logged_in
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+
 from apps.account.models import Profile, User, Wishlist
+from apps.account.utils import update_user_login_data
 
 logger = logging.getLogger(__name__)
 
 
 @receiver(post_save, sender=User)
 def create_user_related_objects(sender, instance, created, **kwargs):
-    """A signal to automatically create a Profile and a Wishlist whenever a new User is created."""
+    """Signal to automatically create a Profile and a Wishlist whenever a new User is created."""
     if created:
         try:
             Profile.objects.create(user=instance)
@@ -24,17 +23,13 @@ def create_user_related_objects(sender, instance, created, **kwargs):
 
 @receiver(user_logged_in)
 def update_last_login_info(sender, request, user, **kwargs):
-    """Updates the user's last login timestamp and IP address upon login."""
-    try:
-        user.last_login_ip = get_client_ip(request)
-        user.last_login_at = timezone.now()
-        user.save(update_fields=['last_login_ip', 'last_login_at'])
-    except Exception as e:
-        logger.error(f"Failed to update last login info for user {user.pk}: {e}")
+    """Signal to update user's last login timestamp and IP address when they log in."""
+    update_user_login_data(user, request)
 
 # @receiver(pre_save, sender=Profile)
 # def resize_profile_avatar(sender, instance, **kwargs):
 #     """Optimized signal to resize an avatar image before it's saved."""
+#     from PIL import Image
 #
 #     # Do nothing if the instance is new or the avatar hasn't been set.
 #     if not instance.pk or not instance.avatar:

@@ -1,10 +1,9 @@
 import os
-from pathlib import Path
 from datetime import timedelta
-
-from django.utils.translation import gettext_lazy as _
+from pathlib import Path
 
 from celery.schedules import crontab
+from django.utils.translation import gettext_lazy as _
 from environ import Env
 
 # --- Build paths inside the project like this: BASE_DIR / 'subdir'. ---
@@ -34,6 +33,7 @@ THIRD_PARTY_APPS = [
     "django_filters",
     "celery",
     "rosetta",
+    "solo",
 ]
 
 LOCAL_APPS = [
@@ -42,9 +42,11 @@ LOCAL_APPS = [
     "apps.notification",
     "apps.media",
     "apps.products",
+    "apps.orders",
+    "apps.configuration",
+    "apps.payments",
+    "apps.wallets",
     # "apps.reviews",
-    # "apps.orders",
-    # "apps.payments",
     # "apps.discounts",
     # "apps.analytics",
 ]
@@ -141,7 +143,7 @@ OTP_SETTINGS = {
     'COOLDOWN_SECONDS': 60,
 }
 
-# --- Notification settings ---
+# --- Notification configuration ---
 NOTIFICATIONS_SETTINGS = {
     'ACTIVE_EMAIL_PROVIDER': env.str('DJANGO_ACTIVE_EMAIL_PROVIDER', default='default'),
     'EMAIL_PROVIDERS': {
@@ -191,6 +193,24 @@ NOTIFICATIONS_SETTINGS = {
     },
 }
 
+# --- Payments configuration ---
+PAYMENTS_SETTINGS = {
+    'PROVIDERS': {
+        'zarinpal': {
+            'CLASS_PATH': 'apps.payments.gateways.zarinpal.ZarinpalGateway',
+            'CONFIG': {
+                'MERCHANT_ID': env.str('ZARINPAL_MERCHANT_ID', default=''),
+            }
+        },
+        'stripe': {
+            'CLASS_PATH': 'apps.payments.gateways.stripe.StripeGateway',
+            'CONFIG': {
+                'API_KEY': env.str('STRIPE_API_KEY', default=''),
+            }
+        },
+    }
+}
+
 # --- Rosetta configuration ---
 # https://django-rosetta.readthedocs.io/
 ROSETTA_MESSAGES_PER_PAGE = 100
@@ -201,7 +221,7 @@ ROSETTA_SHOW_AT_ADMIN_PANEL = True
 
 # --- File Upload Configuration ---
 MAX_IMAGE_UPLOAD_SIZE_MB = 5
-ALLOWED_IMAGE_EXTENSIONS = ["jpg", "jpeg", "png", "gif", "webp"]
+ALLOWED_IMAGE_EXTENSIONS = ["svg", "jpg", "jpeg", "png", "gif", "webp"]
 ALLOWED_VIDEO_EXTENSIONS = ['mp4', 'mov', 'avi', 'webm']
 ALLOWED_DOCUMENT_EXTENSIONS = ['pdf', 'doc', 'docx', 'txt']
 
@@ -231,20 +251,28 @@ CELERY_BEAT_SCHEDULE = {
 
 # --- Django Rest Framework Configuration ---
 REST_FRAMEWORK = {
-    # 'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    # 'DEFAULT_PERMISSION_CLASSES': [
+    #     # 'rest_framework.permissions.IsAuthenticated',
+    # ],
     # 'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
-    # 'PAGE_SIZE': 10,
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 20,
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework_simplejwt.authentication.JWTAuthentication',
         'rest_framework.authentication.SessionAuthentication',  # For DRF browsable API
     ],
-    # 'DEFAULT_PERMISSION_CLASSES': [
-    #     # 'rest_framework.permissions.IsAuthenticated',
-    # ],
-    # 'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
     'DEFAULT_FILTER_BACKENDS': [
         'django_filters.rest_framework.DjangoFilterBackend'
     ],
+    'DEFAULT_THROTTLE_CLASSES': [
+        'apps.common.throttling.ScopedRateThrottle',
+    ],
+    'DEFAULT_THROTTLE_RATES': {
+        'identifier_status_check': '15/m',
+        'request_otp': '3/m',
+        'login_with_password': '5/m',
+    },
     'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.URLPathVersioning',
     'DEFAULT_VERSION': 'v1',
     'ALLOWED_VERSIONS': ['v1', 'v2'],

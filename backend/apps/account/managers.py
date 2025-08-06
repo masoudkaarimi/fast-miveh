@@ -1,15 +1,13 @@
+from django.contrib.auth.base_user import BaseUserManager
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-from django.contrib.auth.base_user import BaseUserManager
 
 
 class UserManager(BaseUserManager):
     """Custom user model manager where phone number is the unique identifier."""
 
     def _create_user(self, phone_number, password, **extra_fields):
-        """
-        Create and save a User with the given phone number and password.
-        """
+        """Create and save a User with the given phone number and password."""
         if not phone_number:
             raise ValueError(_('The Phone Number must be set'))
 
@@ -37,6 +35,8 @@ class UserManager(BaseUserManager):
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
         extra_fields.setdefault('is_active', True)
+        extra_fields.setdefault('is_phone_number_verified', True)
+        extra_fields.setdefault('is_email_verified', True)
 
         if not extra_fields.get('is_staff'):
             raise ValueError(_('Superuser must have is_staff=True.'))
@@ -47,7 +47,7 @@ class UserManager(BaseUserManager):
 
 
 class OTPManager(models.Manager):
-    """Manager for the OTP model."""
+    """Manager for handling OTP (One Time Password) operations."""
 
     def create_otp(self, user, otp_type, recipient):
         from apps.account.utils import generate_numeric_otp
@@ -65,4 +65,5 @@ class OTPManager(models.Manager):
         return otp_instance
 
     def get_latest_otp(self, user, otp_type, recipient):
+        """Retrieve the latest OTP for a user, type, and recipient."""
         return self.filter(user=user, otp_type=otp_type, recipient=recipient).order_by('-created_at').first()

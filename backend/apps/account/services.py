@@ -1,10 +1,11 @@
 from datetime import timedelta
+
 from django.conf import settings
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
+from apps.account.exceptions import OTPCooldownError, OTPGenerationError, OTPValidationError
 from apps.account.models import OTP
-from apps.account.exceptions import OTPGenerationError, OTPValidationError, OTPCooldownError
 
 
 class OTPService:
@@ -33,9 +34,6 @@ class OTPService:
                     _("Please wait %(seconds)d seconds before requesting a new code.") % {'seconds': remaining_seconds},
                     remaining_seconds=remaining_seconds
                 )
-
-        # if OTP.objects.filter(user=self.user, otp_type=otp_type, recipient=recipient, created_at__gte=cooldown_time).exists():
-        #     raise OTPCooldownError(_("Please wait %(seconds)d seconds before requesting a new code.") % {'seconds': cooldown_seconds})
 
     def generate_and_send_otp(self, otp_type, recipient):
         """Main method to generate, store, and trigger the sending of an OTP."""
@@ -89,9 +87,9 @@ class OTPService:
                 raise OTPValidationError(_("Invalid OTP code. Maximum attempts exceeded."))
             else:
                 # Notice: Revealing remaining attempts may reduce security. Consider removing this message.
-                remaining_attempts = max_attempts - otp_instance.attempts
-                raise OTPValidationError(_(f"Invalid OTP code. You have {remaining_attempts} attempts remaining."))
-                # raise OTPValidationError(_("Invalid OTP code."))
+                # remaining_attempts = max_attempts - otp_instance.attempts
+                # raise OTPValidationError(_(f"Invalid OTP code. You have {remaining_attempts} attempts remaining."))
+                raise OTPValidationError(_("Invalid OTP code."))
 
         otp_instance.mark_as_verified()
         return True

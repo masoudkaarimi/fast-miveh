@@ -1,31 +1,31 @@
 import secrets
+import uuid
 from datetime import timedelta
 
-from django.db import models
 from django.conf import settings
-from django.utils import timezone
-from django.templatetags.static import static
 from django.contrib.auth.models import AbstractUser
-from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.validators import UnicodeUsernameValidator
-
+from django.db import models
+from django.utils import timezone
+from django.utils.translation import gettext_lazy as _
 from django_countries.fields import CountryField
 from phonenumber_field.modelfields import PhoneNumberField
 
+from apps.account.managers import OTPManager, UserManager
+from apps.account.validators import BirthdateValidator
 from apps.common.models import TimeStampedModel
 from apps.common.utils import GenerateUploadPath
-from apps.account.validators import BirthdateValidator
-from apps.account.managers import OTPManager, UserManager
-from apps.common.validators import FileSizeValidator, FileExtensionValidator
+from apps.common.validators import FileExtensionValidator, FileSizeValidator
 
 username_validator = UnicodeUsernameValidator()
 
 
 class User(AbstractUser, TimeStampedModel):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     phone_number = PhoneNumberField(
         unique=True,
         verbose_name=_('Phone Number'),
-        help_text=_("Required. The primary identifier for login and registration.")
+        help_text=_("The primary identifier for login and registration.")
     )
     is_phone_number_verified = models.BooleanField(
         default=False,
@@ -37,7 +37,7 @@ class User(AbstractUser, TimeStampedModel):
         blank=True,
         null=True,
         verbose_name=_("Email Address"),
-        help_text=_("Optional. Used for notifications and password recovery if verified.")
+        help_text=_("Used for notifications and password recovery if verified. (Optional)")
     )
     is_email_verified = models.BooleanField(
         default=False,
@@ -49,22 +49,30 @@ class User(AbstractUser, TimeStampedModel):
         unique=True,
         validators=[username_validator],
         verbose_name=_("Username"),
-        help_text=_("Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only."),
+        help_text=_("150 characters or fewer. Letters, digits and @/./+/-/_ only."),
         error_messages={"unique": _("A user with that username already exists.")},
     )
     is_active = models.BooleanField(
         default=False,
         verbose_name=_("Active Status"),
-        help_text=_("Designates whether this user should be treated as active. Unselect this instead of deleting accounts."),
+        help_text=_("Indicates if the user account is active. Users must verify their phone number to activate their account.")
     )
-    last_login_ip = models.GenericIPAddressField(verbose_name=_("Last Login IP"), blank=True, null=True)
-    last_login_at = models.DateTimeField(verbose_name=_("Last Login Date"), blank=True, null=True)
+    last_login_ip = models.GenericIPAddressField(
+        blank=True,
+        null=True,
+        verbose_name=_("Last Login IP"),
+        help_text=_("Auto-generated. An IPv4 address or an IPv6 address.")
+    )
+    last_login_at = models.DateTimeField(
+        blank=True,
+        null=True,
+        verbose_name=_("Last Login Date"),
+        help_text=_("Auto-generated. A date and time that the user last logged in."),
+    )
 
-    # --- Disabled Inherited Fields ---
     date_joined = None
     last_login = None
 
-    # --- Manager and Field Configuration ---
     objects = UserManager()
     USERNAME_FIELD = 'phone_number'
     REQUIRED_FIELDS = ['username', 'email']
@@ -84,7 +92,7 @@ class User(AbstractUser, TimeStampedModel):
         return self.first_name
 
     def _anonymize_data(self):
-        """Internal method to scramble PII and free up unique identifiers."""
+        """Anonymizes the user's data by removing personal information and setting a generic username."""
         anonymized_prefix = f"deleted_{self.pk}"
         self.username = f"{anonymized_prefix}_{secrets.token_hex(4)}"
         self.email = None
@@ -108,13 +116,13 @@ class User(AbstractUser, TimeStampedModel):
             return True
 
     def email_user(self, subject, message, from_email=None, **kwargs):
-        """A simple method to send an email to the user."""
+        """A method to send an email to the user."""
         from apps.notification.services import NotificationService
         if self.email:
             NotificationService().send_email(recipient=self.email, subject=subject, message=message, from_email=from_email, **kwargs)
 
     def sms_user(self, message, **kwargs):
-        """A simple method to send an SMS to the user."""
+        """A method to send an SMS to the user."""
         from apps.notification.services import NotificationService
         if self.phone_number:
             NotificationService().send_sms(recipient=str(self.phone_number), message=message, **kwargs)
@@ -131,11 +139,12 @@ class Profile(TimeStampedModel):
         "User",
         on_delete=models.CASCADE,
         related_name="profile",
+        primary_key=True,
         verbose_name=_("User"),
         help_text=_("The user this profile belongs to.")
     )
     avatar = models.ImageField(
-        upload_to=GenerateUploadPath('profiles', 'avatars'),
+        upload_to=GenerateUploadPath(base_path='uploads/profiles/avatars'),
         default=None,
         blank=True,
         null=True,
@@ -160,21 +169,21 @@ class Profile(TimeStampedModel):
         blank=True,
         null=True,
         verbose_name=_('Gender'),
-        help_text=_("The user's gender. (Optional) Used for personalization and analytics.")
+        help_text=_("Used for personalization and analytics. (Optional)")
     )
     birthdate = models.DateField(
         blank=True,
         null=True,
         validators=[BirthdateValidator()],
         verbose_name=_("Birth Date"),
-        help_text=_("The user's birth date. (Optional) Must be in the past.")
+        help_text=_("The user's birth date. Must be in the past. (Optional)")
     )
     national_code = models.CharField(
         max_length=10,
         blank=True,
         null=True,
         verbose_name=_("National Code"),
-        help_text=_("The user's national identification code. (Optional) Must be unique if provided.")
+        help_text=_("The user's national identification code. Must be unique if provided. (Optional)")
     )
 
     class Meta:
@@ -184,11 +193,6 @@ class Profile(TimeStampedModel):
 
     def __str__(self):
         return f"{self.user.username}'s Profile"
-
-    def get_avatar_url(self):
-        if self.avatar:
-            return self.avatar.url
-        return static('assets/images/placeholders/avatar.webp')
 
 
 class OTP(TimeStampedModel):
@@ -310,44 +314,32 @@ class Address(TimeStampedModel):
         help_text=_("Phone number of the recipient.")
     )
     country = CountryField(
-        blank=False,
-        null=False,
         blank_label=_('(select country)'),
         verbose_name=_("Country/Region"),
-        help_text=_("The country or region of the address. (Required)")
+        help_text=_("The country or region of the address.")
     )
     city = models.CharField(
         max_length=100,
-        blank=False,
-        null=False,
         verbose_name=_("City"),
-        help_text=_("The city of the address. (Required)")
+        help_text=_("The city of the address.")
     )
     state = models.CharField(
         max_length=100,
-        blank=False,
-        null=False,
         verbose_name=_("State/Province"),
-        help_text=_("The state or province of the address. (Required)")
+        help_text=_("The state or province of the address.")
     )
     zip_code = models.CharField(
         max_length=20,
-        blank=False,
-        null=False,
         verbose_name=_("Zip/Postal Code"),
-        help_text=_("The zip or postal code of the address. (Required)")
+        help_text=_("The zip or postal code of the address.")
     )
     address_line_1 = models.CharField(
         max_length=255,
-        blank=False,
-        null=False,
         verbose_name=_("Address Line 1"),
         help_text=_("Additional address line, e.g., apartment or suite number. (Optional)")
     )
     address_line_2 = models.CharField(
         max_length=255,
-        blank=True,
-        null=True,
         verbose_name=_("Address Line 2 (Optional)"),
         help_text=_("e.g., apartment, suite, or unit number.")
     )

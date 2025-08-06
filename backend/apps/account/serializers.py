@@ -1,28 +1,25 @@
 import logging
 
 from django.conf import settings
-from django.utils import timezone
-from django.utils.translation import gettext_lazy as _
-from django.utils.encoding import smart_bytes, force_str
-from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
-from django.core.exceptions import ValidationError as DjangoValidationError
 from django.contrib.auth import authenticate, get_user_model, password_validation
-
+from django.core.exceptions import ValidationError as DjangoValidationError
+from django.templatetags.static import static
+from django.utils.encoding import force_str, smart_bytes
+from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
+from django.utils.translation import gettext_lazy as _
+from phonenumber_field.serializerfields import PhoneNumberField
 from rest_framework import serializers
 from rest_framework_simplejwt.tokens import RefreshToken
-from phonenumber_field.serializerfields import PhoneNumberField
 
-from apps.common.utils import get_client_ip
+from apps.account.exceptions import OTPCooldownError, OTPGenerationError, OTPValidationError
+from apps.account.models import OTP, Address, Profile, Wishlist
 from apps.account.services import OTPService
-from apps.products.models import ProductVariant
-from apps.account.utils import get_identifier_info
-from apps.products.serializers import ProductListSerializer
 from apps.account.tokens import password_reset_token_generator
-from apps.account.models import OTP, Profile, Address, Wishlist
-from apps.account.exceptions import OTPValidationError, OTPGenerationError, OTPCooldownError
+from apps.account.utils import get_identifier_info, update_user_login_data
+from apps.products.models import ProductVariant
+from apps.products.serializers import ProductListSerializer
 
 logger = logging.getLogger(__name__)
-
 User = get_user_model()
 
 
@@ -72,6 +69,7 @@ class RequestOTPSerializer(serializers.Serializer):
     def save(self):
         user = self.context['user']
         phone_number = self.validated_data['phone_number']
+
         otp_service = OTPService(user=user)
         try:
             otp_service.generate_and_send_otp(otp_type=OTP.TypeChoices.SMS, recipient=str(phone_number))
@@ -108,7 +106,7 @@ class VerifyOTPAndLoginSerializer(serializers.Serializer):
         otp_service = OTPService(user=user)
         try:
             if not otp_service.verify_otp(otp_type=OTP.TypeChoices.SMS, recipient=str(phone_number), code=code):
-                raise serializers.ValidationError(_("Invalid OTP code."))
+                raise serializers.ValidationError({"code": _("Invalid OTP code.")})
         except OTPValidationError as e:
             raise serializers.ValidationError(str(e))
 
@@ -122,13 +120,14 @@ class VerifyOTPAndLoginSerializer(serializers.Serializer):
         if not authenticated_user:
             raise serializers.ValidationError(_("Authentication failed after OTP verification. Please contact support."))
 
+        # Update last login date and IP address
+        update_user_login_data(authenticated_user, self.context.get('request'))
+
         refresh_token = RefreshToken.for_user(authenticated_user)
         return {
             'is_new_user': is_new_user,
             'access_token': str(refresh_token.access_token),
             'refresh_token': str(refresh_token),
-            # 'phone_number': str(phone_number),
-            # 'code': code
         }
 
 
@@ -166,27 +165,32 @@ class LoginWithPasswordSerializer(serializers.Serializer):
         if identifier_type == 'email' and not user.is_email_verified:
             raise serializers.ValidationError(_("The email address is not verified. Please log in with your phone number or verify your email."))
 
-        # Todo: Add this logic to otp login serializer
-        user.last_login_at = timezone.now()
-        request = self.context.get('request')
-        if request:
-            user.last_login_ip = get_client_ip(request=request)
-        user.save(update_fields=['last_login_at', 'last_login_ip'])
+        # Update last login date and IP address
+        update_user_login_data(user, self.context.get('request'))
 
         refresh_token = RefreshToken.for_user(user)
         return {
             'access_token': str(refresh_token.access_token),
             'refresh_token': str(refresh_token),
-            # 'identifier': identifier
         }
 
 
 class ProfileSerializer(serializers.ModelSerializer):
     """Serializer for the Profile model, used as a nested serializer."""
+    avatar_url = serializers.SerializerMethodField()
 
     class Meta:
         model = Profile
-        fields = ('gender', 'birthdate', 'national_code', 'avatar')
+        fields = ('gender', 'birthdate', 'national_code', 'avatar_url')
+
+    def get_avatar_url(self, obj: Profile) -> str:
+        request = self.context.get('request')
+
+        if obj.avatar and hasattr(obj.avatar, 'url'):
+            return request.build_absolute_uri(obj.avatar.url) if request else obj.avatar.url
+
+        placeholder_url = static('assets/images/placeholders/avatar_placeholder.webp')
+        return request.build_absolute_uri(placeholder_url) if request else placeholder_url
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
@@ -198,10 +202,8 @@ class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = (
-            'phone_number', 'is_phone_number_verified', 'email', 'is_email_verified',
-            'username', 'first_name', 'last_name', 'profile',
-            'has_password',
-            'is_profile_complete'
+            'phone_number', 'is_phone_number_verified', 'email', 'is_email_verified', 'username', 'first_name',
+            'last_name', 'profile', 'has_password', 'is_profile_complete'
         )
         read_only_fields = ('phone_number', 'is_phone_number_verified', 'email', 'is_email_verified', 'has_password', 'is_profile_complete')
 
@@ -211,16 +213,11 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
     @staticmethod
     def get_is_profile_complete(obj):
-        # Todo
-        # We consider the profile complete if the user has a first name.
-        # You can make this logic more complex if needed.
+        # Todo: We consider the profile complete if the user has a first name. You can make this logic more complex if needed.
         return bool(obj.first_name)
 
     def update(self, instance, validated_data):
-        """
-        Handles nested updates for the User and its related Profile.
-        It will create a profile if one does not exist for the user.
-        """
+        """Updates the user profile and nested profile data."""
         profile, created = Profile.objects.get_or_create(user=instance)
         profile_data = validated_data.pop('profile', {})
 
@@ -232,10 +229,9 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
 
 class PasswordSetSerializer(serializers.Serializer):
-    """ Serializer for a user to set their password. On success, it returns the full user profile."""
-    password = serializers.CharField(write_only=True, required=True, style={'input_type': 'password'}, min_length=8)
-    password2 = serializers.CharField(write_only=True, required=True, style={'input_type': 'password'}, label="Confirm Password")
-    user_profile = UserProfileSerializer(read_only=True)
+    """Serializer for a user to set their password for the first time after registration via OTP."""
+    password = serializers.CharField(write_only=True, required=True, min_length=8, label=_("Password"))
+    password2 = serializers.CharField(write_only=True, required=True, min_length=8, label=_("Confirm Password"))
 
     def validate(self, attrs):
         user = self.context['request'].user
@@ -249,10 +245,8 @@ class PasswordSetSerializer(serializers.Serializer):
             raise serializers.ValidationError({"password2": _("Password fields didn't match.")})
 
         try:
-            # Use Django's built-in password validation
             password_validation.validate_password(password, user)
         except DjangoValidationError as e:
-            # Raise DRF's validation error with the messages from Django
             raise serializers.ValidationError({"password": list(e.messages)})
 
         return attrs
@@ -261,15 +255,14 @@ class PasswordSetSerializer(serializers.Serializer):
         user = self.context['request'].user
         user.set_password(self.validated_data['password'])
         user.save(update_fields=['password'])
-        self.validated_data['user_profile'] = user
         return user
 
 
 class PasswordChangeSerializer(serializers.Serializer):
     """Serializer for an existing user to change their password."""
-    old_password = serializers.CharField(write_only=True, required=True, style={'input_type': 'password'})
-    new_password1 = serializers.CharField(write_only=True, required=True, min_length=8, style={'input_type': 'password'}, label="New Password")
-    new_password2 = serializers.CharField(write_only=True, required=True, style={'input_type': 'password'}, label="Confirm New Password")
+    old_password = serializers.CharField(write_only=True, required=True, min_length=8, label="Old Password")
+    new_password = serializers.CharField(write_only=True, required=True, min_length=8, label="New Password")
+    new_password2 = serializers.CharField(write_only=True, required=True, min_length=8, label="Confirm New Password")
 
     def validate_old_password(self, value):
         user = self.context['request'].user
@@ -278,13 +271,13 @@ class PasswordChangeSerializer(serializers.Serializer):
         return value
 
     def validate(self, attrs):
-        if attrs['new_password1'] != attrs['new_password2']:
+        if attrs['new_password'] != attrs['new_password2']:
             raise serializers.ValidationError({"new_password": _("New password fields didn't match.")})
         return attrs
 
     def save(self):
         user = self.context['request'].user
-        user.set_password(self.validated_data['new_password1'])
+        user.set_password(self.validated_data['new_password'])
         user.save(update_fields=['password'])
         return user
 
@@ -308,7 +301,6 @@ class EmailAddSerializer(serializers.Serializer):
         otp_service = OTPService(user=user)
         try:
             otp_service.generate_and_send_otp(otp_type=OTP.TypeChoices.EMAIL, recipient=user.email)
-
             otp_lifetime = settings.OTP_SETTINGS.get('OTP_EXPIRY_MINUTES', 2) * 60
             self.validated_data['otp_lifetime_seconds'] = otp_lifetime
         except OTPCooldownError as e:
@@ -323,16 +315,17 @@ class EmailAddSerializer(serializers.Serializer):
 
 class EmailVerifySerializer(serializers.Serializer):
     """Serializer to verify an email address using an OTP."""
-    code = serializers.CharField(required=True, max_length=settings.OTP_SETTINGS.get('OTP_LENGTH', 6))
+    code = serializers.CharField(write_only=True, required=True, max_length=settings.OTP_SETTINGS.get('OTP_LENGTH', 6))
 
     def validate(self, data):
         user = self.context['request'].user
         if not user.email:
             raise serializers.ValidationError(_("No email address has been set for this account."))
+
         otp_service = OTPService(user=user)
         try:
             if not otp_service.verify_otp(otp_type=OTP.TypeChoices.EMAIL, recipient=user.email, code=data.get('code')):
-                raise serializers.ValidationError(_("Invalid OTP code."))
+                raise serializers.ValidationError({"code": _("Invalid OTP code.")})
         except OTPValidationError as e:
             raise serializers.ValidationError(str(e))
         return data
@@ -346,7 +339,7 @@ class EmailVerifySerializer(serializers.Serializer):
 
 class PasswordResetRequestSerializer(serializers.Serializer):
     """
-    Handles a password reset request for a given identifier (email or phone number).
+    Serializer for requesting a password reset for a given identifier (email or phone number).
     If the identifier is a verified email, it sends a password reset link.
     If it's a verified phone number, it sends an OTP code via SMS.
     """
@@ -385,15 +378,13 @@ class PasswordResetRequestSerializer(serializers.Serializer):
         if identifier_type == 'email':
             self._send_password_reset_email(user)
         elif identifier_type == 'phone_number':
-            self._send_password_reset_otp(user)
+            self._send_password_reset_phone_number(user)
 
     @staticmethod
     def _send_password_reset_email(user):
         """Generates and sends a password reset email to the user."""
         uid = urlsafe_base64_encode(smart_bytes(user.pk))
         token = password_reset_token_generator.make_token(user)
-
-        # IMPORTANT: This URL should point to your frontend password reset confirmation page.
         frontend_url = settings.FRONTEND_URL.get('PASSWORD_RESET_CONFIRM')
         reset_url = f"{frontend_url}?uidb64={uid}&token={token}"
 
@@ -409,32 +400,46 @@ class PasswordResetRequestSerializer(serializers.Serializer):
         )
 
     @staticmethod
-    def _send_password_reset_otp(user):
+    def _send_password_reset_phone_number(user):
         """Generates and sends a password reset OTP to the user's phone."""
         otp_service = OTPService(user=user)
         try:
             otp_service.generate_and_send_otp(otp_type=OTP.TypeChoices.SMS, recipient=str(user.phone_number))
         except (OTPGenerationError, OTPCooldownError) as e:
             # Log the error for debugging, but don't expose it to the client.
-            # logger.error(f"Failed to send password reset OTP to {user}: {e}")
+            logger.error(f"Failed to send password reset OTP to {user}: {e}")
             pass
 
 
 class PasswordResetConfirmSerializer(serializers.Serializer):
-    """Handles the actual password reset using a token."""
+    """Serializer for confirming a password reset using a token sent via email."""
     uidb64 = serializers.CharField(write_only=True, required=True)
     token = serializers.CharField(write_only=True, required=True)
-    password = serializers.CharField(write_only=True, required=True, min_length=8)
+    password = serializers.CharField(write_only=True, required=True, min_length=8, label="New Password")
+    password2 = serializers.CharField(write_only=True, required=True, min_length=8, label="Confirm Password")
 
     def validate(self, attrs):
+        password = attrs.get('password')
+        password2 = attrs.get('password2')
+
+        if password != password2:
+            raise serializers.ValidationError({"password2": _("Password fields didn't match.")})
+
         try:
             uid = force_str(urlsafe_base64_decode(attrs['uidb64']))
             user = User.objects.get(pk=uid)
             if not password_reset_token_generator.check_token(user, attrs['token']):
                 raise serializers.ValidationError(_("The reset link is invalid or has expired."), code='authorization')
+
+            try:
+                password_validation.validate_password(password, user)
+            except DjangoValidationError as e:
+                raise serializers.ValidationError({"password": list(e.messages)})
+
             self.context['user'] = user
         except (TypeError, ValueError, OverflowError, User.DoesNotExist):
             raise serializers.ValidationError(_("The reset link is invalid or has expired."), code='authorization')
+
         return attrs
 
     def save(self):
@@ -445,26 +450,35 @@ class PasswordResetConfirmSerializer(serializers.Serializer):
 
 
 class PasswordResetConfirmWithOTPSerializer(serializers.Serializer):
-    """Handles the actual password reset using an OTP code."""
-    phone_number = PhoneNumberField(required=True)
-    code = serializers.CharField(required=True, max_length=settings.OTP_SETTINGS.get('OTP_LENGTH', 6))
-    password = serializers.CharField(write_only=True, required=True, min_length=8)
+    """Serializer for confirming a password reset using an OTP sent via SMS."""
+    phone_number = PhoneNumberField(write_only=True, required=True)
+    code = serializers.CharField(write_only=True, required=True, max_length=settings.OTP_SETTINGS.get('OTP_LENGTH', 6))
+    password = serializers.CharField(write_only=True, required=True, min_length=8, label="New Password")
+    password2 = serializers.CharField(write_only=True, required=True, min_length=8, label="Confirm Password")
 
     def validate(self, attrs):
-        phone_number = attrs['phone_number']
-        code = attrs['code']
+        phone_number = attrs.get('phone_number')
+        code = attrs.get('code')
+        password = attrs.get('password')
+        password2 = attrs.get('password2')
+
+        if password != password2:
+            raise serializers.ValidationError({"password2": _("Password fields didn't match.")})
 
         try:
-            # The condition "is_phone_number_verified=True" is removed from here
             user = User.objects.get(phone_number=phone_number)
         except User.DoesNotExist:
-            raise serializers.ValidationError(_("Invalid phone number or user not found."))
+            raise serializers.ValidationError({"phone_number": _("Invalid phone number or user not found.")})
 
-        # ... the rest of the validation logic remains the same ...
+        try:
+            password_validation.validate_password(password, user)
+        except DjangoValidationError as e:
+            raise serializers.ValidationError({"password": list(e.messages)})
+
         otp_service = OTPService(user=user)
         try:
             if not otp_service.verify_otp(otp_type=OTP.TypeChoices.SMS, recipient=str(phone_number), code=code):
-                raise serializers.ValidationError(_("Invalid OTP code."))
+                raise serializers.ValidationError({"code": _("Invalid OTP code.")})
         except OTPValidationError as e:
             raise serializers.ValidationError(str(e))
 
@@ -479,10 +493,7 @@ class PasswordResetConfirmWithOTPSerializer(serializers.Serializer):
 
 
 class AddressSerializer(serializers.ModelSerializer):
-    """
-    Serializer for creating, listing, and updating user addresses.
-    The user is automatically set to the currently authenticated user.
-    """
+    """Serializer for creating and updating user addresses."""
 
     class Meta:
         model = Address
@@ -495,6 +506,7 @@ class AddressSerializer(serializers.ModelSerializer):
         return super().create(validated_data)
 
 
+# TODO: Check it
 # NOTE: This is a simplified serializer for the variant.
 # In the future, we would import a more complete serializer from the 'products' app.
 class WishlistVariantSerializer(serializers.ModelSerializer):

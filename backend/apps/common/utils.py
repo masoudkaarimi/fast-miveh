@@ -1,15 +1,14 @@
-import os
-import secrets
 import logging
+import secrets
+from datetime import date, datetime
+from pathlib import Path
 from typing import Any, Union
-from datetime import datetime, date
-
-from django.conf import settings
-from django.utils import timezone
-from django.utils.translation import gettext as _
-from django.utils.deconstruct import deconstructible
 
 import jdatetime
+from django.conf import settings
+from django.utils import timezone
+from django.utils.deconstruct import deconstructible
+from django.utils.translation import gettext as _
 
 logger = logging.getLogger(__name__)
 
@@ -18,33 +17,42 @@ logger = logging.getLogger(__name__)
 class GenerateUploadPath:
     """
     A deconstructible class to generate a unique, timestamped upload path for files.
-    Ensures that filenames are secure and do not collide.
+    This approach ensures filenames are secure and do not collide.
+
+    Usage in a model field:
+        avatar = models.ImageField(upload_to=GenerateUploadPath(base_path="uploads/profiles/avatars/"))
     """
 
-    def __init__(self, folder: str, sub_path: str = "") -> None:
-        self.folder = folder
-        self.sub_path = sub_path
+    def __init__(self, base_path: str) -> None:
+        """
+        Initializes the path generator.
+        :param base_path: The base path where files will be stored (e.g., 'uploads/products/images/').
+        """
+        self.base_path = base_path
 
     def __call__(self, instance: Any, filename: str) -> str:
         """
-        Generates the file path.
-        Example: `media/profiles/avatars/20250713_235859_a1b2c3d4e5f6a7b8.jpg`
+        Generates a secure file path when a file is uploaded.
+
+        The final path format is:
+        `{base_path}/{timestamp}_{unique_id}.{extension}`
+
+        Example: `uploads/profiles/avatars/20250802_112539_a1b2c3d4.jpg`
         """
+        extension = Path(filename).suffix.lower()
         timestamp = timezone.now().strftime("%Y%m%d_%H%M%S")
+        unique_id = secrets.token_hex(4)
+        new_filename = f"{timestamp}_{unique_id}{extension}"
+        path = Path(self.base_path) / new_filename
 
-        _, extension = os.path.splitext(filename)
-        if not extension:
-            extension = ""
-        else:
-            extension = extension[1:].lower()
-
-        unique_id = secrets.token_hex(8)
-        new_filename = f"{timestamp}_{unique_id}{'.' + extension if extension else ''}"
-
-        return os.path.join(self.folder, self.sub_path, new_filename)
+        return str(path)
 
     def __eq__(self, other):
-        return isinstance(other, self.__class__) and self.folder == other.folder and self.sub_path == other.sub_path
+        """
+        This method is required by Django's migration framework to detect
+        changes in the 'upload_to' attribute of a field.
+        """
+        return isinstance(other, self.__class__) and self.base_path == other.base_path
 
 
 def get_client_ip(request: Any) -> str:

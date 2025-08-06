@@ -1,16 +1,13 @@
 import os
 
 from django.core.exceptions import ValidationError
-from django.utils.translation import gettext_lazy as _
 from django.utils.deconstruct import deconstructible
+from django.utils.translation import gettext_lazy as _
 
 
 @deconstructible
 class FileSizeValidator:
-    """
-    A class-based validator to check the file size.
-    Made deconstructible to work with Django migrations.
-    """
+    """A class-based validator to check the file size."""
 
     def __init__(self, max_size_mb):
         self.max_size_mb = max_size_mb
@@ -45,10 +42,7 @@ class FileSizeValidator:
 
 @deconstructible
 class FileExtensionValidator:
-    """
-    A class-based validator to check for allowed file extensions.
-    Made deconstructible to work with Django migrations.
-    """
+    """A class-based validator to check for allowed file extensions."""
 
     def __init__(self, allowed_extensions):
         self.allowed_extensions = [ext.lower() for ext in allowed_extensions]
