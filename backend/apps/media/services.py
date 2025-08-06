@@ -1,28 +1,18 @@
 from django.conf import settings
 
-from apps.media.models import Media, MediaLink
 from apps.media.exceptions import InvalidMediaTypeError
+from apps.media.models import Media, MediaLink
 
 
 class MediaService:
-    """
-    A service class to handle business logic for creating and managing media.
-    """
+    """A service class to handle business logic for creating and managing media."""
 
     def __init__(self, content_object):
-        """
-        Initializes the service with the parent object to which media will be attached.
-
-        Args:
-            content_object: The instance of the model (e.g., Product, BlogPost).
-        """
         self.content_object = content_object
 
     @staticmethod
     def _get_media_type(filename: str) -> str:
-        """
-        Determines the media type based on the file extension using settings.
-        """
+        """Determines the media type based on the file extension using settings."""
         extension = filename.lower().split('.')[-1]
 
         if extension in settings.ALLOWED_IMAGE_EXTENSIONS:
@@ -35,27 +25,18 @@ class MediaService:
         raise InvalidMediaTypeError(f"Unsupported file type: '.{extension}'")
 
     def create(self, *, file_obj, **kwargs) -> MediaLink:
-        """
-        Creates a Media instance and links it to the content_object.
-
-        Args:
-            file_obj: The uploaded file object.
-            **kwargs: Optional data for MediaLink (is_featured, display_order)
-                      and Media (alt_text, caption).
-
-        Returns:
-            The created MediaLink instance.
-        """
+        """Creates a Media instance and links it to the content_object."""
         media_type = self._get_media_type(file_obj.name)
 
+        # The Media object is now created independently.
         media = Media.objects.create(
             file=file_obj,
             media_type=media_type,
             alt_text=kwargs.get('alt_text', ''),
-            caption=kwargs.get('caption', ''),
-            content_object=self.content_object  # Associate with the parent
+            caption=kwargs.get('caption', '')
         )
 
+        # The MediaLink is then created to connect the new Media to the content_object.
         media_link = MediaLink.objects.create(
             media=media,
             content_object=self.content_object,
