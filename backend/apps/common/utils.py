@@ -1,6 +1,6 @@
 import logging
 import secrets
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 from pathlib import Path
 from typing import Any, Union
 
@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 @deconstructible
 class GenerateUploadPath:
     """
-    A deconstructible class to generate a unique, timestamped upload path for files.
+    A class to generate a unique, timestamped upload path for files.
     This approach ensures filenames are secure and do not collide.
 
     Usage in a model field:
@@ -67,12 +67,12 @@ def get_client_ip(request: Any) -> str:
 
 def is_admin(user: settings.AUTH_USER_MODEL) -> bool:
     """Checks if a user has admin-level privileges."""
-    return user.is_staff
+    return user.is_active and user.is_staff
 
 
 def is_superuser(user: settings.AUTH_USER_MODEL) -> bool:
     """Checks if a user is a superuser."""
-    return user.is_superuser
+    return user.is_active and user.is_staff and user.is_superuser
 
 
 def to_jalali(gregorian_date: Union[datetime, date, str, None], output_format: str = '%Y/%m/%d') -> str:
@@ -96,29 +96,30 @@ def to_jalali(gregorian_date: Union[datetime, date, str, None], output_format: s
     jalali_date = jdatetime.date.fromgregorian(date=gregorian_date)
     return jalali_date.strftime(output_format)
 
-# def get_remaining_time(target_time: datetime) -> str:
-#     """Calculates the remaining time until a target datetime and returns a human-readable string."""
-#     if not target_time or not isinstance(target_time, datetime):
-#         return _("No target time set.")
-#
-#     now = timezone.now()
-#     if target_time <= now:
-#         return _("Expired")
-#
-#     delta: timedelta = target_time - now
-#
-#     days = delta.days
-#     hours, remainder = divmod(delta.seconds, 3600)
-#     minutes, seconds = divmod(remainder, 60)
-#
-#     parts = []
-#     if days > 0:
-#         parts.append(f"{days} " + (_("day") if days == 1 else _("days")))
-#     if hours > 0:
-#         parts.append(f"{hours} " + (_("hour") if hours == 1 else _("hours")))
-#     if minutes > 0:
-#         parts.append(f"{minutes} " + (_("minute") if minutes == 1 else _("minutes")))
-#     if not parts:  # If less than a minute, show seconds
-#         parts.append(f"{seconds} " + (_("second") if seconds == 1 else _("seconds")))
-#
-#     return ", ".join(parts)
+
+def get_remaining_time(target_time: datetime) -> str:
+    """Calculates the remaining time until a target datetime and returns a human-readable string."""
+    if not target_time or not isinstance(target_time, datetime):
+        return _("No target time set.")
+
+    now = timezone.now()
+    if target_time <= now:
+        return _("Expired")
+
+    delta: timedelta = target_time - now
+
+    days = delta.days
+    hours, remainder = divmod(delta.seconds, 3600)
+    minutes, seconds = divmod(remainder, 60)
+
+    parts = []
+    if days > 0:
+        parts.append(f"{days} " + (_("day") if days == 1 else _("days")))
+    if hours > 0:
+        parts.append(f"{hours} " + (_("hour") if hours == 1 else _("hours")))
+    if minutes > 0:
+        parts.append(f"{minutes} " + (_("minute") if minutes == 1 else _("minutes")))
+    if not parts:  # If less than a minute, show seconds
+        parts.append(f"{seconds} " + (_("second") if seconds == 1 else _("seconds")))
+
+    return ", ".join(parts)
