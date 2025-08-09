@@ -1,4 +1,4 @@
-from core.settings.base import *
+from config.settings.base import *
 
 # --- SECURITY WARNING: don't run with debug turned on in production! ---
 DEBUG = env.bool("DJANGO_DEBUG", default=False)

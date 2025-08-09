@@ -1,32 +1,30 @@
-from typing import Any, Dict
-
 from django.conf import settings
 from django.utils.module_loading import import_string
 
+from apps.core.models import SiteConfiguration
 from apps.notification.exceptions import NotificationError
 
 
 class NotificationService:
-    def __init__(self) -> None:
-        self.channels: Dict[str, Any] = self._load_channels()
+    def __init__(self):
+        self.channels = self._load_channels()
 
-    def _load_channels(self) -> Dict[str, Any]:
-        loaded_channels: Dict[str, Any] = {}
+    def _load_channels(self):
+        loaded_channels = {}
         try:
-            # Load active Email channel
-            email_provider_key: str = settings.NOTIFICATIONS_SETTINGS['ACTIVE_EMAIL_PROVIDER']
-            email_config: Dict[str, Any] = settings.NOTIFICATIONS_SETTINGS['EMAIL_PROVIDERS'][email_provider_key]
-            loaded_channels['email'] = self._initialize_channel(email_config)
+            config = SiteConfiguration.get_solo()
+            provider_map = settings.NOTIFICATION_PROVIDERS
 
-            # Load active SMS channel
-            sms_provider_key: str = settings.NOTIFICATIONS_SETTINGS['ACTIVE_SMS_PROVIDER']
-            sms_config: Dict[str, Any] = settings.NOTIFICATIONS_SETTINGS['SMS_PROVIDERS'][sms_provider_key]
-            loaded_channels['sms'] = self._initialize_channel(sms_config)
+            active_providers = [
+                ('email', config.active_email_provider),
+                ('sms', config.active_sms_provider),
+                ('telegram', config.active_telegram_provider),
+            ]
 
-            # Load active Telegram channel
-            telegram_provider_key: str = settings.NOTIFICATIONS_SETTINGS['ACTIVE_TELEGRAM_PROVIDER']
-            telegram_config: Dict[str, Any] = settings.NOTIFICATIONS_SETTINGS['TELEGRAM_PROVIDERS'][telegram_provider_key]
-            loaded_channels['telegram'] = self._initialize_channel(telegram_config)
+            for channel_key, provider in active_providers:
+                if provider and provider in provider_map:
+                    provider_config = provider_map[provider]
+                    loaded_channels[channel_key] = self._initialize_channel(provider_config)
 
         except (KeyError, AttributeError) as e:
             raise NotificationError(f"Notification settings are misconfigured. Error: {e}") from e
@@ -34,17 +32,23 @@ class NotificationService:
         return loaded_channels
 
     @staticmethod
-    def _initialize_channel(provider_config: Dict[str, Any]) -> Any:
-        channel_class_path: str = provider_config['CHANNEL_CLASS']
-        config_dict: Dict[str, Any] = provider_config.get('CONFIG', {})
-        ChannelClass: Any = import_string(channel_class_path)
+    def _initialize_channel(provider_config):
+        channel_class_path = provider_config['CHANNEL_CLASS']
+        config_dict = provider_config.get('CONFIG', {})
+        ChannelClass = import_string(channel_class_path)
         return ChannelClass(**config_dict)
 
-    def send_email(self, recipient: str, **kwargs: Any) -> None:
+    def send_email(self, recipient, **kwargs):
+        if 'email' not in self.channels:
+            raise NotificationError("No active email provider is configured in Site Configuration.")
         self.channels['email'].send(recipient, **kwargs)
 
-    def send_sms(self, recipient: str, **kwargs: Any) -> None:
+    def send_sms(self, recipient, **kwargs):
+        if 'sms' not in self.channels:
+            raise NotificationError("No active SMS provider is configured in Site Configuration.")
         self.channels['sms'].send(recipient, **kwargs)
 
-    def send_telegram(self, recipient: str, **kwargs: Any) -> None:
+    def send_telegram(self, recipient, **kwargs):
+        if 'telegram' not in self.channels:
+            raise NotificationError("No active Telegram provider is configured in Site Configuration.")
         self.channels['telegram'].send(recipient, **kwargs)

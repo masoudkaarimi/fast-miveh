@@ -3,6 +3,7 @@ from datetime import timedelta
 from pathlib import Path
 
 from celery.schedules import crontab
+from django.core.management.utils import get_random_secret_key
 from django.utils.translation import gettext_lazy as _
 from environ import Env
 
@@ -14,7 +15,8 @@ env = Env()
 Env.read_env(str(BASE_DIR / ".env"))
 
 # --- SECURITY WARNING: keep the secret key used in production secret! ---
-SECRET_KEY = env.str("DJANGO_SECRET_KEY")
+SECRET_KEY = env.str("DJANGO_SECRET_KEY", default=get_random_secret_key())
+FIELD_ENCRYPTION_KEY = env.str("DJANGO_FIELD_ENCRYPTION_KEY", default=None)
 
 # --- Application definition ---
 DEFAULT_APPS = [
@@ -43,7 +45,7 @@ LOCAL_APPS = [
     "apps.media",
     "apps.products",
     "apps.orders",
-    "apps.configuration",
+    "apps.core",
     "apps.payments",
     "apps.wallets",
     # "apps.reviews",
@@ -67,7 +69,7 @@ MIDDLEWARE = [
 ]
 
 # --- URL configuration ---
-ROOT_URLCONF = "core.urls"
+ROOT_URLCONF = "config.urls"
 # FORCE_SCRIPT_NAME = '/api'
 
 # --- Template configuration ---
@@ -88,7 +90,8 @@ TEMPLATES = [
 ]
 
 # --- WSGI application configuration ---
-WSGI_APPLICATION = "core.wsgi.application"
+WSGI_APPLICATION = "config.wsgi.application"
+# ASGI_APPLICATION = "config.asgi.application"
 
 # --- Password validation ---
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
@@ -144,56 +147,49 @@ OTP_SETTINGS = {
 }
 
 # --- Notification configuration ---
-NOTIFICATIONS_SETTINGS = {
-    'ACTIVE_EMAIL_PROVIDER': env.str('DJANGO_ACTIVE_EMAIL_PROVIDER', default='default'),
-    'EMAIL_PROVIDERS': {
-        'default': {
-            'CHANNEL_CLASS': 'apps.notification.channels.email.EmailChannel',
-            'CONFIG': {}
-        },
-        # You can add other providers like SendGrid here in the future
-        # 'sendgrid': {
-        #     'CHANNEL_CLASS': 'apps.notification.channels.email.SendGridEmailChannel',
-        #     'CONFIG': { 'API_KEY': 'YOUR_SENDGRID_API_KEY' }
-        # },
+NOTIFICATION_PROVIDERS = {
+    # --- SMS Providers ---
+    'console_sms': {
+        'CHANNEL_CLASS': 'apps.notification.channels.sms.ConsoleSMSChannel',
+        'CONFIG': {}
     },
-
-    # --- SMS CHANNEL ---
-    'ACTIVE_SMS_PROVIDER': env.str('DJANGO_ACTIVE_SMS_PROVIDER', default='console'),
-    'SMS_PROVIDERS': {
-        'console': {
-            'CHANNEL_CLASS': 'apps.notification.channels.sms.ConsoleSMSChannel',
-            'CONFIG': {}
-        },
-        # 'twilio': {
-        #     'CHANNEL_CLASS': 'apps.notification.channels.sms.TwilioSMSChannel',
-        #     'CONFIG': {
-        #         'ACCOUNT_SID': 'YOUR_TWILIO_ACCOUNT_SID',
-        #         'AUTH_TOKEN': 'YOUR_TWILIO_AUTH_TOKEN',
-        #         'FROM_NUMBER': 'YOUR_TWILIO_PHONE_NUMBER',
-        #     }
-        # },
-        'kavenegar': {
-            'CHANNEL_CLASS': 'apps.notification.channels.sms.KavenegarSMSChannel',
-            'CONFIG': {
-                'API_KEY': env.str('DJANGO_KAVENEGAR_API_KEY', default=''),
-            }
-        },
+    'kavenegar_sms': {
+        'CHANNEL_CLASS': 'apps.notification.channels.sms.KavenegarSMSChannel',
+        'CONFIG': {
+            'API_KEY': env.str('DJANGO_KAVENEGAR_API_KEY', default=''),
+        }
     },
+    # 'twilio_sms': {
+    #     'CHANNEL_CLASS': 'apps.notification.channels.sms.TwilioSMSChannel',
+    #     'CONFIG': {
+    #         'ACCOUNT_SID': 'YOUR_TWILIO_ACCOUNT_SID',
+    #         'AUTH_TOKEN': 'YOUR_TWILIO_AUTH_TOKEN',
+    #         'FROM_NUMBER': 'YOUR_TWILIO_PHONE_NUMBER',
+    #     }
+    # },
 
-    # --- TELEGRAM CHANNEL (NEW) ---
-    'ACTIVE_TELEGRAM_PROVIDER': env.str('DJANGO_ACTIVE_TELEGRAM_PROVIDER', default='default'),
-    'TELEGRAM_PROVIDERS': {
-        'default': {
-            'CHANNEL_CLASS': 'apps.notification.channels.telegram.TelegramBotChannel',
-            'CONFIG': {
-                'TELEGRAM_BOT_TOKEN': env.str('DJANGO_TELEGRAM_BOT_TOKEN', default=''),
-            }
+    # --- Email Providers ---
+    'django_email': {
+        'CHANNEL_CLASS': 'apps.notification.channels.email.DjangoEmailChannel',
+        'CONFIG': {
+            'FROM_EMAIL': env.str('DJANGO_DEFAULT_FROM_EMAIL', default='no-reply@example.com')
+        }
+    },
+    # 'sendgrid': {
+    #     'CHANNEL_CLASS': 'apps.notification.channels.email.SendGridEmailChannel',
+    #     'CONFIG': {'API_KEY': 'YOUR_SENDGRID_API_KEY'}
+    # },
+
+    # --- Telegram Providers ---
+    'telegram_bot': {
+        'CHANNEL_CLASS': 'apps.notification.channels.telegram.TelegramBotChannel',
+        'CONFIG': {
+            'TELEGRAM_BOT_TOKEN': env.str('DJANGO_TELEGRAM_BOT_TOKEN', default=''),
         }
     },
 }
 
-# --- Payments configuration ---
+# --- Payment configuration ---
 PAYMENTS_SETTINGS = {
     'PROVIDERS': {
         'zarinpal': {
