@@ -1,12 +1,16 @@
 from django.conf import settings
-from django.contrib import admin
-from django.conf.urls.static import static
-from django.urls import path, include, re_path
 from django.conf.urls.i18n import i18n_patterns
+from django.conf.urls.static import static
+from django.contrib import admin
+from django.urls import include, path, re_path
 
 api_urlpatterns = [
+    re_path(r'^(?P<version>v\d+)/', include('apps.core.urls', namespace='configuration')),
     re_path(r'^(?P<version>v\d+)/', include('apps.account.urls', namespace='account')),
     re_path(r'^(?P<version>v\d+)/', include('apps.products.urls', namespace='products')),
+    re_path(r'^(?P<version>v\d+)/', include('apps.orders.urls', namespace='orders')),
+    re_path(r'^(?P<version>v\d+)/', include('apps.payments.urls', namespace='payments')),
+    re_path(r'^(?P<version>v\d+)/', include('apps.wallets.urls', namespace='wallets')),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 ]
 
