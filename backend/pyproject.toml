@@ -1,0 +1,74 @@
+[tool.black]
+line-length = 120
+
+[tool.isort]
+profile = "black"
+line_length = 120
+#force_single_line = true
+#known_first_party = ["apps", "core", "config"]
+
+[tool.llmcontext]
+allowed_dirs = [
+    "apps",
+]
+ignored_dirs = [
+    ".git",
+    ".github",
+    ".vscode",
+    ".idea",
+    "node_modules",
+    "__pycache__",
+    "static",
+    "media",
+    "locale",
+    "nginx",
+    "screenshots",
+    "migrations",
+    "fixtures",
+    "management",
+    "config",
+    "frontend"
+]
+ignored_files = [
+    "package-lock.json",
+    "yarn.lock",
+    "pnpm-lock.yaml",
+    "poetry.lock",
+    "Pipfile.lock",
+    ".env.example",
+    ".env",
+    ".gitignore",
+    ".gitattributes",
+    ".dockerignore",
+    "Dockerfile",
+    "docker-compose.dev.yml",
+    "docker-compose.prod.yml",
+    "docker-compose.yml",
+    "postman_collection.json",
+    "requirements.txt",
+    "manage.py"
+]
+ignored_extensions = [
+    ".png",
+    ".jpg",
+    ".jpeg",
+    ".gif",
+    ".ico",
+    ".svg",
+    ".zip",
+    ".pdf",
+    ".woff",
+    ".woff2",
+    ".ttf",
+    ".otf",
+    ".pyc",
+    ".o",
+    ".so",
+    ".lock",
+    ".log",
+    ".DS_Store",
+    ".md",
+    ".sqlite3",
+    ".sh",
+    ".toml"
+]

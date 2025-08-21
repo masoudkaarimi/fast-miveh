@@ -36,12 +36,13 @@ THIRD_PARTY_APPS = [
     "celery",
     "rosetta",
     "solo",
+    "mptt",
 ]
 
 LOCAL_APPS = [
     "apps.common",
-    "apps.account",
-    "apps.notification",
+    "apps.accounts",
+    "apps.notifications",
     "apps.media",
     "apps.products",
     "apps.orders",
@@ -123,10 +124,10 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 ALLOW_UNICODE_SLUGS = True
 
 # --- Authentication Configuration ---
-AUTH_USER_MODEL = "account.User"
+AUTH_USER_MODEL = "accounts.User"
 AUTHENTICATION_BACKENDS = [
-    'apps.account.backends.IdentifierBackend',  # Custom backend for identifier (email or phone) + password login
-    'apps.account.backends.OTPBackend',  # Custom backend for OTP login
+    'apps.accounts.backends.IdentifierBackend',  # Custom backend for identifier (email or phone) + password login
+    'apps.accounts.backends.OTPBackend',  # Custom backend for OTP login
     'django.contrib.auth.backends.ModelBackend',  # Default Django auth backend
 ]
 # LOGIN_URL = 'account:login'
@@ -135,6 +136,7 @@ PASSWORD_RESET_TIMEOUT = 259200  # Default: 259200 seconds = 3 days
 # --- Site Configuration ---
 SITE_NAME = _("Fast Miveh")
 FRONTEND_URL = {
+    'BASE': env.str("DJANGO_FRONTEND_URL"),
     'PASSWORD_RESET_CONFIRM': env.str("DJANGO_FRONTEND_URL_PASSWORD_RESET"),
 }
 
@@ -150,17 +152,17 @@ OTP_SETTINGS = {
 NOTIFICATION_PROVIDERS = {
     # --- SMS Providers ---
     'console_sms': {
-        'CHANNEL_CLASS': 'apps.notification.channels.sms.ConsoleSMSChannel',
+        'CHANNEL_CLASS': 'apps.notifications.channels.sms.ConsoleSMSChannel',
         'CONFIG': {}
     },
     'kavenegar_sms': {
-        'CHANNEL_CLASS': 'apps.notification.channels.sms.KavenegarSMSChannel',
+        'CHANNEL_CLASS': 'apps.notifications.channels.sms.KavenegarSMSChannel',
         'CONFIG': {
             'API_KEY': env.str('DJANGO_KAVENEGAR_API_KEY', default=''),
         }
     },
     # 'twilio_sms': {
-    #     'CHANNEL_CLASS': 'apps.notification.channels.sms.TwilioSMSChannel',
+    #     'CHANNEL_CLASS': 'apps.notifications.channels.sms.TwilioSMSChannel',
     #     'CONFIG': {
     #         'ACCOUNT_SID': 'YOUR_TWILIO_ACCOUNT_SID',
     #         'AUTH_TOKEN': 'YOUR_TWILIO_AUTH_TOKEN',
@@ -170,19 +172,19 @@ NOTIFICATION_PROVIDERS = {
 
     # --- Email Providers ---
     'django_email': {
-        'CHANNEL_CLASS': 'apps.notification.channels.email.DjangoEmailChannel',
+        'CHANNEL_CLASS': 'apps.notifications.channels.email.DjangoEmailChannel',
         'CONFIG': {
             'FROM_EMAIL': env.str('DJANGO_DEFAULT_FROM_EMAIL', default='no-reply@example.com')
         }
     },
     # 'sendgrid': {
-    #     'CHANNEL_CLASS': 'apps.notification.channels.email.SendGridEmailChannel',
+    #     'CHANNEL_CLASS': 'apps.notifications.channels.email.SendGridEmailChannel',
     #     'CONFIG': {'API_KEY': 'YOUR_SENDGRID_API_KEY'}
     # },
 
     # --- Telegram Providers ---
     'telegram_bot': {
-        'CHANNEL_CLASS': 'apps.notification.channels.telegram.TelegramBotChannel',
+        'CHANNEL_CLASS': 'apps.notifications.channels.telegram.TelegramBotChannel',
         'CONFIG': {
             'TELEGRAM_BOT_TOKEN': env.str('DJANGO_TELEGRAM_BOT_TOKEN', default=''),
         }
@@ -252,6 +254,7 @@ REST_FRAMEWORK = {
     # ],
     # 'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    # 'DEFAULT_PAGINATION_CLASS': 'apps.common.pagination.PageNumberPagination',
     'PAGE_SIZE': 20,
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework_simplejwt.authentication.JWTAuthentication',
