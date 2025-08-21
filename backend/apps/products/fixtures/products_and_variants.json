@@ -1,0 +1,318 @@
+[
+    { "model": "products.product", "pk": 1, "fields": { "product_type": 3, "brand": 3, "name": "سیب قرمز درجه یک دماوند", "slug": "premium-damavand-red-apple", "short_description": "سیب قرمز ارگانیک و آبدار، محصول باغات دماوند.", "categories": [1], "tags": [3, 4, 5], "is_active": true, "published_at": "2025-01-01T10:00:00Z", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.productvariant", "pk": 1, "fields": { "product": 1, "name": "بسته ۵۰۰ گرمی", "sku": "APL-R-500G", "attributes": [3, 7], "is_active": true, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.price", "pk": 1, "fields": {"variant": 1, "currency": 1, "base_price": "45000.00", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+    { "model": "products.inventory", "pk": 1, "fields": {"variant": 1, "quantity": 200, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+    { "model": "products.productvariant", "pk": 2, "fields": { "product": 1, "name": "۱ کیلوگرم", "sku": "APL-R-1KG", "attributes": [1, 7], "is_default": true, "is_active": true, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.price", "pk": 2, "fields": {"variant": 2, "currency": 1, "base_price": "85000.00", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+    { "model": "products.inventory", "pk": 2, "fields": {"variant": 2, "quantity": 150, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+    { "model": "products.productvariant", "pk": 3, "fields": { "product": 1, "name": "سبد ۲.۵ کیلویی", "sku": "APL-R-2.5KG-BASKET", "attributes": [2, 7, 4], "is_active": true, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.price", "pk": 3, "fields": {"variant": 3, "currency": 1, "base_price": "195000.00", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+    { "model": "products.inventory", "pk": 3, "fields": {"variant": 3, "quantity": 80, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+
+    { "model": "products.product", "pk": 2, "fields": { "product_type": 3, "brand": 3, "name": "پرتقال تامسون شمال", "slug": "thomson-orange", "short_description": "پرتقال تامسون شیرین و خوش‌عطر، مناسب برای آبگیری.", "categories": [1, 2], "tags": [3], "is_active": true, "published_at": "2025-01-01T10:00:00Z", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.productvariant", "pk": 4, "fields": { "product": 2, "name": "درجه یک - ۱ کیلوگرم", "sku": "ORG-T-1KG", "attributes": [1, 7], "is_default": true, "is_active": true, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.price", "pk": 4, "fields": {"variant": 4, "currency": 1, "base_price": "65000.00", "sale_price": "59000.00", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+    { "model": "products.inventory", "pk": 4, "fields": {"variant": 4, "quantity": 200, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+    { "model": "products.productvariant", "pk": 5, "fields": { "product": 2, "name": "کارتن ۲.۵ کیلویی", "sku": "ORG-T-2.5KG", "attributes": [2, 7, 5], "is_active": true, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.price", "pk": 5, "fields": {"variant": 5, "currency": 1, "base_price": "150000.00", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+    { "model": "products.inventory", "pk": 5, "fields": {"variant": 5, "quantity": 100, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+
+    { "model": "products.product", "pk": 3, "fields": { "product_type": 3, "brand": 3, "name": "هلو انجیری", "slug": "flat-peach", "short_description": "هلو انجیری شیرین و معطر، محصول شهریار.", "categories": [1, 3], "tags": [3, 2], "is_active": true, "published_at": "2025-01-01T10:00:00Z", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.productvariant", "pk": 6, "fields": { "product": 3, "name": "بسته ۵۰۰ گرمی", "sku": "PCH-F-500G", "attributes": [3, 7], "is_active": true, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.price", "pk": 6, "fields": {"variant": 6, "currency": 1, "base_price": "75000.00", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+    { "model": "products.inventory", "pk": 6, "fields": {"variant": 6, "quantity": 90, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+    { "model": "products.productvariant", "pk": 7, "fields": { "product": 3, "name": "۱ کیلوگرم", "sku": "PCH-F-1KG", "attributes": [1, 7], "is_default": true, "is_active": true, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.price", "pk": 7, "fields": {"variant": 7, "currency": 1, "base_price": "140000.00", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+    { "model": "products.inventory", "pk": 7, "fields": {"variant": 7, "quantity": 110, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+    { "model": "products.productvariant", "pk": 8, "fields": { "product": 3, "name": "سبد ۲.۵ کیلویی", "sku": "PCH-F-2.5KG", "attributes": [2, 7, 4], "is_active": true, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.price", "pk": 8, "fields": {"variant": 8, "currency": 1, "base_price": "320000.00", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+    { "model": "products.inventory", "pk": 8, "fields": {"variant": 8, "quantity": 50, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+
+    { "model": "products.product", "pk": 4, "fields": { "product_type": 3, "brand": 3, "name": "موز", "slug": "banana", "short_description": "موز وارداتی تازه و شیرین.", "categories": [1], "tags": [5], "is_active": true, "published_at": "2025-01-01T10:00:00Z", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.productvariant", "pk": 9, "fields": { "product": 4, "name": "۱ کیلوگرم", "sku": "BNN-1KG", "attributes": [1], "is_default": true, "is_active": true, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.price", "pk": 9, "fields": {"variant": 9, "currency": 1, "base_price": "110000.00", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+    { "model": "products.inventory", "pk": 9, "fields": {"variant": 9, "quantity": 180, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+
+    { "model": "products.product", "pk": 5, "fields": { "product_type": 3, "brand": 3, "name": "توت فرنگی", "slug": "strawberry", "short_description": "توت فرنگی تازه و ارگانیک کردستان.", "categories": [1], "tags": [3, 4], "is_active": true, "published_at": "2025-01-01T10:00:00Z", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.productvariant", "pk": 10, "fields": { "product": 5, "name": "بسته ۵۰۰ گرمی", "sku": "STRW-500G", "attributes": [3, 4], "is_default": true, "is_active": true, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.price", "pk": 10, "fields": {"variant": 10, "currency": 1, "base_price": "95000.00", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+    { "model": "products.inventory", "pk": 10, "fields": {"variant": 10, "quantity": 70, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+    { "model": "products.productvariant", "pk": 11, "fields": { "product": 5, "name": "بسته ۱ کیلویی", "sku": "STRW-1KG", "attributes": [1, 4], "is_active": true, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.price", "pk": 11, "fields": {"variant": 11, "currency": 1, "base_price": "180000.00", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+    { "model": "products.inventory", "pk": 11, "fields": {"variant": 11, "quantity": 40, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+
+    { "model": "products.product", "pk": 6, "fields": { "product_type": 3, "brand": 3, "name": "گیلاس تکدانه", "slug": "cherry", "short_description": "گیلاس درشت و شیرین.", "categories": [1, 3], "tags": [3], "is_active": true, "published_at": "2025-01-01T10:00:00Z", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.productvariant", "pk": 12, "fields": { "product": 6, "name": "۱ کیلوگرم", "sku": "CHRY-1KG", "attributes": [1], "is_default": true, "is_active": true, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.price", "pk": 12, "fields": {"variant": 12, "currency": 1, "base_price": "250000.00", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+    { "model": "products.inventory", "pk": 12, "fields": {"variant": 12, "quantity": 60, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+
+    { "model": "products.product", "pk": 7, "fields": { "product_type": 3, "brand": 3, "name": "انگور بی دانه", "slug": "seedless-grapes", "short_description": "انگور بی دانه سفید و شیرین.", "categories": [1], "tags": [3], "is_active": true, "published_at": "2025-01-01T10:00:00Z", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.productvariant", "pk": 13, "fields": { "product": 7, "name": "۱ کیلوگرم", "sku": "GRP-S-1KG", "attributes": [1], "is_default": true, "is_active": true, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.price", "pk": 13, "fields": {"variant": 13, "currency": 1, "base_price": "115000.00", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+    { "model": "products.inventory", "pk": 13, "fields": {"variant": 13, "quantity": 130, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+
+    { "model": "products.product", "pk": 8, "fields": { "product_type": 3, "brand": 3, "name": "لیمو ترش سنگی", "slug": "lime", "short_description": "لیمو ترش سنگی شیراز.", "categories": [1, 2], "tags": [3], "is_active": true, "published_at": "2025-01-01T10:00:00Z", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.productvariant", "pk": 14, "fields": { "product": 8, "name": "۱ کیلوگرم", "sku": "LIME-1KG", "attributes": [1], "is_default": true, "is_active": true, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.price", "pk": 14, "fields": {"variant": 14, "currency": 1, "base_price": "72000.00", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+    { "model": "products.inventory", "pk": 14, "fields": {"variant": 14, "quantity": 220, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+
+    { "model": "products.product", "pk": 9, "fields": { "product_type": 3, "brand": 3, "name": "خیار رسمی", "slug": "persian-cucumber", "short_description": "خیار رسمی تازه و ترد.", "categories": [5], "tags": [3], "is_active": true, "published_at": "2025-01-01T10:00:00Z", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.productvariant", "pk": 15, "fields": { "product": 9, "name": "۱ کیلوگرم", "sku": "CUC-P-1KG", "attributes": [1, 7], "is_default": true, "is_active": true, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.price", "pk": 15, "fields": {"variant": 15, "currency": 1, "base_price": "55000.00", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+    { "model": "products.inventory", "pk": 15, "fields": {"variant": 15, "quantity": 400, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+
+    { "model": "products.product", "pk": 10, "fields": { "product_type": 3, "brand": 3, "name": "گوجه فرنگی رسمی", "slug": "persian-tomato", "short_description": "گوجه فرنگی گوشتی و خوش‌رنگ.", "categories": [5], "tags": [3, 5], "is_active": true, "published_at": "2025-01-01T10:00:00Z", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.productvariant", "pk": 16, "fields": { "product": 10, "name": "۱ کیلوگرم", "sku": "TMT-P-1KG", "attributes": [1, 7], "is_default": true, "is_active": true, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.price", "pk": 16, "fields": {"variant": 16, "currency": 1, "base_price": "40000.00", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+    { "model": "products.inventory", "pk": 16, "fields": {"variant": 16, "quantity": 500, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+
+    { "model": "products.product", "pk": 11, "fields": { "product_type": 3, "brand": 3, "name": "پیاز زرد", "slug": "yellow-onion", "short_description": "پیاز زرد زنجان، مناسب برای پخت و پز.", "categories": [5], "tags": [], "is_active": true, "published_at": "2025-01-01T10:00:00Z", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.productvariant", "pk": 17, "fields": { "product": 11, "name": "۱ کیلوگرم", "sku": "ONN-Y-1KG", "attributes": [1], "is_default": true, "is_active": true, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.price", "pk": 17, "fields": {"variant": 17, "currency": 1, "base_price": "30000.00", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+    { "model": "products.inventory", "pk": 17, "fields": {"variant": 17, "quantity": 800, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+
+    { "model": "products.product", "pk": 12, "fields": { "product_type": 3, "brand": 3, "name": "سیب زمینی", "slug": "potato", "short_description": "سیب زمینی آگریا، مناسب برای سرخ کردن و پخت و پز.", "categories": [5], "tags": [], "is_active": true, "published_at": "2025-01-01T10:00:00Z", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.productvariant", "pk": 18, "fields": { "product": 12, "name": "۱ کیلوگرم", "sku": "POT-1KG", "attributes": [1], "is_default": true, "is_active": true, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.price", "pk": 18, "fields": {"variant": 18, "currency": 1, "base_price": "42000.00", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+    { "model": "products.inventory", "pk": 18, "fields": {"variant": 18, "quantity": 700, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+
+    { "model": "products.product", "pk": 13, "fields": { "product_type": 3, "brand": 3, "name": "بادمجان", "slug": "eggplant", "short_description": "بادمجان قلمی شیرین و بدون تخم.", "categories": [5], "tags": [], "is_active": true, "published_at": "2025-01-01T10:00:00Z", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.productvariant", "pk": 19, "fields": { "product": 13, "name": "۱ کیلوگرم", "sku": "EGP-1KG", "attributes": [1], "is_default": true, "is_active": true, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.price", "pk": 19, "fields": {"variant": 19, "currency": 1, "base_price": "48000.00", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+    { "model": "products.inventory", "pk": 19, "fields": {"variant": 19, "quantity": 280, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+
+    { "model": "products.product", "pk": 14, "fields": { "product_type": 3, "brand": 3, "name": "کدو سبز", "slug": "zucchini", "short_description": "کدو سبز تازه و قلمی.", "categories": [5], "tags": [], "is_active": true, "published_at": "2025-01-01T10:00:00Z", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.productvariant", "pk": 20, "fields": { "product": 14, "name": "۱ کیلوگرم", "sku": "ZUC-1KG", "attributes": [1], "is_default": true, "is_active": true, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.price", "pk": 20, "fields": {"variant": 20, "currency": 1, "base_price": "51000.00", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+    { "model": "products.inventory", "pk": 20, "fields": {"variant": 20, "quantity": 210, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+
+    { "model": "products.product", "pk": 15, "fields": { "product_type": 3, "brand": 3, "name": "کاهو رسمی", "slug": "romaine-lettuce", "short_description": "کاهو رسمی تازه و ارگانیک.", "categories": [4], "tags": [4], "is_active": true, "published_at": "2025-01-01T10:00:00Z", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.productvariant", "pk": 21, "fields": { "product": 15, "name": "یک عدد", "sku": "LTC-R-1PC", "attributes": [], "is_default": true, "is_active": true, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.price", "pk": 21, "fields": {"variant": 21, "currency": 1, "base_price": "35000.00", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+    { "model": "products.inventory", "pk": 21, "fields": {"variant": 21, "quantity": 250, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+
+    { "model": "products.product", "pk": 16, "fields": { "product_type": 3, "brand": 3, "name": "سبزی خوردن پاک شده", "slug": "fresh-herbs-mix", "short_description": "مخلوط سبزی خوردن تازه، شسته و آماده مصرف.", "categories": [4], "tags": [2], "is_active": true, "published_at": "2025-01-01T10:00:00Z", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.productvariant", "pk": 22, "fields": { "product": 16, "name": "بسته ۲۵۰ گرمی", "sku": "HRB-M-250G", "attributes": [], "is_default": true, "is_active": true, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.price", "pk": 22, "fields": {"variant": 22, "currency": 1, "base_price": "42000.00", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+    { "model": "products.inventory", "pk": 22, "fields": {"variant": 22, "quantity": 150, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+
+    { "model": "products.product", "pk": 17, "fields": { "product_type": 3, "brand": 3, "name": "اسفناج", "slug": "spinach", "short_description": "اسفناج تازه و جوان.", "categories": [4], "tags": [], "is_active": true, "published_at": "2025-01-01T10:00:00Z", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.productvariant", "pk": 23, "fields": { "product": 17, "name": "بسته ۵۰۰ گرمی", "sku": "SPN-500G", "attributes": [3], "is_default": true, "is_active": true, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.price", "pk": 23, "fields": {"variant": 23, "currency": 1, "base_price": "38000.00", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+    { "model": "products.inventory", "pk": 23, "fields": {"variant": 23, "quantity": 180, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+
+    { "model": "products.product", "pk": 18, "fields": { "product_type": 3, "brand": 3, "name": "کلم بروکلی", "slug": "broccoli", "short_description": "کلم بروکلی ارگانیک.", "categories": [4], "tags": [4], "is_active": true, "published_at": "2025-01-01T10:00:00Z", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.productvariant", "pk": 24, "fields": { "product": 18, "name": "یک عدد", "sku": "BRC-1PC", "attributes": [], "is_default": true, "is_active": true, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.price", "pk": 24, "fields": {"variant": 24, "currency": 1, "base_price": "60000.00", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+    { "model": "products.inventory", "pk": 24, "fields": {"variant": 24, "quantity": 110, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+
+    { "model": "products.product", "pk": 19, "fields": { "product_type": 3, "brand": 3, "name": "کرفس", "slug": "celery", "short_description": "کرفس تازه و آبدار.", "categories": [4], "tags": [], "is_active": true, "published_at": "2025-01-01T10:00:00Z", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.productvariant", "pk": 25, "fields": { "product": 19, "name": "یک دسته", "sku": "CLRY-1B", "attributes": [], "is_default": true, "is_active": true, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.price", "pk": 25, "fields": {"variant": 25, "currency": 1, "base_price": "25000.00", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+    { "model": "products.inventory", "pk": 25, "fields": {"variant": 25, "quantity": 140, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+
+    { "model": "products.product", "pk": 20, "fields": { "product_type": 3, "brand": 3, "name": "جعفری", "slug": "parsley", "short_description": "جعفری تازه برای انواع غذا.", "categories": [4], "tags": [], "is_active": true, "published_at": "2025-01-01T10:00:00Z", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.productvariant", "pk": 26, "fields": { "product": 20, "name": "بسته ۱۰۰ گرمی", "sku": "PRSL-100G", "attributes": [], "is_default": true, "is_active": true, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.price", "pk": 26, "fields": {"variant": 26, "currency": 1, "base_price": "15000.00", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+    { "model": "products.inventory", "pk": 26, "fields": {"variant": 26, "quantity": 300, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+
+    { "model": "products.product", "pk": 21, "fields": { "product_type": 4, "brand": 4, "name": "پسته اکبری خام", "slug": "raw-akbari-pistachio", "short_description": "پسته اکبری درجه یک رفسنجان، خندان و تازه.", "categories": [6], "tags": [5], "is_active": true, "published_at": "2025-01-01T10:00:00Z", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.productvariant", "pk": 27, "fields": { "product": 21, "name": "بسته ۵۰۰ گرمی", "sku": "PST-A-500G", "attributes": [3, 6], "is_default": true, "is_active": true, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.price", "pk": 27, "fields": {"variant": 27, "currency": 1, "base_price": "450000.00", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+    { "model": "products.inventory", "pk": 27, "fields": {"variant": 27, "quantity": 50, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+
+    { "model": "products.product", "pk": 22, "fields": { "product_type": 4, "brand": 4, "name": "گردو پوست کاغذی", "slug": "paper-shell-walnut", "short_description": "گردوی ایرانی پوست کاغذی با مغز سفید و چرب.", "categories": [6], "tags": [2], "is_active": true, "published_at": "2025-01-01T10:00:00Z", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.productvariant", "pk": 28, "fields": { "product": 22, "name": "۱ کیلوگرم", "sku": "WLT-PS-1KG", "attributes": [1], "is_default": true, "is_active": true, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.price", "pk": 28, "fields": {"variant": 28, "currency": 1, "base_price": "750000.00", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+    { "model": "products.inventory", "pk": 28, "fields": {"variant": 28, "quantity": 40, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+
+    { "model": "products.product", "pk": 23, "fields": { "product_type": 4, "brand": 4, "name": "بادام درختی", "slug": "almond", "short_description": "بادام درختی ایرانی اعلا.", "categories": [6], "tags": [], "is_active": true, "published_at": "2025-01-01T10:00:00Z", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.productvariant", "pk": 29, "fields": { "product": 23, "name": "۵۰۰ گرم", "sku": "ALM-500G", "attributes": [3], "is_default": true, "is_active": true, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.price", "pk": 29, "fields": {"variant": 29, "currency": 1, "base_price": "480000.00", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+    { "model": "products.inventory", "pk": 29, "fields": {"variant": 29, "quantity": 60, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+
+    { "model": "products.product", "pk": 24, "fields": { "product_type": 4, "brand": 4, "name": "کشمش پلویی", "slug": "raisins", "short_description": "کشمش پلویی آفتاب خشک.", "categories": [6], "tags": [], "is_active": true, "published_at": "2025-01-01T10:00:00Z", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.productvariant", "pk": 30, "fields": { "product": 24, "name": "بسته ۵۰۰ گرمی", "sku": "RSN-500G", "attributes": [3, 6], "is_default": true, "is_active": true, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.price", "pk": 30, "fields": {"variant": 30, "currency": 1, "base_price": "90000.00", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+    { "model": "products.inventory", "pk": 30, "fields": {"variant": 30, "quantity": 120, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+
+    { "model": "products.product", "pk": 25, "fields": { "product_type": 4, "brand": 4, "name": "انجیر خشک استهبان", "slug": "dried-figs", "short_description": "انجیر خشک درجه یک استهبان.", "categories": [6], "tags": [2], "is_active": true, "published_at": "2025-01-01T10:00:00Z", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.productvariant", "pk": 31, "fields": { "product": 25, "name": "۵۰۰ گرم", "sku": "FIG-D-500G", "attributes": [3], "is_default": true, "is_active": true, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.price", "pk": 31, "fields": {"variant": 31, "currency": 1, "base_price": "320000.00", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+    { "model": "products.inventory", "pk": 31, "fields": {"variant": 31, "quantity": 0, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+
+    { "model": "products.product", "pk": 26, "fields": { "product_type": 4, "brand": 4, "name": "قیسی ممتاز", "slug": "dried-apricot", "short_description": "قیسی ممتاز صادراتی.", "categories": [6], "tags": [], "is_active": true, "published_at": "2025-01-01T10:00:00Z", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.productvariant", "pk": 32, "fields": { "product": 26, "name": "۵۰۰ گرم", "sku": "APR-D-500G", "attributes": [3], "is_default": true, "is_active": true, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.price", "pk": 32, "fields": {"variant": 32, "currency": 1, "base_price": "280000.00", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+    { "model": "products.inventory", "pk": 32, "fields": {"variant": 32, "quantity": 95, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+
+    { "model": "products.product", "pk": 27, "fields": { "product_type": 4, "brand": 4, "name": "بادام هندی", "slug": "cashew", "short_description": "بادام هندی شور درجه یک.", "categories": [6], "tags": [], "is_active": true, "published_at": "2025-01-01T10:00:00Z", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.productvariant", "pk": 33, "fields": { "product": 27, "name": "۲۵۰ گرم", "sku": "CSHW-250G", "attributes": [], "is_default": true, "is_active": true, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.price", "pk": 33, "fields": {"variant": 33, "currency": 1, "base_price": "350000.00", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+    { "model": "products.inventory", "pk": 33, "fields": {"variant": 33, "quantity": 85, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+
+    { "model": "products.product", "pk": 28, "fields": { "product_type": 4, "brand": 3, "name": "عدس دیم آذرشهر", "slug": "azarshahr-lentils", "short_description": "عدس محلی آذرشهر، زودپز و خوش طعم.", "categories": [7], "tags": [], "is_active": true, "published_at": "2025-01-01T10:00:00Z", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.productvariant", "pk": 34, "fields": { "product": 28, "name": "بسته ۹۰۰ گرمی", "sku": "LNTL-AZR-900G", "attributes": [6], "is_default": true, "is_active": true, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.price", "pk": 34, "fields": {"variant": 34, "currency": 1, "base_price": "145000.00", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+    { "model": "products.inventory", "pk": 34, "fields": {"variant": 34, "quantity": 300, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+
+    { "model": "products.product", "pk": 29, "fields": { "product_type": 4, "brand": 3, "name": "لوبیا چیتی", "slug": "pinto-beans", "short_description": "لوبیا چیتی درجه یک خمین.", "categories": [7], "tags": [5], "is_active": true, "published_at": "2025-01-01T10:00:00Z", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.productvariant", "pk": 35, "fields": { "product": 29, "name": "بسته ۹۰۰ گرمی", "sku": "BNS-PNT-900G", "attributes": [6], "is_default": true, "is_active": true, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.price", "pk": 35, "fields": {"variant": 35, "currency": 1, "base_price": "160000.00", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+    { "model": "products.inventory", "pk": 35, "fields": {"variant": 35, "quantity": 250, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+
+    { "model": "products.product", "pk": 30, "fields": { "product_type": 4, "brand": 3, "name": "نخود", "slug": "chickpea", "short_description": "نخود دو خان کرمانشاه.", "categories": [7], "tags": [], "is_active": true, "published_at": "2025-01-01T10:00:00Z", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.productvariant", "pk": 36, "fields": { "product": 30, "name": "بسته ۹۰۰ گرمی", "sku": "CHKP-900G", "attributes": [6], "is_default": true, "is_active": true, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.price", "pk": 36, "fields": {"variant": 36, "currency": 1, "base_price": "135000.00", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+    { "model": "products.inventory", "pk": 36, "fields": {"variant": 36, "quantity": 280, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+
+    { "model": "products.product", "pk": 31, "fields": { "product_type": 4, "brand": 3, "name": "لپه", "slug": "split-pea", "short_description": "لپه ریز آذرشهر.", "categories": [7], "tags": [], "is_active": true, "published_at": "2025-01-01T10:00:00Z", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.productvariant", "pk": 37, "fields": { "product": 31, "name": "بسته ۹۰۰ گرمی", "sku": "SPLP-900G", "attributes": [6], "is_default": true, "is_active": true, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.price", "pk": 37, "fields": {"variant": 37, "currency": 1, "base_price": "155000.00", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+    { "model": "products.inventory", "pk": 37, "fields": {"variant": 37, "quantity": 260, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+
+    { "model": "products.product", "pk": 32, "fields": { "product_type": 4, "brand": 3, "name": "لوبیا قرمز", "slug": "red-kidney-bean", "short_description": "لوبیا قرمز کپسولی.", "categories": [7], "tags": [], "is_active": true, "published_at": "2025-01-01T10:00:00Z", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.productvariant", "pk": 38, "fields": { "product": 32, "name": "بسته ۹۰۰ گرمی", "sku": "RKB-900G", "attributes": [6], "is_default": true, "is_active": true, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.price", "pk": 38, "fields": {"variant": 38, "currency": 1, "base_price": "170000.00", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+    { "model": "products.inventory", "pk": 38, "fields": {"variant": 38, "quantity": 190, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+
+    { "model": "products.product", "pk": 33, "fields": { "product_type": 4, "brand": 3, "name": "ماش", "slug": "mung-bean", "short_description": "ماش ایرانی درجه یک.", "categories": [7], "tags": [], "is_active": true, "published_at": "2025-01-01T10:00:00Z", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.productvariant", "pk": 39, "fields": { "product": 33, "name": "بسته ۹۰۰ گرمی", "sku": "MUNB-900G", "attributes": [6], "is_default": true, "is_active": true, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.price", "pk": 39, "fields": {"variant": 39, "currency": 1, "base_price": "140000.00", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+    { "model": "products.inventory", "pk": 39, "fields": {"variant": 39, "quantity": 210, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+
+    { "model": "products.product", "pk": 34, "fields": { "product_type": 6, "brand": 3, "name": "گلاب دو آتیشه کاشان", "slug": "kashan-rosewater", "short_description": "گلاب سنگین و دو آتیشه، محصول قمصر کاشان.", "categories": [8], "tags": [2, 4], "is_active": true, "published_at": "2025-01-01T10:00:00Z", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.productvariant", "pk": 40, "fields": { "product": 34, "name": "۱ لیتر", "sku": "RSW-DD-1L", "attributes": [9, 12], "is_default": true, "is_active": true, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.price", "pk": 40, "fields": {"variant": 40, "currency": 1, "base_price": "120000.00", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+    { "model": "products.inventory", "pk": 40, "fields": {"variant": 40, "quantity": 100, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+
+    { "model": "products.product", "pk": 35, "fields": { "product_type": 6, "brand": 3, "name": "عرق نعنا", "slug": "mint-water", "short_description": "عرق نعنا خالص و طبیعی.", "categories": [8], "tags": [], "is_active": true, "published_at": "2025-01-01T10:00:00Z", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.productvariant", "pk": 41, "fields": { "product": 35, "name": "۱ لیتر", "sku": "MNTW-1L", "attributes": [9, 11], "is_default": true, "is_active": true, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.price", "pk": 41, "fields": {"variant": 41, "currency": 1, "base_price": "70000.00", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+    { "model": "products.inventory", "pk": 41, "fields": {"variant": 41, "quantity": 130, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+
+    { "model": "products.product", "pk": 36, "fields": { "product_type": 6, "brand": 3, "name": "عرق بیدمشک", "slug": "musk-willow-water", "short_description": "عرق بیدمشک اعلا.", "categories": [8], "tags": [], "is_active": true, "published_at": "2025-01-01T10:00:00Z", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.productvariant", "pk": 42, "fields": { "product": 36, "name": "۱ لیتر", "sku": "MWW-1L", "attributes": [9, 11], "is_default": true, "is_active": true, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.price", "pk": 42, "fields": {"variant": 42, "currency": 1, "base_price": "85000.00", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+    { "model": "products.inventory", "pk": 42, "fields": {"variant": 42, "quantity": 100, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+
+    { "model": "products.product", "pk": 37, "fields": { "product_type": 6, "brand": 3, "name": "عرق کاسنی", "slug": "chicory-water", "short_description": "عرق کاسنی سنتی.", "categories": [8], "tags": [], "is_active": true, "published_at": "2025-01-01T10:00:00Z", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.productvariant", "pk": 43, "fields": { "product": 37, "name": "۱ لیتر", "sku": "CHW-1L", "attributes": [9, 11], "is_default": true, "is_active": true, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.price", "pk": 43, "fields": {"variant": 43, "currency": 1, "base_price": "65000.00", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+    { "model": "products.inventory", "pk": 43, "fields": {"variant": 43, "quantity": 150, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+
+    { "model": "products.product", "pk": 38, "fields": { "product_type": 6, "brand": 3, "name": "عرق شاتره", "slug": "fumitory-water", "short_description": "عرق شاتره طبیعی.", "categories": [8], "tags": [], "is_active": true, "published_at": "2025-01-01T10:00:00Z", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.productvariant", "pk": 44, "fields": { "product": 38, "name": "۱ لیتر", "sku": "FMW-1L", "attributes": [9, 11], "is_default": true, "is_active": true, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.price", "pk": 44, "fields": {"variant": 44, "currency": 1, "base_price": "68000.00", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+    { "model": "products.inventory", "pk": 44, "fields": {"variant": 44, "quantity": 140, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+
+    { "model": "products.product", "pk": 39, "fields": { "product_type": 6, "brand": 3, "name": "عرق بهارنارنج", "slug": "orange-blossom-water", "short_description": "عرق بهارنارنج شیراز.", "categories": [8], "tags": [], "is_active": true, "published_at": "2025-01-01T10:00:00Z", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.productvariant", "pk": 45, "fields": { "product": 39, "name": "۱ لیتر", "sku": "OBW-1L", "attributes": [9, 11], "is_default": true, "is_active": true, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.price", "pk": 45, "fields": {"variant": 45, "currency": 1, "base_price": "95000.00", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+    { "model": "products.inventory", "pk": 45, "fields": {"variant": 45, "quantity": 90, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+
+    { "model": "products.product", "pk": 40, "fields": { "product_type": 5, "brand": 3, "name": "عسل طبیعی سبلان", "slug": "sabalan-honey", "short_description": "عسل چهل گیاه دامنه سبلان، کاملا طبیعی.", "categories": [9], "tags": [4, 5], "is_active": true, "published_at": "2025-01-01T10:00:00Z", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.productvariant", "pk": 46, "fields": { "product": 40, "name": "شیشه ۴۵۰ گرمی", "sku": "HNY-SBL-450G", "attributes": [14, 16], "is_default": true, "is_active": true, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.price", "pk": 46, "fields": {"variant": 46, "currency": 1, "base_price": "350000.00", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+    { "model": "products.inventory", "pk": 46, "fields": {"variant": 46, "quantity": 60, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+
+    { "model": "products.product", "pk": 41, "fields": { "product_type": 5, "brand": 1, "name": "مربای آلبالو", "slug": "sour-cherry-jam", "short_description": "مربای آلبالو یک و یک.", "categories": [9], "tags": [1], "is_active": true, "published_at": "2025-01-01T10:00:00Z", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.productvariant", "pk": 47, "fields": { "product": 41, "name": "شیشه ۲۹۰ گرمی", "sku": "JAM-SC-290G", "attributes": [13, 15], "is_default": true, "is_active": true, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.price", "pk": 47, "fields": {"variant": 47, "currency": 1, "base_price": "85000.00", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+    { "model": "products.inventory", "pk": 47, "fields": {"variant": 47, "quantity": 0, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+
+    { "model": "products.product", "pk": 42, "fields": { "product_type": 5, "brand": 1, "name": "مربای توت فرنگی", "slug": "strawberry-jam", "short_description": "مربای توت فرنگی یک و یک.", "categories": [9], "tags": [], "is_active": true, "published_at": "2025-01-01T10:00:00Z", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.productvariant", "pk": 48, "fields": { "product": 42, "name": "شیشه ۲۹۰ گرمی", "sku": "JAM-ST-290G", "attributes": [13, 15], "is_default": true, "is_active": true, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.price", "pk": 48, "fields": {"variant": 48, "currency": 1, "base_price": "92000.00", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+    { "model": "products.inventory", "pk": 48, "fields": {"variant": 48, "quantity": 110, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+
+    { "model": "products.product", "pk": 43, "fields": { "product_type": 5, "brand": 2, "name": "مربای هویج", "slug": "carrot-jam", "short_description": "مربای هویج مهرام.", "categories": [9], "tags": [], "is_active": true, "published_at": "2025-01-01T10:00:00Z", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.productvariant", "pk": 49, "fields": { "product": 43, "name": "شیشه ۲۹۰ گرمی", "sku": "JAM-CR-290G", "attributes": [13, 15], "is_default": true, "is_active": true, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.price", "pk": 49, "fields": {"variant": 49, "currency": 1, "base_price": "75000.00", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+    { "model": "products.inventory", "pk": 49, "fields": {"variant": 49, "quantity": 130, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+
+    { "model": "products.product", "pk": 44, "fields": { "product_type": 5, "brand": 2, "name": "مربای به", "slug": "quince-jam", "short_description": "مربای به مهرام.", "categories": [9], "tags": [], "is_active": true, "published_at": "2025-01-01T10:00:00Z", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.productvariant", "pk": 50, "fields": { "product": 44, "name": "شیشه ۲۹۰ گرمی", "sku": "JAM-QN-290G", "attributes": [13, 15], "is_default": true, "is_active": true, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.price", "pk": 50, "fields": {"variant": 50, "currency": 1, "base_price": "88000.00", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+    { "model": "products.inventory", "pk": 50, "fields": {"variant": 50, "quantity": 90, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+
+    { "model": "products.product", "pk": 45, "fields": { "product_type": 5, "brand": 3, "name": "شیره انگور", "slug": "grape-molasses", "short_description": "شیره انگور سنتی ملایر.", "categories": [9], "tags": [], "is_active": true, "published_at": "2025-01-01T10:00:00Z", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.productvariant", "pk": 51, "fields": { "product": 45, "name": "ظرف ۴۵۰ گرمی", "sku": "MOL-GRP-450G", "attributes": [14], "is_default": true, "is_active": true, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.price", "pk": 51, "fields": {"variant": 51, "currency": 1, "base_price": "110000.00", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+    { "model": "products.inventory", "pk": 51, "fields": {"variant": 51, "quantity": 100, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+
+    { "model": "products.product", "pk": 46, "fields": { "product_type": 3, "brand": 3, "name": "کلم سفید", "slug": "cabbage", "short_description": "کلم سفید تازه.", "categories": [4], "tags": [], "is_active": true, "published_at": "2025-01-01T10:00:00Z", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.productvariant", "pk": 52, "fields": { "product": 46, "name": "یک عدد", "sku": "CABB-1PC", "attributes": [], "is_default": true, "is_active": true, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.price", "pk": 52, "fields": {"variant": 52, "currency": 1, "base_price": "32000.00", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+    { "model": "products.inventory", "pk": 52, "fields": {"variant": 52, "quantity": 90, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+
+    { "model": "products.product", "pk": 47, "fields": { "product_type": 3, "brand": 3, "name": "فلفل دلمه ای", "slug": "bell-pepper", "short_description": "فلفل دلمه ای رنگی.", "categories": [5], "tags": [], "is_active": true, "published_at": "2025-01-01T10:00:00Z", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.productvariant", "pk": 53, "fields": { "product": 47, "name": "۱ کیلوگرم", "sku": "BPP-1KG", "attributes": [1], "is_default": true, "is_active": true, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.price", "pk": 53, "fields": {"variant": 53, "currency": 1, "base_price": "65000.00", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+    { "model": "products.inventory", "pk": 53, "fields": {"variant": 53, "quantity": 120, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+
+    { "model": "products.product", "pk": 48, "fields": { "product_type": 3, "brand": 3, "name": "سیر", "slug": "garlic", "short_description": "سیر خشک همدان.", "categories": [5], "tags": [], "is_active": true, "published_at": "2025-01-01T10:00:00Z", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.productvariant", "pk": 54, "fields": { "product": 48, "name": "بسته ۲۵۰ گرمی", "sku": "GRLC-250G", "attributes": [], "is_default": true, "is_active": true, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.price", "pk": 54, "fields": {"variant": 54, "currency": 1, "base_price": "40000.00", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+    { "model": "products.inventory", "pk": 54, "fields": {"variant": 54, "quantity": 200, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+
+    { "model": "products.product", "pk": 49, "fields": { "product_type": 4, "brand": 3, "name": "لوبیا سفید", "slug": "white-bean", "short_description": "لوبیا سفید دستچین.", "categories": [7], "tags": [], "is_active": true, "published_at": "2025-01-01T10:00:00Z", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.productvariant", "pk": 55, "fields": { "product": 49, "name": "بسته ۹۰۰ گرمی", "sku": "WBN-900G", "attributes": [6], "is_default": true, "is_active": true, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.price", "pk": 55, "fields": {"variant": 55, "currency": 1, "base_price": "150000.00", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+    { "model": "products.inventory", "pk": 55, "fields": {"variant": 55, "quantity": 220, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+
+    { "model": "products.product", "pk": 50, "fields": { "product_type": 4, "brand": 4, "name": "نخودچی", "slug": "roasted-chickpea", "short_description": "نخودچی شور و تازه.", "categories": [6], "tags": [], "is_active": true, "published_at": "2025-01-01T10:00:00Z", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.productvariant", "pk": 56, "fields": { "product": 50, "name": "بسته ۴۵۰ گرمی", "sku": "RCHKP-450G", "attributes": [], "is_default": true, "is_active": true, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.price", "pk": 56, "fields": {"variant": 56, "currency": 1, "base_price": "95000.00", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+    { "model": "products.inventory", "pk": 56, "fields": {"variant": 56, "quantity": 150, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+
+    { "model": "products.product", "pk": 51, "fields": { "product_type": 3, "brand": 3, "name": "نارنگی", "slug": "tangerine", "short_description": "نارنگی شیرین و پوست نازک.", "categories": [1, 2], "tags": [3], "is_active": true, "published_at": "2025-01-01T10:00:00Z", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.productvariant", "pk": 57, "fields": { "product": 51, "name": "۱ کیلوگرم", "sku": "TNG-1KG", "attributes": [1], "is_default": true, "is_active": true, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.price", "pk": 57, "fields": {"variant": 57, "currency": 1, "base_price": "78000.00", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+    { "model": "products.inventory", "pk": 57, "fields": {"variant": 57, "quantity": 300, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+
+    { "model": "products.product", "pk": 52, "fields": { "product_type": 3, "brand": 3, "name": "خرمالو", "slug": "persimmon", "short_description": "خرمالوی شیرین و رسیده.", "categories": [1], "tags": [3], "is_active": true, "published_at": "2025-01-01T10:00:00Z", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.productvariant", "pk": 58, "fields": { "product": 52, "name": "۱ کیلوگرم", "sku": "PERS-1KG", "attributes": [1], "is_default": true, "is_active": true, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.price", "pk": 58, "fields": {"variant": 58, "currency": 1, "base_price": "110000.00", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+    { "model": "products.inventory", "pk": 58, "fields": {"variant": 58, "quantity": 120, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+
+    { "model": "products.product", "pk": 53, "fields": { "product_type": 3, "brand": 3, "name": "انار", "slug": "pomegranate", "short_description": "انار ساوه، سرخ و آبدار.", "categories": [1], "tags": [3], "is_active": true, "published_at": "2025-01-01T10:00:00Z", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.productvariant", "pk": 59, "fields": { "product": 53, "name": "۱ کیلوگرم", "sku": "POME-1KG", "attributes": [1], "is_default": true, "is_active": true, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.price", "pk": 59, "fields": {"variant": 59, "currency": 1, "base_price": "90000.00", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+    { "model": "products.inventory", "pk": 59, "fields": {"variant": 59, "quantity": 160, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+
+    { "model": "products.product", "pk": 54, "fields": { "product_type": 3, "brand": 3, "name": "کلم قرمز", "slug": "red-cabbage", "short_description": "کلم قرمز برای انواع سالاد.", "categories": [4], "tags": [], "is_active": true, "published_at": "2025-01-01T10:00:00Z", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.productvariant", "pk": 60, "fields": { "product": 54, "name": "یک عدد", "sku": "RCABB-1PC", "attributes": [], "is_default": true, "is_active": true, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.price", "pk": 60, "fields": {"variant": 60, "currency": 1, "base_price": "34000.00", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+    { "model": "products.inventory", "pk": 60, "fields": {"variant": 60, "quantity": 100, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+
+    { "model": "products.product", "pk": 55, "fields": { "product_type": 3, "brand": 3, "name": "هندوانه", "slug": "watermelon", "short_description": "هندوانه شیرین و آبدار.", "categories": [5], "tags": [3], "is_active": true, "published_at": "2025-01-01T10:00:00Z", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.productvariant", "pk": 61, "fields": { "product": 55, "name": "۱ کیلوگرم", "sku": "WMLN-1KG", "attributes": [1], "is_default": true, "is_active": true, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.price", "pk": 61, "fields": {"variant": 61, "currency": 1, "base_price": "20000.00", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+    { "model": "products.inventory", "pk": 61, "fields": {"variant": 61, "quantity": 80, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+
+    { "model": "products.product", "pk": 56, "fields": { "product_type": 4, "brand": 4, "name": "تخمه آفتابگردان", "slug": "sunflower-seeds", "short_description": "تخمه آفتابگردان شمشیری.", "categories": [6], "tags": [], "is_active": true, "published_at": "2025-01-01T10:00:00Z", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.productvariant", "pk": 62, "fields": { "product": 56, "name": "بسته ۵۰۰ گرمی", "sku": "SFS-500G", "attributes": [3], "is_default": true, "is_active": true, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.price", "pk": 62, "fields": {"variant": 62, "currency": 1, "base_price": "120000.00", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+    { "model": "products.inventory", "pk": 62, "fields": {"variant": 62, "quantity": 110, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+
+    { "model": "products.product", "pk": 57, "fields": { "product_type": 4, "brand": 4, "name": "نخودچی شور", "slug": "roasted-chickpea-salted", "short_description": "نخودچی شور و تازه.", "categories": [6], "tags": [], "is_active": true, "published_at": "2025-01-01T10:00:00Z", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.productvariant", "pk": 63, "fields": { "product": 57, "name": "بسته ۴۵۰ گرمی", "sku": "RCHKP-450G-PACK", "attributes": [], "is_default": true, "is_active": true, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.price", "pk": 63, "fields": {"variant": 63, "currency": 1, "base_price": "95000.00", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+    { "model": "products.inventory", "pk": 63, "fields": {"variant": 63, "quantity": 150, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+
+    { "model": "products.product", "pk": 58, "fields": { "product_type": 6, "brand": 3, "name": "عرق کاسنی سنتی", "slug": "traditional-chicory-water", "short_description": "عرق کاسنی سنتی.", "categories": [8], "tags": [], "is_active": true, "published_at": "2025-01-01T10:00:00Z", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.productvariant", "pk": 64, "fields": { "product": 58, "name": "۱ لیتر", "sku": "CHW-1L-TRADITIONAL", "attributes": [9, 11], "is_default": true, "is_active": true, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.price", "pk": 64, "fields": {"variant": 64, "currency": 1, "base_price": "65000.00", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+    { "model": "products.inventory", "pk": 64, "fields": {"variant": 64, "quantity": 150, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+
+    { "model": "products.product", "pk": 59, "fields": { "product_type": 6, "brand": 3, "name": "عرق شاتره سنتی", "slug": "traditional-fumitory-water", "short_description": "عرق شاتره طبیعی.", "categories": [8], "tags": [], "is_active": true, "published_at": "2025-01-01T10:00:00Z", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.productvariant", "pk": 65, "fields": { "product": 59, "name": "۱ لیتر", "sku": "FMW-1L-TRADITIONAL", "attributes": [9, 11], "is_default": true, "is_active": true, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },    { "model": "products.price", "pk": 65, "fields": {"variant": 65, "currency": 1, "base_price": "68000.00", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+    { "model": "products.inventory", "pk": 65, "fields": {"variant": 65, "quantity": 140, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+
+    { "model": "products.product", "pk": 60, "fields": { "product_type": 5, "brand": 1, "name": "مربای هویج مهرام", "slug": "mahram-carrot-jam", "short_description": "مربای هویج مهرام.", "categories": [9], "tags": [], "is_active": true, "published_at": "2025-01-01T10:00:00Z", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.productvariant", "pk": 66, "fields": { "product": 60, "name": "شیشه ۲۹۰ گرمی", "sku": "JAM-CR-MHRM-290G", "attributes": [13, 15], "is_default": true, "is_active": true, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.price", "pk": 66, "fields": {"variant": 66, "currency": 1, "base_price": "75000.00", "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} },
+    { "model": "products.inventory", "pk": 66, "fields": {"variant": 66, "quantity": 130, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z"} }
+]

@@ -1,0 +1,11 @@
+[
+    { "model": "products.productcollection", "pk": 1, "fields": { "name": "پیشنهادهای شگفت‌انگیز", "slug": "incredible-offers", "description": "منتخبی از بهترین محصولات با تخفیف‌های ویژه هفتگی.", "is_active": true, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.productcollection", "pk": 2, "fields": { "name": "ارگانیک و سالم", "slug": "organic-and-healthy", "description": "محصولات ۱۰۰٪ طبیعی و ارگانیک برای سبک زندگی سالم.", "is_active": true, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.productcollection", "pk": 3, "fields": { "name": "محصولات فصل", "slug": "seasonal-products", "description": "بهترین و تازه‌ترین محصولات فصل.", "is_active": true, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.productcollectionentry", "pk": 1, "fields": { "collection": 1, "product": 2, "display_order": 1, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.productcollectionentry", "pk": 2, "fields": { "collection": 1, "product": 41, "display_order": 2, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.productcollectionentry", "pk": 3, "fields": { "collection": 2, "product": 1, "display_order": 1, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.productcollectionentry", "pk": 4, "fields": { "collection": 2, "product": 18, "display_order": 2, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.productcollectionentry", "pk": 5, "fields": { "collection": 3, "product": 3, "display_order": 1, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } },
+    { "model": "products.productcollectionentry", "pk": 6, "fields": { "collection": 3, "product": 5, "display_order": 2, "created_at": "2025-08-12T10:00:00Z", "updated_at": "2025-08-12T10:00:00Z" } }
+]

@@ -1,41 +1,28 @@
 from datetime import timezone
 
 import factory
-from faker import Faker
 from factory.django import DjangoModelFactory
+from faker import Faker
 
+from apps.core.factories import CurrencyFactory
+from apps.core.models import Currency
 from apps.products.models import (
-    Currency, Brand, Category, Tag, Attribute, AttributeValue,
-    ProductType, ProductTypeAttribute, Product, ProductVariant, Price, Inventory, ProductCollection,
-    ProductCollectionEntry
+    Attribute,
+    AttributeValue,
+    Brand,
+    Category,
+    Inventory,
+    Price,
+    Product,
+    ProductCollection,
+    ProductCollectionEntry,
+    ProductType,
+    ProductTypeAttribute,
+    ProductVariant,
+    Tag,
 )
 
 fake = Faker()
-
-
-class CurrencyFactory(DjangoModelFactory):
-    class Meta:
-        model = Currency
-        django_get_or_create = ('code',)
-
-    code = factory.Iterator(['IRR', 'TOMAN', 'USD', 'EUR', 'GBP'])
-    name = factory.LazyAttribute(lambda obj: {
-        'IRR': 'Iranian Rial',
-        'TOMAN': 'Iranian Toman',
-        'USD': 'US Dollar',
-        'EUR': 'Euro',
-        'GBP': 'British Pound'
-    }.get(obj.code, fake.currency_name()))
-    symbol = factory.LazyAttribute(lambda obj: {
-        'IRR': '﷼',
-        'TOMAN': 'تومان',
-        'USD': '$',
-        'EUR': '€',
-        'GBP': '£'
-    }.get(obj.code, fake.currency_symbol()))
-    exchange_rate = 1.0
-    is_active = True
-    is_default = False
 
 
 class CategoryFactory(DjangoModelFactory):
@@ -288,7 +275,6 @@ class InventoryFactory(DjangoModelFactory):
 
     variant = factory.SubFactory(ProductVariantFactory, create_price_and_inventory=False)
     quantity = factory.Faker('random_int', min=0, max=100)
-    reserved_quantity = factory.Faker('random_int', min=0, max=10)
     threshold = 10
     track_inventory = True
     allow_backorders = False

@@ -778,6 +778,15 @@ class Price(TimeStampedModel):
         verbose_name=_("Currency"),
         help_text=_("The currency in which the price is set, e.g., USD, EUR.")
     )
+    cost_price = models.DecimalField(
+        max_digits=12,
+        decimal_places=2,
+        validators=[MinValueValidator(0)],
+        blank=True,
+        null=True,
+        verbose_name=_("Cost Price"),
+        help_text=_("The cost price of the variant, used for profit calculations. If not set, profit cannot be calculated.")
+    )
     base_price = models.DecimalField(
         max_digits=12,
         decimal_places=2,
@@ -806,15 +815,7 @@ class Price(TimeStampedModel):
         verbose_name=_("Sale End Date"),
         help_text=_("The date and time when the sale price expires. If blank, the sale does not expire automatically.")
     )
-    cost_price = models.DecimalField(
-        max_digits=12,
-        decimal_places=2,
-        validators=[MinValueValidator(0)],
-        blank=True,
-        null=True,
-        verbose_name=_("Cost Price"),
-        help_text=_("The cost price of the variant, used for profit calculations. If not set, profit cannot be calculated.")
-    )
+
 
     class Meta:
         verbose_name = _("Price")
@@ -915,3 +916,66 @@ class Inventory(TimeStampedModel):
         if not self.track_inventory:
             return False
         return self.available_quantity <= self.threshold
+
+
+class BackInStockSubscription(TimeStampedModel):
+    """Represents a subscription for notifications when a product variant is back in stock."""
+
+    class Status(models.TextChoices):
+        PENDING = 'pending', _('Pending')
+        SENT = 'sent', _('Sent')
+        CANCELED = 'canceled', _('Canceled')  # For future use
+
+    variant = models.ForeignKey(
+        "ProductVariant",
+        on_delete=models.CASCADE,
+        related_name='stock_alerts',
+        verbose_name=_("Product Variant"),
+        help_text=_("The product variant for which the stock alert is requested.")
+    )
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='stock_alerts',
+        null=True,
+        blank=True,
+        verbose_name=_("User"),
+        help_text=_("The user who requested the stock alert. Leave blank for guest users.")
+    )
+    email = models.EmailField(
+        blank=True,
+        verbose_name=_("Email Address"),
+        help_text=_("Required for guest users to receive notifications.")
+    )
+    status = models.CharField(
+        max_length=10,
+        choices=Status.choices,
+        default=Status.PENDING,
+        db_index=True,
+        verbose_name=_("Status"),
+        help_text=_("The current status of the stock alert request.")
+    )
+
+    class Meta:
+        verbose_name = _("Back In Stock Subscription")
+        verbose_name_plural = _("Back In Stock Subscriptions")
+        ordering = ['-created_at']
+        constraints = [
+            # A logged-in user can only subscribe once per variant.
+            models.UniqueConstraint(
+                fields=['user', 'variant'],
+                name='unique_user_per_variant_alert',
+                condition=models.Q(user__isnull=False)
+            ),
+            # A guest email can only subscribe once per variant.
+            models.UniqueConstraint(
+                fields=['email', 'variant'],
+                name='unique_guest_per_variant_alert',
+                # condition=models.Q(email__isnull=False, email__ne='') # TODO: This constraint uses `__ne` which is not supported by SQLite.
+                condition=models.Q(email__isnull=False)
+            )
+        ]
+
+    def __str__(self):
+        recipient = self.user.get_username() if self.user else self.email
+        return f"Stock alert for {self.variant.sku} to {recipient}"

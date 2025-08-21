@@ -17,15 +17,10 @@ class ProductNotFound(ProductException):
 
 
 class InventoryError(ProductException):
-    """Base exception for inventory-related issues."""
+    """Base exception for inventory-related errors."""
     default_message = _("An inventory-related error occurred.")
 
 
 class OutOfStockError(InventoryError):
     """Raised when an operation is attempted on an out-of-stock item."""
     default_message = _("This item is currently out of stock.")
-
-
-class InvalidAttributeCombination(ProductException):
-    """Raised when a selected combination of attributes does not map to a valid variant."""
-    default_message = _("The selected options do not form a valid product combination.")

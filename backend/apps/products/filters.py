@@ -1,8 +1,8 @@
-from django.db.models import Q
-
 import django_filters
+from django.db.models import Q
+from django.utils import timezone
 
-from apps.products.models import Product, Attribute, Category
+from apps.products.models import Attribute, Category, Product
 
 
 class ProductFilter(django_filters.FilterSet):
@@ -42,7 +42,7 @@ class ProductFilter(django_filters.FilterSet):
         fields=(
             ('name', 'name'),
             ('created_at', 'created_at'),
-            ('variants__prices__base_price', 'price'),  # Allows sorting by price
+            ('variants__prices__base_price', 'price'),
         ),
         label="Ordering"
     )
@@ -52,29 +52,25 @@ class ProductFilter(django_filters.FilterSet):
         fields = ['search', 'category', 'brand', 'tags', 'min_price', 'max_price', 'on_sale']
 
     def __init__(self, *args, **kwargs):
-        """
-        Dynamically adds filters for all 'filterable' attributes.
-        This is the core of the dynamic filtering system.
-        """
+        """Dynamically adds filters for all 'filterable' attributes."""
         super().__init__(*args, **kwargs)
-        # Fetch all attributes marked as filterable from the database
+
         filterable_attributes = Attribute.objects.filter(is_filterable=True, is_active=True)
 
         for attr in filterable_attributes:
-            # For each attribute, create a new filter field.
-            # The field name will be the attribute's slug (e.g., 'color', 'size').
-            self.filters[attr.slug] = django_filters.CharFilter(
-                method='filter_by_dynamic_attribute',
-                label=attr.name  # The label shown in the UI
-            )
+            self.filters[attr.slug] = django_filters.CharFilter(method='filter_by_dynamic_attribute', label=attr.name)
 
     # --- Custom Filter Methods ---
 
     @staticmethod
     def filter_by_all_name_fields(queryset, name, value):
         """Perform a case-insensitive search across multiple text fields."""
+        if not value:
+            return queryset
+
         return queryset.filter(
             Q(name__icontains=value) |
+            Q(slug__icontains=value) |
             Q(description__icontains=value) |
             Q(brand__name__icontains=value)
         )
@@ -83,7 +79,9 @@ class ProductFilter(django_filters.FilterSet):
     def filter_by_category(queryset, name, value):
         """Filter by a category slug and all of its descendants."""
         try:
-            # Get the category and all its children using django-mptt's get_descendants
+            if not value:
+                return queryset
+
             category = Category.objects.get(slug=value)
             categories = category.get_descendants(include_self=True)
             return queryset.filter(categories__in=categories)
@@ -92,12 +90,17 @@ class ProductFilter(django_filters.FilterSet):
 
     @staticmethod
     def filter_on_sale(queryset, name, value):
-        """Filter products that have at least one variant currently on sale."""
-        if value:
-            # This logic needs to be fleshed out based on Price model's is_on_sale property
-            # A more direct query approach is better for performance here.
-            return queryset.filter(variants__prices__sale_price__isnull=False)  # Simplified example
-        return queryset
+        """Filters products that have at least one variant with a currently active sale."""
+        if not value:
+            return queryset
+
+        now = timezone.now()
+
+        sale_price_exists = Q(variants__prices__sale_price__isnull=False)
+        sale_has_started = Q(variants__prices__sale_start_date__isnull=True) | Q(variants__prices__sale_start_date__lte=now)
+        sale_has_not_ended = Q(variants__prices__sale_end_date__isnull=True) | Q(variants__prices__sale_end_date__gte=now)
+
+        return queryset.filter(sale_price_exists & sale_has_started & sale_has_not_ended).distinct()
 
     @staticmethod
     def filter_by_dynamic_attribute(queryset, name, value):
@@ -106,6 +109,9 @@ class ProductFilter(django_filters.FilterSet):
         It filters products that have a variant matching the given attribute slug and value.
         e.g., name='color', value='red' -> filters for variants with Attribute 'color' and Value 'red'.
         """
+        if not value:
+            return queryset
+
         return queryset.filter(
             variants__attributes__attribute__slug=name,
             variants__attributes__value__iexact=value

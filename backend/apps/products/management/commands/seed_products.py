@@ -1,19 +1,33 @@
 import random
 
-from django.db import transaction
 from django.core.management.base import BaseCommand
-
+from django.db import transaction
 from faker import Faker
 
-from apps.products.models import (
-    Currency, Brand, Category, Tag, Attribute, AttributeValue,
-    ProductType, Product, ProductVariant, Price, Inventory, ProductCollection,
-    ProductCollectionEntry
-)
+from apps.core.factories import CurrencyFactory
+from apps.core.models import Currency
 from apps.products.factories import (
-    CurrencyFactory, BrandFactory, CategoryFactory, TagFactory,
-    ProductTypeFactory, ProductFactory, ProductVariantFactory,
-    ProductCollectionFactory
+    BrandFactory,
+    CategoryFactory,
+    ProductCollectionFactory,
+    ProductFactory,
+    ProductTypeFactory,
+    ProductVariantFactory,
+    TagFactory,
+)
+from apps.products.models import (
+    Attribute,
+    AttributeValue,
+    Brand,
+    Category,
+    Inventory,
+    Price,
+    Product,
+    ProductCollection,
+    ProductCollectionEntry,
+    ProductType,
+    ProductVariant,
+    Tag,
 )
 
 fake = Faker()
