@@ -2,10 +2,8 @@ import logging
 import secrets
 from datetime import date, datetime, timedelta
 from pathlib import Path
-from typing import Any, Union
 
 import jdatetime
-from django.conf import settings
 from django.utils import timezone
 from django.utils.deconstruct import deconstructible
 from django.utils.translation import gettext as _
@@ -23,14 +21,14 @@ class GenerateUploadPath:
         avatar = models.ImageField(upload_to=GenerateUploadPath(base_path="uploads/profiles/avatars/"))
     """
 
-    def __init__(self, base_path: str) -> None:
+    def __init__(self, base_path):
         """
         Initializes the path generator.
         :param base_path: The base path where files will be stored (e.g., 'uploads/products/images/').
         """
         self.base_path = base_path
 
-    def __call__(self, instance: Any, filename: str) -> str:
+    def __call__(self, instance, filename):
         """
         Generates a secure file path when a file is uploaded.
 
@@ -55,7 +53,7 @@ class GenerateUploadPath:
         return isinstance(other, self.__class__) and self.base_path == other.base_path
 
 
-def get_client_ip(request: Any) -> str:
+def get_client_ip(request):
     """A utility function to get the user's real IP address from a request, considering proxies and load balancers."""
     x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
     if x_forwarded_for:
@@ -65,17 +63,17 @@ def get_client_ip(request: Any) -> str:
     return ip
 
 
-def is_admin(user: settings.AUTH_USER_MODEL) -> bool:
+def is_admin(user) -> bool:
     """Checks if a user has admin-level privileges."""
     return user.is_active and user.is_staff
 
 
-def is_superuser(user: settings.AUTH_USER_MODEL) -> bool:
+def is_superuser(user) -> bool:
     """Checks if a user is a superuser."""
     return user.is_active and user.is_staff and user.is_superuser
 
 
-def to_jalali(gregorian_date: Union[datetime, date, str, None], output_format: str = '%Y/%m/%d') -> str:
+def to_jalali(gregorian_date, output_format='%Y/%m/%d'):
     """Converts a Gregorian date (or datetime/string) to a formatted Jalali date string."""
     if not gregorian_date:
         return _("N/A")
@@ -97,7 +95,7 @@ def to_jalali(gregorian_date: Union[datetime, date, str, None], output_format: s
     return jalali_date.strftime(output_format)
 
 
-def get_remaining_time(target_time: datetime) -> str:
+def get_remaining_time(target_time):
     """Calculates the remaining time until a target datetime and returns a human-readable string."""
     if not target_time or not isinstance(target_time, datetime):
         return _("No target time set.")
@@ -106,7 +104,7 @@ def get_remaining_time(target_time: datetime) -> str:
     if target_time <= now:
         return _("Expired")
 
-    delta: timedelta = target_time - now
+    delta = target_time - now
 
     days = delta.days
     hours, remainder = divmod(delta.seconds, 3600)
