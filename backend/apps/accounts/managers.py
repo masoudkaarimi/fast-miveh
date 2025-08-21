@@ -50,7 +50,7 @@ class OTPManager(models.Manager):
     """Manager for handling OTP (One Time Password) operations."""
 
     def create_otp(self, user, otp_type, recipient):
-        from apps.account.utils import generate_numeric_otp
+        from apps.accounts.utils import generate_numeric_otp
 
         # Deactivate previous OTPs for the same user, otp type, and recipient
         self.filter(

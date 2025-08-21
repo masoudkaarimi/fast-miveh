@@ -4,8 +4,8 @@ from django.conf import settings
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
-from apps.account.exceptions import OTPCooldownError, OTPGenerationError, OTPValidationError
-from apps.account.models import OTP
+from apps.accounts.exceptions import OTPCooldownError, OTPGenerationError, OTPValidationError
+from apps.accounts.models import OTP
 
 
 class OTPService:

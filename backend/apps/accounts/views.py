@@ -4,9 +4,9 @@ from rest_framework import generics, status, viewsets
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 
-from apps.account.models import Address, Wishlist
-from apps.account.permissions import IsOwnerOrReadOnly
-from apps.account.serializers import (
+from apps.accounts.models import Address, Wishlist
+from apps.accounts.permissions import IsOwnerOrReadOnly
+from apps.accounts.serializers import (
     AddressSerializer,
     EmailAddSerializer,
     EmailVerifySerializer,

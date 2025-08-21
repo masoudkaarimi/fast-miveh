@@ -11,8 +11,8 @@ from django.utils.translation import gettext_lazy as _
 from django_countries.fields import CountryField
 from phonenumber_field.modelfields import PhoneNumberField
 
-from apps.account.managers import OTPManager, UserManager
-from apps.account.validators import BirthdateValidator
+from apps.accounts.managers import OTPManager, UserManager
+from apps.accounts.validators import BirthdateValidator
 from apps.common.models import TimeStampedModel
 from apps.common.utils import GenerateUploadPath
 from apps.common.validators import FileExtensionValidator, FileSizeValidator
@@ -117,15 +117,15 @@ class User(AbstractUser, TimeStampedModel):
 
     def email_user(self, subject, message, from_email=None, **kwargs):
         """A method to send an email to the user."""
-        from apps.notification.services import NotificationService
+        from apps.notifications.services import NotificationChannelService
         if self.email:
-            NotificationService().send_email(recipient=self.email, subject=subject, message=message, from_email=from_email, **kwargs)
+            NotificationChannelService().send_email(recipient=self.email, subject=subject, message=message, from_email=from_email, **kwargs)
 
     def sms_user(self, message, **kwargs):
         """A method to send an SMS to the user."""
-        from apps.notification.services import NotificationService
+        from apps.notifications.services import NotificationChannelService
         if self.phone_number:
-            NotificationService().send_sms(recipient=str(self.phone_number), message=message, **kwargs)
+            NotificationChannelService().send_sms(recipient=str(self.phone_number), message=message, **kwargs)
 
 
 class Profile(TimeStampedModel):

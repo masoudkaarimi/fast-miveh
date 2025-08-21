@@ -4,8 +4,8 @@ from django.contrib.auth import user_logged_in
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
-from apps.account.models import Profile, User, Wishlist
-from apps.account.utils import update_user_login_data
+from apps.accounts.models import Profile, User, Wishlist
+from apps.accounts.utils import update_user_login_data
 
 logger = logging.getLogger(__name__)
 

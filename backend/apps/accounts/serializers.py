@@ -11,11 +11,11 @@ from phonenumber_field.serializerfields import PhoneNumberField
 from rest_framework import serializers
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from apps.account.exceptions import OTPCooldownError, OTPGenerationError, OTPValidationError
-from apps.account.models import OTP, Address, Profile, Wishlist
-from apps.account.services import OTPService
-from apps.account.tokens import password_reset_token_generator
-from apps.account.utils import get_identifier_info, update_user_login_data
+from apps.accounts.exceptions import OTPCooldownError, OTPGenerationError, OTPValidationError
+from apps.accounts.models import OTP, Address, Profile, Wishlist
+from apps.accounts.services import OTPService
+from apps.accounts.tokens import password_reset_token_generator
+from apps.accounts.utils import get_identifier_info, update_user_login_data
 from apps.products.models import ProductVariant
 from apps.products.serializers import ProductListSerializer
 
