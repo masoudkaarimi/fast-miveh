@@ -1,5 +1,5 @@
-from apps.notification.channels.base import BaseNotificationChannel
-from apps.notification.exceptions import NotificationError
+from apps.notifications.channels.base import BaseNotificationChannel
+from apps.notifications.exceptions import NotificationError
 
 
 class ConsoleSMSChannel(BaseNotificationChannel):

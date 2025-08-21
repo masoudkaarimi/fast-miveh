@@ -1,0 +1,117 @@
+{% load i18n %}
+
+{% autoescape off %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                background: #f4f6fb;
+                color: #333;
+                max-width: 600px;
+                margin: 0 auto;
+                padding: 20px;
+            }
+
+            .container {
+                margin: 0 auto;
+                padding: 2rem 0;
+                text-align: center;
+            }
+
+            .email-container {
+                border: 1px solid #e2e8f0;
+                border-radius: 12px;
+                padding: 32px 24px;
+                background: #fff;
+                max-width: 480px;
+                margin: 0 auto;
+                box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+            }
+
+            .logo {
+                margin-bottom: 24px;
+            }
+
+            .logo img {
+                width: 64px;
+            }
+
+            h2 {
+                color: #2d3748;
+                font-size: 1.5rem;
+                margin-bottom: 16px;
+            }
+
+            p {
+                color: #4a5568;
+                font-size: 1rem;
+                text-align: center;
+                line-height: 1.6;
+            }
+
+            .product-name {
+                font-size: 1.1rem;
+                font-weight: bold;
+                color: #2d3748;
+                margin: 20px 0;
+            }
+
+            .action-button {
+                display: inline-block;
+                background-color: #2b6cb0;
+                color: #ffffff !important;
+                font-size: 1rem;
+                text-align: center;
+                padding: 14px 28px;
+                border-radius: 8px;
+                margin: 24px 0;
+                font-weight: bold;
+                text-decoration: none;
+                border: none;
+                cursor: pointer;
+            }
+
+            .footer {
+                margin-top: 32px;
+                text-align: center;
+                color: #a0aec0;
+                font-size: 0.9rem;
+                border-top: 1px solid #eeeeee;
+                padding-top: 15px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="email-container">
+                <div class="logo">
+                    <img src="https://cdn-icons-png.flaticon.com/512/732/732200.png" alt="Logo">
+                </div>
+
+                <h2>{% translate "An Item is Back in Stock!" %}</h2>
+
+                <p>
+                    {% translate "Good news! The product you were waiting for is now available." %}
+                </p>
+
+                <div class="product-name">
+                    {{ product_name }} - {{ variant_name }}
+                </div>
+
+                <a href="{{ product_url }}" class="action-button" target="_blank">{% translate "View Product" %}</a>
+
+                <p style="font-size: 0.9rem; color: #718096;">
+                    {% translate "Stock is limited, so we recommend making your purchase soon to avoid disappointment." %}
+                </p>
+
+                <div class="footer">
+                    &copy; {% now "Y" %} {{ site_name }}. {% translate "All rights reserved." %}
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
+{% endautoescape %}

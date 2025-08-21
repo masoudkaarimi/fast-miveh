@@ -4,8 +4,8 @@ from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 
-from apps.notification.channels.base import BaseNotificationChannel
-from apps.notification.exceptions import NotificationError
+from apps.notifications.channels.base import BaseNotificationChannel
+from apps.notifications.exceptions import NotificationError
 
 
 class DjangoEmailChannel(BaseNotificationChannel):
