@@ -11,7 +11,7 @@ class MediaService:
         self.content_object = content_object
 
     @staticmethod
-    def _get_media_type(filename: str) -> str:
+    def _get_media_type(filename):
         """Determines the media type based on the file extension using settings."""
         extension = filename.lower().split('.')[-1]
 
@@ -24,7 +24,15 @@ class MediaService:
 
         raise InvalidMediaTypeError(f"Unsupported file type: '.{extension}'")
 
-    def create(self, *, file_obj, **kwargs) -> MediaLink:
+    @staticmethod
+    def get_media_links_for(obj):
+        """Retrieves all MediaLink objects for a given content object."""
+        if not hasattr(obj, 'media_links'):
+            return MediaLink.objects.none()
+
+        return obj.media_links.order_by('display_order').select_related('media')
+
+    def create(self, *, file_obj, **kwargs):
         """Creates a Media instance and links it to the content_object."""
         media_type = self._get_media_type(file_obj.name)
 

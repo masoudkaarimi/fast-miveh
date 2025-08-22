@@ -14,7 +14,9 @@ class APIThrottled(Throttled):
         if detail is None and wait is not None:
             detail = _("Request was throttled. Expected available in %(seconds)d seconds.") % {'seconds': int(wait)}
 
-        super().__init__(detail=detail, wait=wait, code=code)
+        self.wait = wait
+
+        super().__init__(detail=detail, code=code)
 
 
 class ScopedRateThrottle(BaseScopedRateThrottle):
