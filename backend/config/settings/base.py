@@ -241,10 +241,11 @@ CELERY_TIMEZONE = 'UTC'
 
 # Celery Beat Schedule
 CELERY_BEAT_SCHEDULE = {
-    # 'clear-expired-reservations': {
-    #     'task': 'apps.checkout.tasks.clear_expired_reservations',
-    #     'schedule': crontab(minute='0', hour='0'),
-    # }
+    'cleanup-abandoned-carts-daily': {
+        'task': 'orders.cleanup_abandoned_carts',
+        'schedule': crontab(hour=3, minute=0),  # Run every night at 3:00 AM
+        'args': (30,),
+    },
 }
 
 # --- Django Rest Framework Configuration ---

@@ -92,7 +92,7 @@ class CartItem(TimeStampedModel):
             ),
             models.CheckConstraint(
                 check=Q(quantity__gt=0),
-                name='quantity_must_be_positive_per_item'
+                name='positive_cart_quantity_per_item'
             ),
         ]
 
@@ -192,19 +192,19 @@ class Order(TimeStampedModel):
         constraints = [
             models.CheckConstraint(
                 check=Q(subtotal_price__gte=0),
-                name='order_subtotal_price_non_negative'
+                name='non_negative_order_subtotal_price'
             ),
             models.CheckConstraint(
                 check=Q(shipping_price__gte=0),
-                name='order_shipping_price_non_negative'
+                name='non_negative_order_shipping_price'
             ),
             models.CheckConstraint(
                 check=Q(discount_amount__gte=0),
-                name='order_discount_amount_non_negative'
+                name='non_negative_order_discount_amount'
             ),
             models.CheckConstraint(
                 check=Q(final_price__gte=0),
-                name='order_final_price_non_negative'
+                name='non_negative_order_final_price'
             ),
         ]
 
@@ -281,15 +281,15 @@ class OrderItem(TimeStampedModel):
             ),
             models.CheckConstraint(
                 check=Q(quantity__gt=0),
-                name='order_item_quantity_positive'
+                name='positive_order_quantity_per_item'
             ),
             models.CheckConstraint(
                 check=Q(unit_price__gte=0),
-                name='order_item_unit_price_non_negative'
+                name='non_negative_order_item_unit_price'
             ),
             models.CheckConstraint(
                 check=Q(total_price__gte=0),
-                name='order_item_total_price_non_negative'
+                name='non_negative_order_item_total_price'
             ),
         ]
 
