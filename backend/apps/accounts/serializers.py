@@ -2,6 +2,7 @@ import logging
 
 from django.conf import settings
 from django.contrib.auth import authenticate, get_user_model, password_validation
+from django.contrib.auth.signals import user_logged_in
 from django.core.exceptions import ValidationError as DjangoValidationError
 from django.templatetags.static import static
 from django.utils.encoding import force_str, smart_bytes
@@ -96,6 +97,7 @@ class VerifyOTPAndLoginSerializer(serializers.Serializer):
     def validate(self, data):
         phone_number = data.get('phone_number')
         code = data.get('code')
+        request = self.context.get('request')
         user = User.objects.filter(phone_number=phone_number).first()
 
         if not user:
@@ -115,11 +117,11 @@ class VerifyOTPAndLoginSerializer(serializers.Serializer):
             user.is_phone_number_verified = True
             user.save(update_fields=['is_active', 'is_phone_number_verified'])
 
-        authenticated_user = authenticate(request=self.context.get('request'), user=user)
-
+        authenticated_user = authenticate(request=request, user=user)
         if not authenticated_user:
             raise serializers.ValidationError(_("Authentication failed after OTP verification. Please contact support."))
 
+        # user_logged_in.send(sender=authenticated_user.__class__, request=request, user=authenticated_user)
         # Update last login date and IP address
         update_user_login_data(authenticated_user, self.context.get('request'))
 
@@ -141,7 +143,7 @@ class LoginWithPasswordSerializer(serializers.Serializer):
     def validate(self, data):
         identifier = data.get('identifier')
         password = data.get('password')
-
+        request = self.context.get('request')
         identifier_type, normalized_identifier = get_identifier_info(identifier)
 
         user = None
@@ -156,7 +158,7 @@ class LoginWithPasswordSerializer(serializers.Serializer):
         if not user:
             raise serializers.ValidationError(_("Unable to log in with provided credentials."))
 
-        if not user.check_password(password):
+        if not user or not user.check_password(password):
             raise serializers.ValidationError(_("Unable to log in with provided credentials."))
 
         if not user.is_active:
@@ -165,6 +167,8 @@ class LoginWithPasswordSerializer(serializers.Serializer):
         if identifier_type == 'email' and not user.is_email_verified:
             raise serializers.ValidationError(_("The email address is not verified. Please log in with your phone number or verify your email."))
 
+        # user.backend = 'apps.accounts.backends.IdentifierBackend'
+        # user_logged_in.send(sender=user.__class__, request=request, user=user)
         # Update last login date and IP address
         update_user_login_data(user, self.context.get('request'))
 

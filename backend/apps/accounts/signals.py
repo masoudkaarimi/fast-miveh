@@ -6,6 +6,9 @@ from django.dispatch import receiver
 
 from apps.accounts.models import Profile, User, Wishlist
 from apps.accounts.utils import update_user_login_data
+from apps.orders.models import Cart
+from apps.orders.services import CartService
+from apps.products.exceptions import OutOfStockError
 
 logger = logging.getLogger(__name__)
 
@@ -25,6 +28,49 @@ def create_user_related_objects(sender, instance, created, **kwargs):
 def update_last_login_info(sender, request, user, **kwargs):
     """Signal to update user's last login timestamp and IP address when they log in."""
     update_user_login_data(user, request)
+
+
+@receiver(user_logged_in)
+def merge_guest_cart_to_user_cart(sender, request, user, **kwargs):
+    """Signal handler to merge a guest's shopping cart with their user cart upon login."""
+    try:
+        session_key = request.session.session_key
+        if not session_key:
+            return
+
+        guest_cart = Cart.objects.get(session_key=session_key, user__isnull=True)
+        user_cart_service = CartService(user=user)
+        user_cart = user_cart_service.cart
+
+        print("Guest Cart ID:", guest_cart.id)
+
+        # If the guest cart is not the same as the user's cart, merge them
+        if guest_cart.id != user_cart.id:
+            for guest_item in guest_cart.items.all():
+                try:
+                    print("Merging item:", guest_item.variant.id, "Quantity:", guest_item.quantity)
+                    user_cart_service.add_item(
+                        variant_id=guest_item.variant.id,
+                        quantity=guest_item.quantity
+                    )
+                except OutOfStockError:
+                    # If an item is out of stock, log it and continue with the next items.
+                    logger.warning(
+                        f"Skipped merging out-of-stock item (Variant ID: {guest_item.variant.id}) "
+                        f"for user {user.id} from guest cart."
+                    )
+                except Exception as item_error:
+                    logger.error(
+                        f"Unexpected error merging item (Variant ID: {guest_item.variant.id}) "
+                        f"for user {user.id}: {item_error}"
+                    )
+
+            guest_cart.delete()
+    except Cart.DoesNotExist:
+        # This is normal if the guest had an empty cart.
+        pass
+    except Exception as e:
+        logger.error(f"Critical error merging guest cart for user {user.id}: {e}")
 
 # @receiver(pre_save, sender=Profile)
 # def resize_profile_avatar(sender, instance, **kwargs):

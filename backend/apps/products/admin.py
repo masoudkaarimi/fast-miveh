@@ -20,7 +20,6 @@ from apps.products.models import (
     ProductVariant,
     Tag,
 )
-from apps.products.views import ProductTypeAttributesView
 
 
 @admin.register(Brand)
