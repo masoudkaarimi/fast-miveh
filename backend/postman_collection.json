@@ -1,0 +1,1867 @@
+{
+	"info": {
+		"_postman_id": "3281b263-6e68-4ac9-91fa-e5ee38277e99",
+		"name": "Fast Miveh API Docs",
+		"description": "A comprehensive Postman collection for the complete, phone-first dynamic authentication API.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "21165246"
+	},
+	"item": [
+		{
+			"name": "Account",
+			"item": [
+				{
+					"name": "Authentication Flow",
+					"item": [
+						{
+							"name": "Step 1: Check Identifier Status",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "identifier",
+											"value": "+12345678910",
+											"type": "text"
+										},
+										{
+											"key": "identifier",
+											"value": "john.doe@example.com2",
+											"type": "text",
+											"disabled": true
+										}
+									]
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/v1/auth/status/",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"auth",
+										"status",
+										""
+									]
+								},
+								"description": "Checks if a user exists with the given phone number or email."
+							},
+							"response": []
+						},
+						{
+							"name": "Step 2a: Request OTP (for Login/Register)",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "phone_number",
+											"value": "+12345678910",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/v1/auth/otp/request/",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"auth",
+										"otp",
+										"request",
+										""
+									]
+								},
+								"description": "Requests an OTP for a phone number. Creates an inactive user if they don't exist."
+							},
+							"response": []
+						},
+						{
+							"name": "Step 2b: Login with Password",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "identifier",
+											"value": "+989123456789",
+											"type": "text"
+										},
+										{
+											"key": "identifier",
+											"value": "superadmin@example.com",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "password",
+											"value": "Superadmin@1234",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/v1/auth/login/",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"auth",
+										"login",
+										""
+									]
+								},
+								"description": "Logs in a user with their phone number and password."
+							},
+							"response": []
+						},
+						{
+							"name": "Step 3: Verify OTP |& Complete Login/Registration",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "phone_number",
+											"value": "+12345678910",
+											"type": "text"
+										},
+										{
+											"key": "code",
+											"value": "909885",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/v1/auth/otp/verify/",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"auth",
+										"otp",
+										"verify",
+										""
+									]
+								},
+								"description": "Verifies the OTP. Returns tokens and an `is_new_user` flag."
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Account Management (Authenticated)",
+					"item": [
+						{
+							"name": "Get My Profile",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{accessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/v1/profile/me/",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"profile",
+										"me",
+										""
+									]
+								},
+								"description": "Get (GET) or update (PUT/PATCH) the authenticated user's profile."
+							},
+							"response": []
+						},
+						{
+							"name": "Update My Profile / Partial Update My Profile",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{accessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "username",
+											"value": "new_username_123",
+											"type": "text"
+										},
+										{
+											"key": "first_name",
+											"value": "John",
+											"type": "text"
+										},
+										{
+											"key": "last_name",
+											"value": "Doe",
+											"type": "text"
+										},
+										{
+											"key": "profile.gender",
+											"value": "male",
+											"type": "text"
+										},
+										{
+											"key": "profile.birthdate",
+											"value": "1990-01-15",
+											"type": "text"
+										},
+										{
+											"key": "profile.avatar",
+											"type": "file",
+											"src": "/D:/Dev/Archive/Pictures/avatar/masoud-12.jpg"
+										},
+										{
+											"key": "profile.national_code",
+											"value": "0123456789",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/v1/profile/me/",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"profile",
+										"me",
+										""
+									]
+								},
+								"description": "Get (GET) or update (PUT/PATCH) the authenticated user's profile."
+							},
+							"response": []
+						},
+						{
+							"name": "Set Password (for new users)",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{accessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "password",
+											"value": "YourStrongPassword123",
+											"type": "text"
+										},
+										{
+											"key": "password2",
+											"value": "YourStrongPassword123",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/v1/profile/set-password/",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"profile",
+										"set-password",
+										""
+									]
+								},
+								"description": "Allows a user who registered via OTP to set a password for the first time."
+							},
+							"response": []
+						},
+						{
+							"name": "Change Password",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{accessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "old_password",
+											"value": "YourStrongPassword123",
+											"type": "text"
+										},
+										{
+											"key": "new_password",
+											"value": "NewStrongPassword123",
+											"type": "text"
+										},
+										{
+											"key": "new_password2",
+											"value": "NewStrongPassword123",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/v1/profile/change-password/",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"profile",
+										"change-password",
+										""
+									]
+								},
+								"description": "Allows a user who registered via OTP to set a password for the first time."
+							},
+							"response": []
+						},
+						{
+							"name": "Add/Change Email",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{accessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "email",
+											"value": "jain.doe@example.com",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/v1/profile/email/add/",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"profile",
+										"email",
+										"add",
+										""
+									]
+								},
+								"description": "Sets the user's email and sends a verification OTP."
+							},
+							"response": []
+						},
+						{
+							"name": "Verify Email",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{accessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "code",
+											"value": "330408",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/v1/profile/email/verify/",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"profile",
+										"email",
+										"verify",
+										""
+									]
+								},
+								"description": "Verifies the user's email address with the OTP sent."
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Standalone Flows",
+					"item": [
+						{
+							"name": "Request Password Reset",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "identifier",
+											"value": "+12345678910",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "identifier",
+											"value": "jain.doe@example.com",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/v1/password-reset/request/",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"password-reset",
+										"request",
+										""
+									]
+								},
+								"description": "Sends a password reset link to a *verified* email address."
+							},
+							"response": []
+						},
+						{
+							"name": "Confirm Password Reset",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "uidb64",
+											"value": "Mg",
+											"type": "text"
+										},
+										{
+											"key": "token",
+											"value": "ct065k-9d08471446acc84405cec999a96332a8",
+											"type": "text"
+										},
+										{
+											"key": "password",
+											"value": "NewSecurePassword456",
+											"type": "text"
+										},
+										{
+											"key": "password2",
+											"value": "NewSecurePassword456",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/v1/password-reset/confirm/",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"password-reset",
+										"confirm",
+										""
+									]
+								},
+								"description": "Sets a new password using the uid and token from the reset link."
+							},
+							"response": []
+						},
+						{
+							"name": "Confirm Password Reset OTP",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "code",
+											"value": "273443",
+											"type": "text"
+										},
+										{
+											"key": "phone_number",
+											"value": "+12345678910",
+											"type": "text"
+										},
+										{
+											"key": "password",
+											"value": "NewStrongPassword123",
+											"type": "text"
+										},
+										{
+											"key": "password2",
+											"value": "NewSecurePassword456",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/v1/password-reset/confirm-otp/",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"password-reset",
+										"confirm-otp",
+										""
+									]
+								},
+								"description": "Sets a new password using the uid and token from the reset link."
+							},
+							"response": []
+						},
+						{
+							"name": "Refresh Access Token",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "refresh",
+											"value": "{{refreshToken}}",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/v1/auth/token/refresh/",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"auth",
+										"token",
+										"refresh",
+										""
+									]
+								},
+								"description": "Gets a new access token using a valid refresh token."
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Address Management (Authenticated)",
+					"item": [
+						{
+							"name": "List All Addresses",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{accessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/v1/profile/addresses/",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"profile",
+										"addresses",
+										""
+									]
+								},
+								"description": "Returns a list of all addresses in the user's address book (snapshots are not included)."
+							},
+							"response": []
+						},
+						{
+							"name": "Retrieve a Specific Address",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{accessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/v1/profile/addresses/:address_id/",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"profile",
+										"addresses",
+										":address_id",
+										""
+									],
+									"variable": [
+										{
+											"key": "address_id",
+											"value": "2"
+										}
+									]
+								},
+								"description": "Gets the details of a single address by its ID."
+							},
+							"response": []
+						},
+						{
+							"name": "Create a New Address",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{accessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "title",
+											"value": "Home",
+											"type": "text"
+										},
+										{
+											"key": "full_name",
+											"value": "Saeed Mohammadi",
+											"type": "text"
+										},
+										{
+											"key": "phone_number",
+											"value": "+989123456789",
+											"type": "text"
+										},
+										{
+											"key": "country",
+											"value": "IR",
+											"type": "text"
+										},
+										{
+											"key": "state",
+											"value": "Tehran",
+											"type": "text"
+										},
+										{
+											"key": "city",
+											"value": "Tehran",
+											"type": "text"
+										},
+										{
+											"key": "zip_code",
+											"value": "1234567890",
+											"type": "text"
+										},
+										{
+											"key": "address_line_1",
+											"value": "Valiasr St, Vanak Sq, No. 123",
+											"type": "text"
+										},
+										{
+											"key": "address_line_2",
+											"value": "Unit 4",
+											"type": "text"
+										},
+										{
+											"key": "is_default",
+											"value": "true",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/v1/profile/addresses/",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"profile",
+										"addresses",
+										""
+									]
+								},
+								"description": "Adds a new address to the user's address book."
+							},
+							"response": []
+						},
+						{
+							"name": "Update an Address",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{accessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "title",
+											"value": "Home",
+											"type": "text"
+										},
+										{
+											"key": "full_name",
+											"value": "Saeed Mohammadi",
+											"type": "text"
+										},
+										{
+											"key": "phone_number",
+											"value": "+989123456789",
+											"type": "text"
+										},
+										{
+											"key": "country",
+											"value": "IR",
+											"type": "text"
+										},
+										{
+											"key": "state",
+											"value": "Tehran",
+											"type": "text"
+										},
+										{
+											"key": "city",
+											"value": "Tehran",
+											"type": "text"
+										},
+										{
+											"key": "zip_code",
+											"value": "1234567890",
+											"type": "text"
+										},
+										{
+											"key": "address_line_1",
+											"value": "Valiasr St, Vanak Sq, No. 123",
+											"type": "text"
+										},
+										{
+											"key": "address_line_2",
+											"value": "Unit 4",
+											"type": "text"
+										},
+										{
+											"key": "is_default",
+											"value": "true",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/v1/profile/addresses/:address_id/",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"profile",
+										"addresses",
+										":address_id",
+										""
+									],
+									"variable": [
+										{
+											"key": "address_id",
+											"value": ""
+										}
+									]
+								},
+								"description": "Adds a new address to the user's address book."
+							},
+							"response": []
+						},
+						{
+							"name": "Partially Update an Address",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{accessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "is_default",
+											"value": "true",
+											"description": "Set this address as the default.",
+											"type": "text"
+										},
+										{
+											"key": "title",
+											"value": "Work Office",
+											"description": "Change the title of the address.",
+											"type": "text",
+											"disabled": true
+										}
+									]
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/v1/profile/addresses/:address_id/",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"profile",
+										"addresses",
+										":address_id",
+										""
+									],
+									"variable": [
+										{
+											"key": "address_id",
+											"value": "1"
+										}
+									]
+								},
+								"description": "Performs a partial update. Only provide the fields you want to change. This is the recommended way to set an address as default."
+							},
+							"response": []
+						},
+						{
+							"name": "Delete an Address",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{accessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/v1/profile/addresses/:address_id/",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"profile",
+										"addresses",
+										":address_id",
+										""
+									],
+									"variable": [
+										{
+											"key": "address_id",
+											"value": "1"
+										}
+									]
+								},
+								"description": "Permanently deletes an address from the user's address book."
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Wishlist Management (Authenticated)",
+					"item": [
+						{
+							"name": "Get My Wishlist",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{accessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/v1/profile/wishlist/",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"profile",
+										"wishlist",
+										""
+									]
+								},
+								"description": "Retrieves all items in the currently authenticated user's wishlist."
+							},
+							"response": []
+						},
+						{
+							"name": "Add Item to Wishlist",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{accessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "variant_id",
+											"value": "1",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/v1/profile/wishlist/",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"profile",
+										"wishlist",
+										""
+									]
+								},
+								"description": "Adds a new product variant to the user's wishlist. The variant ID is sent in the request body."
+							},
+							"response": []
+						},
+						{
+							"name": "Remove Item from Wishlist",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{accessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "variant_id",
+											"value": "1",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/v1/profile/wishlist/",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"profile",
+										"wishlist",
+										""
+									]
+								},
+								"description": "Removes a product variant from the user's wishlist. The variant ID is sent in the request body."
+							},
+							"response": []
+						}
+					],
+					"description": "Endpoints for the single WishlistAPIView."
+				}
+			]
+		},
+		{
+			"name": "Store",
+			"item": [
+				{
+					"name": "Products",
+					"item": [
+						{
+							"name": "List All Products",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/v1/products/",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"products",
+										""
+									],
+									"query": [
+										{
+											"key": "search",
+											"value": "sour-cherry-jam",
+											"description": "Full-text search on name, description, and brand.",
+											"disabled": true
+										},
+										{
+											"key": "category",
+											"value": "herbal-distillates",
+											"description": "Filter by category slug (includes sub-categories).",
+											"disabled": true
+										},
+										{
+											"key": "brand",
+											"value": "fast-miveh",
+											"description": "Filter by brand slug.",
+											"disabled": true
+										},
+										{
+											"key": "tags",
+											"value": "our-suggestion",
+											"description": "Filter by one or more comma-separated tag slugs.",
+											"disabled": true
+										},
+										{
+											"key": "min_price",
+											"value": "1000",
+											"description": "Filter by minimum price.",
+											"disabled": true
+										},
+										{
+											"key": "max_price",
+											"value": "5000",
+											"description": "Filter by maximum price.",
+											"disabled": true
+										},
+										{
+											"key": "on_sale",
+											"value": "true",
+											"description": "Filter for products currently on sale.",
+											"disabled": true
+										},
+										{
+											"key": "ordering",
+											"value": "-price",
+											"description": "Sort results. Options: name, -name, created_at, -created_at, price, -price.",
+											"disabled": true
+										}
+									]
+								},
+								"description": "Lists all published products. Supports advanced filtering and ordering."
+							},
+							"response": [
+								{
+									"name": "List All Products",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/api/v1/products/",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"products",
+												""
+											],
+											"query": [
+												{
+													"key": "search",
+													"value": "phone",
+													"description": "Full-text search on name, description, and brand.",
+													"disabled": true
+												},
+												{
+													"key": "category",
+													"value": "laptops",
+													"description": "Filter by category slug (includes sub-categories).",
+													"disabled": true
+												},
+												{
+													"key": "brand",
+													"value": "apple",
+													"description": "Filter by brand slug.",
+													"disabled": true
+												},
+												{
+													"key": "tags",
+													"value": "new,featured",
+													"description": "Filter by one or more comma-separated tag slugs.",
+													"disabled": true
+												},
+												{
+													"key": "min_price",
+													"value": "1000",
+													"description": "Filter by minimum price.",
+													"disabled": true
+												},
+												{
+													"key": "max_price",
+													"value": "5000",
+													"description": "Filter by maximum price.",
+													"disabled": true
+												},
+												{
+													"key": "on_sale",
+													"value": "true",
+													"description": "Filter for products currently on sale.",
+													"disabled": true
+												},
+												{
+													"key": "ordering",
+													"value": "-price",
+													"description": "Sort results. Options: name, -name, created_at, -created_at, price, -price.",
+													"disabled": true
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Date",
+											"value": "Tue, 29 Jul 2025 12:10:13 GMT"
+										},
+										{
+											"key": "Server",
+											"value": "WSGIServer/0.2 CPython/3.12.4"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json",
+											"description": "",
+											"type": "text"
+										},
+										{
+											"key": "Vary",
+											"value": "Accept, Accept-Language, origin, Cookie"
+										},
+										{
+											"key": "Allow",
+											"value": "GET, HEAD, OPTIONS"
+										},
+										{
+											"key": "X-Frame-Options",
+											"value": "DENY"
+										},
+										{
+											"key": "Content-Length",
+											"value": "33466"
+										},
+										{
+											"key": "Content-Language",
+											"value": "en"
+										},
+										{
+											"key": "X-Content-Type-Options",
+											"value": "nosniff"
+										},
+										{
+											"key": "Referrer-Policy",
+											"value": "same-origin"
+										},
+										{
+											"key": "Cross-Origin-Opener-Policy",
+											"value": "same-origin"
+										}
+									],
+									"cookie": [
+										{
+											"expires": "Invalid Date",
+											"domain": "",
+											"path": ""
+										}
+									],
+									"body": "[\n    {\n        \"id\": 160,\n        \"name\": \"Synergistic exuding migration 29\",\n        \"slug\": \"synergistic-exuding-migration-29\",\n        \"sku\": \"96017234\",\n        \"unit\": \"do\",\n        \"short_description\": \"House condition father budget discover push bar central manage customer tree.\",\n        \"featured_image_url\": \"http://127.0.0.1:8000/media/uploads/20250729_094145_58cd534dfbec763a.webp\",\n        \"media\": [\n            {\n                \"url\": \"http://127.0.0.1:8000/media/uploads/20250729_094145_58cd534dfbec763a.webp\",\n                \"alt_text\": \"\",\n                \"media_type\": \"image\"\n            },\n            {\n                \"url\": \"http://127.0.0.1:8000/media/uploads/20250729_094137_2a7d294672cf2812.webp\",\n                \"alt_text\": \"\",\n                \"media_type\": \"image\"\n            }\n        ],\n        \"brand\": {\n            \"id\": 47,\n            \"name\": \"Fowler and Sons 6\",\n            \"slug\": \"fowler-and-sons-6\",\n            \"logo_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/brand_placeholder.webp\"\n        },\n        \"tags\": [\n            \"brother-6\"\n        ],\n        \"categories\": [\n            {\n                \"id\": 44,\n                \"name\": \"age-3\",\n                \"slug\": \"age-3\",\n                \"image_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/category_placeholder.webp\"\n            },\n            {\n                \"id\": 42,\n                \"name\": \"so-1\",\n                \"slug\": \"so-1\",\n                \"image_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/category_placeholder.webp\"\n            },\n            {\n                \"id\": 49,\n                \"name\": \"trade-8\",\n                \"slug\": \"trade-8\",\n                \"image_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/category_placeholder.webp\"\n            }\n        ],\n        \"price_info\": {\n            \"base_price\": 56276.02,\n            \"final_price\": 56276.02,\n            \"is_on_sale\": false,\n            \"discount_amount\": 0,\n            \"currency_code\": \"TOMAN\",\n            \"currency_symbol\": \"تومان\",\n            \"discount_percentage\": 0\n        },\n        \"inventory_info\": {\n            \"quantity\": 8,\n            \"max_quantity\": 8,\n            \"is_in_stock\": true,\n            \"allow_backorders\": false\n        }\n    },\n    {\n        \"id\": 159,\n        \"name\": \"Fully-configurable fault-tolerant matrix 28\",\n        \"slug\": \"fully-configurable-fault-tolerant-matrix-28\",\n        \"sku\": \"72182680\",\n        \"unit\": \"do\",\n        \"short_description\": \"Together rule start wind bring better well.\",\n        \"featured_image_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/product.webp\",\n        \"media\": [],\n        \"brand\": {\n            \"id\": 50,\n            \"name\": \"Kelly, Howard and Hall 9\",\n            \"slug\": \"kelly-howard-and-hall-9\",\n            \"logo_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/brand_placeholder.webp\"\n        },\n        \"tags\": [],\n        \"categories\": [\n            {\n                \"id\": 50,\n                \"name\": \"bank-9\",\n                \"slug\": \"bank-9\",\n                \"image_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/category_placeholder.webp\"\n            },\n            {\n                \"id\": 46,\n                \"name\": \"lead-5\",\n                \"slug\": \"lead-5\",\n                \"image_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/category_placeholder.webp\"\n            }\n        ],\n        \"price_info\": {\n            \"base_price\": 37470.53,\n            \"final_price\": 37470.53,\n            \"is_on_sale\": false,\n            \"discount_amount\": 0,\n            \"currency_code\": \"TOMAN\",\n            \"currency_symbol\": \"تومان\",\n            \"discount_percentage\": 0\n        },\n        \"inventory_info\": {\n            \"quantity\": 47,\n            \"max_quantity\": 47,\n            \"is_in_stock\": true,\n            \"allow_backorders\": false\n        }\n    },\n    {\n        \"id\": 158,\n        \"name\": \"Assimilated zero tolerance knowledge user 27\",\n        \"slug\": \"assimilated-zero-tolerance-knowledge-user-27\",\n        \"sku\": \"00270908\",\n        \"unit\": \"do\",\n        \"short_description\": \"Fund structure song teacher reach quickly word read.\",\n        \"featured_image_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/product.webp\",\n        \"media\": [],\n        \"brand\": {\n            \"id\": 44,\n            \"name\": \"Nichols, Miller and Harris 3\",\n            \"slug\": \"nichols-miller-and-harris-3\",\n            \"logo_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/brand_placeholder.webp\"\n        },\n        \"tags\": [\n            \"toward-14\"\n        ],\n        \"categories\": [\n            {\n                \"id\": 45,\n                \"name\": \"alone-4\",\n                \"slug\": \"alone-4\",\n                \"image_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/category_placeholder.webp\"\n            },\n            {\n                \"id\": 47,\n                \"name\": \"rise-6\",\n                \"slug\": \"rise-6\",\n                \"image_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/category_placeholder.webp\"\n            },\n            {\n                \"id\": 49,\n                \"name\": \"trade-8\",\n                \"slug\": \"trade-8\",\n                \"image_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/category_placeholder.webp\"\n            }\n        ],\n        \"price_info\": {\n            \"base_price\": 50976.98,\n            \"final_price\": 50976.98,\n            \"is_on_sale\": false,\n            \"discount_amount\": 0,\n            \"currency_code\": \"TOMAN\",\n            \"currency_symbol\": \"تومان\",\n            \"discount_percentage\": 0\n        },\n        \"inventory_info\": {\n            \"quantity\": 75,\n            \"max_quantity\": 75,\n            \"is_in_stock\": true,\n            \"allow_backorders\": false\n        }\n    },\n    {\n        \"id\": 157,\n        \"name\": \"Re-engineered systemic superstructure 26\",\n        \"slug\": \"re-engineered-systemic-superstructure-26\",\n        \"sku\": \"32657531\",\n        \"unit\": \"difference\",\n        \"short_description\": \"Someone our coach thousand be away party property those drop yet cause force.\",\n        \"featured_image_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/product.webp\",\n        \"media\": [],\n        \"brand\": {\n            \"id\": 45,\n            \"name\": \"Smith, Bartlett and Henderson 4\",\n            \"slug\": \"smith-bartlett-and-henderson-4\",\n            \"logo_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/brand_placeholder.webp\"\n        },\n        \"tags\": [\n            \"brother-6\"\n        ],\n        \"categories\": [\n            {\n                \"id\": 44,\n                \"name\": \"age-3\",\n                \"slug\": \"age-3\",\n                \"image_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/category_placeholder.webp\"\n            },\n            {\n                \"id\": 46,\n                \"name\": \"lead-5\",\n                \"slug\": \"lead-5\",\n                \"image_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/category_placeholder.webp\"\n            },\n            {\n                \"id\": 49,\n                \"name\": \"trade-8\",\n                \"slug\": \"trade-8\",\n                \"image_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/category_placeholder.webp\"\n            }\n        ],\n        \"price_info\": {\n            \"base_price\": 93243.29,\n            \"final_price\": 93243.29,\n            \"is_on_sale\": false,\n            \"discount_amount\": 0,\n            \"currency_code\": \"TOMAN\",\n            \"currency_symbol\": \"تومان\",\n            \"discount_percentage\": 0\n        },\n        \"inventory_info\": {\n            \"quantity\": 36,\n            \"max_quantity\": 36,\n            \"is_in_stock\": true,\n            \"allow_backorders\": false\n        }\n    },\n    {\n        \"id\": 156,\n        \"name\": \"Universal stable approach 25\",\n        \"slug\": \"universal-stable-approach-25\",\n        \"sku\": \"93687423\",\n        \"unit\": \"difference\",\n        \"short_description\": \"Hundred without firm customer something official yourself research hospital candidate sea page begin.\",\n        \"featured_image_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/product.webp\",\n        \"media\": [],\n        \"brand\": {\n            \"id\": 47,\n            \"name\": \"Fowler and Sons 6\",\n            \"slug\": \"fowler-and-sons-6\",\n            \"logo_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/brand_placeholder.webp\"\n        },\n        \"tags\": [\n            \"dog-13\",\n            \"staff-12\"\n        ],\n        \"categories\": [\n            {\n                \"id\": 44,\n                \"name\": \"age-3\",\n                \"slug\": \"age-3\",\n                \"image_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/category_placeholder.webp\"\n            },\n            {\n                \"id\": 50,\n                \"name\": \"bank-9\",\n                \"slug\": \"bank-9\",\n                \"image_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/category_placeholder.webp\"\n            },\n            {\n                \"id\": 47,\n                \"name\": \"rise-6\",\n                \"slug\": \"rise-6\",\n                \"image_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/category_placeholder.webp\"\n            }\n        ],\n        \"price_info\": {\n            \"base_price\": 80249.27,\n            \"final_price\": 80249.27,\n            \"is_on_sale\": false,\n            \"discount_amount\": 0,\n            \"currency_code\": \"TOMAN\",\n            \"currency_symbol\": \"تومان\",\n            \"discount_percentage\": 0\n        },\n        \"inventory_info\": {\n            \"quantity\": 30,\n            \"max_quantity\": 30,\n            \"is_in_stock\": true,\n            \"allow_backorders\": false\n        }\n    },\n    {\n        \"id\": 155,\n        \"name\": \"Stand-alone coherent task-force 24\",\n        \"slug\": \"stand-alone-coherent-task-force-24\",\n        \"sku\": \"40499635\",\n        \"unit\": \"difference\",\n        \"short_description\": \"Hour same party even however while idea moment.\",\n        \"featured_image_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/product.webp\",\n        \"media\": [],\n        \"brand\": {\n            \"id\": 47,\n            \"name\": \"Fowler and Sons 6\",\n            \"slug\": \"fowler-and-sons-6\",\n            \"logo_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/brand_placeholder.webp\"\n        },\n        \"tags\": [\n            \"success-0\"\n        ],\n        \"categories\": [\n            {\n                \"id\": 50,\n                \"name\": \"bank-9\",\n                \"slug\": \"bank-9\",\n                \"image_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/category_placeholder.webp\"\n            }\n        ],\n        \"price_info\": {\n            \"base_price\": 22433.03,\n            \"final_price\": 22433.03,\n            \"is_on_sale\": false,\n            \"discount_amount\": 0,\n            \"currency_code\": \"TOMAN\",\n            \"currency_symbol\": \"تومان\",\n            \"discount_percentage\": 0\n        },\n        \"inventory_info\": {\n            \"quantity\": 0,\n            \"max_quantity\": 0,\n            \"is_in_stock\": false,\n            \"allow_backorders\": false\n        }\n    },\n    {\n        \"id\": 154,\n        \"name\": \"Enterprise-wide executive parallelism 23\",\n        \"slug\": \"enterprise-wide-executive-parallelism-23\",\n        \"sku\": \"42796060\",\n        \"unit\": \"do\",\n        \"short_description\": \"Cell significant detail work agree way bag ready spend result.\",\n        \"featured_image_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/product.webp\",\n        \"media\": [],\n        \"brand\": {\n            \"id\": 44,\n            \"name\": \"Nichols, Miller and Harris 3\",\n            \"slug\": \"nichols-miller-and-harris-3\",\n            \"logo_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/brand_placeholder.webp\"\n        },\n        \"tags\": [\n            \"meet-8\",\n            \"think-3\"\n        ],\n        \"categories\": [\n            {\n                \"id\": 42,\n                \"name\": \"so-1\",\n                \"slug\": \"so-1\",\n                \"image_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/category_placeholder.webp\"\n            }\n        ],\n        \"price_info\": {\n            \"base_price\": 75114.23,\n            \"final_price\": 75114.23,\n            \"is_on_sale\": false,\n            \"discount_amount\": 0,\n            \"currency_code\": \"TOMAN\",\n            \"currency_symbol\": \"تومان\",\n            \"discount_percentage\": 0\n        },\n        \"inventory_info\": {\n            \"quantity\": 25,\n            \"max_quantity\": 25,\n            \"is_in_stock\": true,\n            \"allow_backorders\": false\n        }\n    },\n    {\n        \"id\": 153,\n        \"name\": \"Monitored 24/7 extranet 22\",\n        \"slug\": \"monitored-247-extranet-22\",\n        \"sku\": \"36062300\",\n        \"unit\": \"do\",\n        \"short_description\": \"Know billion ball pass me build yet theory.\",\n        \"featured_image_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/product.webp\",\n        \"media\": [],\n        \"brand\": {\n            \"id\": 49,\n            \"name\": \"Moreno LLC 8\",\n            \"slug\": \"moreno-llc-8\",\n            \"logo_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/brand_placeholder.webp\"\n        },\n        \"tags\": [\n            \"meet-8\",\n            \"laugh-5\"\n        ],\n        \"categories\": [\n            {\n                \"id\": 45,\n                \"name\": \"alone-4\",\n                \"slug\": \"alone-4\",\n                \"image_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/category_placeholder.webp\"\n            },\n            {\n                \"id\": 47,\n                \"name\": \"rise-6\",\n                \"slug\": \"rise-6\",\n                \"image_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/category_placeholder.webp\"\n            }\n        ],\n        \"price_info\": {\n            \"base_price\": 88082.21,\n            \"final_price\": 88082.21,\n            \"is_on_sale\": false,\n            \"discount_amount\": 0,\n            \"currency_code\": \"TOMAN\",\n            \"currency_symbol\": \"تومان\",\n            \"discount_percentage\": 0\n        },\n        \"inventory_info\": {\n            \"quantity\": 80,\n            \"max_quantity\": 80,\n            \"is_in_stock\": true,\n            \"allow_backorders\": false\n        }\n    },\n    {\n        \"id\": 152,\n        \"name\": \"Persevering client-server architecture 21\",\n        \"slug\": \"persevering-client-server-architecture-21\",\n        \"sku\": \"66142027\",\n        \"unit\": \"debate\",\n        \"short_description\": \"Me cup PM either kind these thousand goal fine wish compare continue.\",\n        \"featured_image_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/product.webp\",\n        \"media\": [],\n        \"brand\": {\n            \"id\": 45,\n            \"name\": \"Smith, Bartlett and Henderson 4\",\n            \"slug\": \"smith-bartlett-and-henderson-4\",\n            \"logo_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/brand_placeholder.webp\"\n        },\n        \"tags\": [\n            \"democratic-4\",\n            \"purpose-1\"\n        ],\n        \"categories\": [\n            {\n                \"id\": 47,\n                \"name\": \"rise-6\",\n                \"slug\": \"rise-6\",\n                \"image_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/category_placeholder.webp\"\n            },\n            {\n                \"id\": 48,\n                \"name\": \"smile-7\",\n                \"slug\": \"smile-7\",\n                \"image_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/category_placeholder.webp\"\n            },\n            {\n                \"id\": 49,\n                \"name\": \"trade-8\",\n                \"slug\": \"trade-8\",\n                \"image_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/category_placeholder.webp\"\n            }\n        ],\n        \"price_info\": {\n            \"base_price\": 52180.55,\n            \"final_price\": 52180.55,\n            \"is_on_sale\": false,\n            \"discount_amount\": 0,\n            \"currency_code\": \"TOMAN\",\n            \"currency_symbol\": \"تومان\",\n            \"discount_percentage\": 0\n        },\n        \"inventory_info\": {\n            \"quantity\": 26,\n            \"max_quantity\": 26,\n            \"is_in_stock\": true,\n            \"allow_backorders\": false\n        }\n    },\n    {\n        \"id\": 151,\n        \"name\": \"Customizable stable migration 20\",\n        \"slug\": \"customizable-stable-migration-20\",\n        \"sku\": \"05187997\",\n        \"unit\": \"difference\",\n        \"short_description\": \"Catch yet less challenge together exist bank plant establish morning street.\",\n        \"featured_image_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/product.webp\",\n        \"media\": [],\n        \"brand\": {\n            \"id\": 44,\n            \"name\": \"Nichols, Miller and Harris 3\",\n            \"slug\": \"nichols-miller-and-harris-3\",\n            \"logo_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/brand_placeholder.webp\"\n        },\n        \"tags\": [\n            \"success-0\"\n        ],\n        \"categories\": [\n            {\n                \"id\": 50,\n                \"name\": \"bank-9\",\n                \"slug\": \"bank-9\",\n                \"image_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/category_placeholder.webp\"\n            }\n        ],\n        \"price_info\": {\n            \"base_price\": 76482.42,\n            \"final_price\": 76482.42,\n            \"is_on_sale\": false,\n            \"discount_amount\": 0,\n            \"currency_code\": \"TOMAN\",\n            \"currency_symbol\": \"تومان\",\n            \"discount_percentage\": 0\n        },\n        \"inventory_info\": {\n            \"quantity\": 55,\n            \"max_quantity\": 55,\n            \"is_in_stock\": true,\n            \"allow_backorders\": false\n        }\n    },\n    {\n        \"id\": 150,\n        \"name\": \"Polarized reciprocal framework 19\",\n        \"slug\": \"polarized-reciprocal-framework-19\",\n        \"sku\": \"17550178\",\n        \"unit\": \"do\",\n        \"short_description\": \"Event key trouble important edge since.\",\n        \"featured_image_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/product.webp\",\n        \"media\": [],\n        \"brand\": {\n            \"id\": 49,\n            \"name\": \"Moreno LLC 8\",\n            \"slug\": \"moreno-llc-8\",\n            \"logo_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/brand_placeholder.webp\"\n        },\n        \"tags\": [\n            \"laugh-5\"\n        ],\n        \"categories\": [\n            {\n                \"id\": 48,\n                \"name\": \"smile-7\",\n                \"slug\": \"smile-7\",\n                \"image_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/category_placeholder.webp\"\n            }\n        ],\n        \"price_info\": {\n            \"base_price\": 56978.22,\n            \"final_price\": 56978.22,\n            \"is_on_sale\": false,\n            \"discount_amount\": 0,\n            \"currency_code\": \"TOMAN\",\n            \"currency_symbol\": \"تومان\",\n            \"discount_percentage\": 0\n        },\n        \"inventory_info\": {\n            \"quantity\": 41,\n            \"max_quantity\": 41,\n            \"is_in_stock\": true,\n            \"allow_backorders\": false\n        }\n    },\n    {\n        \"id\": 149,\n        \"name\": \"Enhanced tertiary frame 18\",\n        \"slug\": \"enhanced-tertiary-frame-18\",\n        \"sku\": \"86847889\",\n        \"unit\": \"do\",\n        \"short_description\": \"Early since agent open personal require audience.\",\n        \"featured_image_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/product.webp\",\n        \"media\": [],\n        \"brand\": {\n            \"id\": 42,\n            \"name\": \"Thompson-Vargas 1\",\n            \"slug\": \"thompson-vargas-1\",\n            \"logo_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/brand_placeholder.webp\"\n        },\n        \"tags\": [\n            \"benefit-2\",\n            \"think-3\"\n        ],\n        \"categories\": [\n            {\n                \"id\": 44,\n                \"name\": \"age-3\",\n                \"slug\": \"age-3\",\n                \"image_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/category_placeholder.webp\"\n            },\n            {\n                \"id\": 47,\n                \"name\": \"rise-6\",\n                \"slug\": \"rise-6\",\n                \"image_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/category_placeholder.webp\"\n            },\n            {\n                \"id\": 48,\n                \"name\": \"smile-7\",\n                \"slug\": \"smile-7\",\n                \"image_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/category_placeholder.webp\"\n            }\n        ],\n        \"price_info\": {\n            \"base_price\": 19493.84,\n            \"final_price\": 19493.84,\n            \"is_on_sale\": false,\n            \"discount_amount\": 0,\n            \"currency_code\": \"TOMAN\",\n            \"currency_symbol\": \"تومان\",\n            \"discount_percentage\": 0\n        },\n        \"inventory_info\": {\n            \"quantity\": 48,\n            \"max_quantity\": 48,\n            \"is_in_stock\": true,\n            \"allow_backorders\": false\n        }\n    },\n    {\n        \"id\": 148,\n        \"name\": \"Open-architected optimal encoding 17\",\n        \"slug\": \"open-architected-optimal-encoding-17\",\n        \"sku\": \"16151277\",\n        \"unit\": \"difference\",\n        \"short_description\": \"Cultural everything crime bag beat add realize anyone someone computer campaign other.\",\n        \"featured_image_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/product.webp\",\n        \"media\": [],\n        \"brand\": {\n            \"id\": 49,\n            \"name\": \"Moreno LLC 8\",\n            \"slug\": \"moreno-llc-8\",\n            \"logo_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/brand_placeholder.webp\"\n        },\n        \"tags\": [\n            \"meet-8\"\n        ],\n        \"categories\": [\n            {\n                \"id\": 45,\n                \"name\": \"alone-4\",\n                \"slug\": \"alone-4\",\n                \"image_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/category_placeholder.webp\"\n            },\n            {\n                \"id\": 43,\n                \"name\": \"subject-2\",\n                \"slug\": \"subject-2\",\n                \"image_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/category_placeholder.webp\"\n            },\n            {\n                \"id\": 49,\n                \"name\": \"trade-8\",\n                \"slug\": \"trade-8\",\n                \"image_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/category_placeholder.webp\"\n            }\n        ],\n        \"price_info\": {\n            \"base_price\": 69822.11,\n            \"final_price\": 69822.11,\n            \"is_on_sale\": false,\n            \"discount_amount\": 0,\n            \"currency_code\": \"TOMAN\",\n            \"currency_symbol\": \"تومان\",\n            \"discount_percentage\": 0\n        },\n        \"inventory_info\": {\n            \"quantity\": 36,\n            \"max_quantity\": 36,\n            \"is_in_stock\": true,\n            \"allow_backorders\": false\n        }\n    },\n    {\n        \"id\": 147,\n        \"name\": \"Down-sized tertiary application 16\",\n        \"slug\": \"down-sized-tertiary-application-16\",\n        \"sku\": \"54616486\",\n        \"unit\": \"difference\",\n        \"short_description\": \"Turn deep bit coach maybe effect there president rich choice.\",\n        \"featured_image_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/product.webp\",\n        \"media\": [],\n        \"brand\": {\n            \"id\": 48,\n            \"name\": \"Jones-Doyle 7\",\n            \"slug\": \"jones-doyle-7\",\n            \"logo_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/brand_placeholder.webp\"\n        },\n        \"tags\": [\n            \"success-0\"\n        ],\n        \"categories\": [\n            {\n                \"id\": 44,\n                \"name\": \"age-3\",\n                \"slug\": \"age-3\",\n                \"image_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/category_placeholder.webp\"\n            },\n            {\n                \"id\": 49,\n                \"name\": \"trade-8\",\n                \"slug\": \"trade-8\",\n                \"image_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/category_placeholder.webp\"\n            }\n        ],\n        \"price_info\": {\n            \"base_price\": 91966.21,\n            \"final_price\": 91966.21,\n            \"is_on_sale\": false,\n            \"discount_amount\": 0,\n            \"currency_code\": \"TOMAN\",\n            \"currency_symbol\": \"تومان\",\n            \"discount_percentage\": 0\n        },\n        \"inventory_info\": {\n            \"quantity\": 64,\n            \"max_quantity\": 64,\n            \"is_in_stock\": true,\n            \"allow_backorders\": false\n        }\n    },\n    {\n        \"id\": 146,\n        \"name\": \"Decentralized radical standardization 15\",\n        \"slug\": \"decentralized-radical-standardization-15\",\n        \"sku\": \"68550400\",\n        \"unit\": \"do\",\n        \"short_description\": \"Page through action find rise evening often floor Republican officer well partner.\",\n        \"featured_image_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/product.webp\",\n        \"media\": [],\n        \"brand\": {\n            \"id\": 47,\n            \"name\": \"Fowler and Sons 6\",\n            \"slug\": \"fowler-and-sons-6\",\n            \"logo_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/brand_placeholder.webp\"\n        },\n        \"tags\": [\n            \"benefit-2\"\n        ],\n        \"categories\": [\n            {\n                \"id\": 42,\n                \"name\": \"so-1\",\n                \"slug\": \"so-1\",\n                \"image_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/category_placeholder.webp\"\n            },\n            {\n                \"id\": 43,\n                \"name\": \"subject-2\",\n                \"slug\": \"subject-2\",\n                \"image_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/category_placeholder.webp\"\n            }\n        ],\n        \"price_info\": {\n            \"base_price\": 36239.23,\n            \"final_price\": 36239.23,\n            \"is_on_sale\": false,\n            \"discount_amount\": 0,\n            \"currency_code\": \"TOMAN\",\n            \"currency_symbol\": \"تومان\",\n            \"discount_percentage\": 0\n        },\n        \"inventory_info\": {\n            \"quantity\": 0,\n            \"max_quantity\": 0,\n            \"is_in_stock\": false,\n            \"allow_backorders\": false\n        }\n    },\n    {\n        \"id\": 145,\n        \"name\": \"Compatible incremental adapter 14\",\n        \"slug\": \"compatible-incremental-adapter-14\",\n        \"sku\": \"63878950\",\n        \"unit\": \"do\",\n        \"short_description\": \"Grow how cause score public parent part south.\",\n        \"featured_image_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/product.webp\",\n        \"media\": [],\n        \"brand\": {\n            \"id\": 41,\n            \"name\": \"Wells, Johnson and Preston 0\",\n            \"slug\": \"wells-johnson-and-preston-0\",\n            \"logo_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/brand_placeholder.webp\"\n        },\n        \"tags\": [\n            \"democratic-4\",\n            \"purpose-1\"\n        ],\n        \"categories\": [\n            {\n                \"id\": 44,\n                \"name\": \"age-3\",\n                \"slug\": \"age-3\",\n                \"image_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/category_placeholder.webp\"\n            },\n            {\n                \"id\": 46,\n                \"name\": \"lead-5\",\n                \"slug\": \"lead-5\",\n                \"image_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/category_placeholder.webp\"\n            },\n            {\n                \"id\": 49,\n                \"name\": \"trade-8\",\n                \"slug\": \"trade-8\",\n                \"image_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/category_placeholder.webp\"\n            }\n        ],\n        \"price_info\": {\n            \"base_price\": 60344.65,\n            \"final_price\": 60344.65,\n            \"is_on_sale\": false,\n            \"discount_amount\": 0,\n            \"currency_code\": \"TOMAN\",\n            \"currency_symbol\": \"تومان\",\n            \"discount_percentage\": 0\n        },\n        \"inventory_info\": {\n            \"quantity\": 34,\n            \"max_quantity\": 34,\n            \"is_in_stock\": true,\n            \"allow_backorders\": false\n        }\n    },\n    {\n        \"id\": 144,\n        \"name\": \"Balanced interactive approach 13\",\n        \"slug\": \"balanced-interactive-approach-13\",\n        \"sku\": \"41884669\",\n        \"unit\": \"do\",\n        \"short_description\": \"Stock together cell economic century wide ask writer say.\",\n        \"featured_image_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/product.webp\",\n        \"media\": [],\n        \"brand\": {\n            \"id\": 44,\n            \"name\": \"Nichols, Miller and Harris 3\",\n            \"slug\": \"nichols-miller-and-harris-3\",\n            \"logo_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/brand_placeholder.webp\"\n        },\n        \"tags\": [\n            \"hundred-7\",\n            \"success-0\"\n        ],\n        \"categories\": [\n            {\n                \"id\": 44,\n                \"name\": \"age-3\",\n                \"slug\": \"age-3\",\n                \"image_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/category_placeholder.webp\"\n            },\n            {\n                \"id\": 50,\n                \"name\": \"bank-9\",\n                \"slug\": \"bank-9\",\n                \"image_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/category_placeholder.webp\"\n            },\n            {\n                \"id\": 42,\n                \"name\": \"so-1\",\n                \"slug\": \"so-1\",\n                \"image_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/category_placeholder.webp\"\n            }\n        ],\n        \"price_info\": {\n            \"base_price\": 61858.16,\n            \"final_price\": 61858.16,\n            \"is_on_sale\": false,\n            \"discount_amount\": 0,\n            \"currency_code\": \"TOMAN\",\n            \"currency_symbol\": \"تومان\",\n            \"discount_percentage\": 0\n        },\n        \"inventory_info\": {\n            \"quantity\": 71,\n            \"max_quantity\": 71,\n            \"is_in_stock\": true,\n            \"allow_backorders\": false\n        }\n    },\n    {\n        \"id\": 143,\n        \"name\": \"Multi-lateral background matrices 12\",\n        \"slug\": \"multi-lateral-background-matrices-12\",\n        \"sku\": \"54988729\",\n        \"unit\": \"difference\",\n        \"short_description\": \"Group scene court cup occur water theory culture TV off go.\",\n        \"featured_image_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/product.webp\",\n        \"media\": [],\n        \"brand\": {\n            \"id\": 41,\n            \"name\": \"Wells, Johnson and Preston 0\",\n            \"slug\": \"wells-johnson-and-preston-0\",\n            \"logo_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/brand_placeholder.webp\"\n        },\n        \"tags\": [\n            \"laugh-5\"\n        ],\n        \"categories\": [\n            {\n                \"id\": 44,\n                \"name\": \"age-3\",\n                \"slug\": \"age-3\",\n                \"image_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/category_placeholder.webp\"\n            },\n            {\n                \"id\": 50,\n                \"name\": \"bank-9\",\n                \"slug\": \"bank-9\",\n                \"image_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/category_placeholder.webp\"\n            },\n            {\n                \"id\": 49,\n                \"name\": \"trade-8\",\n                \"slug\": \"trade-8\",\n                \"image_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/category_placeholder.webp\"\n            }\n        ],\n        \"price_info\": {\n            \"base_price\": 33656.62,\n            \"final_price\": 33656.62,\n            \"is_on_sale\": false,\n            \"discount_amount\": 0,\n            \"currency_code\": \"TOMAN\",\n            \"currency_symbol\": \"تومان\",\n            \"discount_percentage\": 0\n        },\n        \"inventory_info\": {\n            \"quantity\": 63,\n            \"max_quantity\": 63,\n            \"is_in_stock\": true,\n            \"allow_backorders\": false\n        }\n    },\n    {\n        \"id\": 142,\n        \"name\": \"Seamless global algorithm 11\",\n        \"slug\": \"seamless-global-algorithm-11\",\n        \"sku\": \"30496453\",\n        \"unit\": \"difference\",\n        \"short_description\": \"Network black garden other east information.\",\n        \"featured_image_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/product.webp\",\n        \"media\": [],\n        \"brand\": {\n            \"id\": 43,\n            \"name\": \"Bauer, Hamilton and Holden 2\",\n            \"slug\": \"bauer-hamilton-and-holden-2\",\n            \"logo_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/brand_placeholder.webp\"\n        },\n        \"tags\": [],\n        \"categories\": [\n            {\n                \"id\": 46,\n                \"name\": \"lead-5\",\n                \"slug\": \"lead-5\",\n                \"image_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/category_placeholder.webp\"\n            },\n            {\n                \"id\": 48,\n                \"name\": \"smile-7\",\n                \"slug\": \"smile-7\",\n                \"image_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/category_placeholder.webp\"\n            },\n            {\n                \"id\": 43,\n                \"name\": \"subject-2\",\n                \"slug\": \"subject-2\",\n                \"image_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/category_placeholder.webp\"\n            }\n        ],\n        \"price_info\": {\n            \"base_price\": 70579.22,\n            \"final_price\": 70579.22,\n            \"is_on_sale\": false,\n            \"discount_amount\": 0,\n            \"currency_code\": \"TOMAN\",\n            \"currency_symbol\": \"تومان\",\n            \"discount_percentage\": 0\n        },\n        \"inventory_info\": {\n            \"quantity\": 37,\n            \"max_quantity\": 37,\n            \"is_in_stock\": true,\n            \"allow_backorders\": false\n        }\n    },\n    {\n        \"id\": 141,\n        \"name\": \"Fundamental web-enabled instruction set 10\",\n        \"slug\": \"fundamental-web-enabled-instruction-set-10\",\n        \"sku\": \"57675671\",\n        \"unit\": \"do\",\n        \"short_description\": \"Put similar cut since Democrat play give ground.\",\n        \"featured_image_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/product.webp\",\n        \"media\": [],\n        \"brand\": {\n            \"id\": 47,\n            \"name\": \"Fowler and Sons 6\",\n            \"slug\": \"fowler-and-sons-6\",\n            \"logo_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/brand_placeholder.webp\"\n        },\n        \"tags\": [\n            \"hundred-7\",\n            \"democratic-4\"\n        ],\n        \"categories\": [\n            {\n                \"id\": 48,\n                \"name\": \"smile-7\",\n                \"slug\": \"smile-7\",\n                \"image_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/category_placeholder.webp\"\n            },\n            {\n                \"id\": 43,\n                \"name\": \"subject-2\",\n                \"slug\": \"subject-2\",\n                \"image_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/category_placeholder.webp\"\n            }\n        ],\n        \"price_info\": {\n            \"base_price\": 32373.14,\n            \"final_price\": 32373.14,\n            \"is_on_sale\": false,\n            \"discount_amount\": 0,\n            \"currency_code\": \"TOMAN\",\n            \"currency_symbol\": \"تومان\",\n            \"discount_percentage\": 0\n        },\n        \"inventory_info\": {\n            \"quantity\": 2,\n            \"max_quantity\": 2,\n            \"is_in_stock\": true,\n            \"allow_backorders\": false\n        }\n    },\n    {\n        \"id\": 140,\n        \"name\": \"Realigned value-added capability 9\",\n        \"slug\": \"realigned-value-added-capability-9\",\n        \"sku\": \"56881660\",\n        \"unit\": \"do\",\n        \"short_description\": \"Second present property item mother Congress simply.\",\n        \"featured_image_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/product.webp\",\n        \"media\": [],\n        \"brand\": {\n            \"id\": 41,\n            \"name\": \"Wells, Johnson and Preston 0\",\n            \"slug\": \"wells-johnson-and-preston-0\",\n            \"logo_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/brand_placeholder.webp\"\n        },\n        \"tags\": [],\n        \"categories\": [\n            {\n                \"id\": 46,\n                \"name\": \"lead-5\",\n                \"slug\": \"lead-5\",\n                \"image_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/category_placeholder.webp\"\n            }\n        ],\n        \"price_info\": {\n            \"base_price\": 65712.14,\n            \"final_price\": 65712.14,\n            \"is_on_sale\": false,\n            \"discount_amount\": 0,\n            \"currency_code\": \"TOMAN\",\n            \"currency_symbol\": \"تومان\",\n            \"discount_percentage\": 0\n        },\n        \"inventory_info\": {\n            \"quantity\": 24,\n            \"max_quantity\": 24,\n            \"is_in_stock\": true,\n            \"allow_backorders\": false\n        }\n    },\n    {\n        \"id\": 139,\n        \"name\": \"Programmable optimizing circuit 8\",\n        \"slug\": \"programmable-optimizing-circuit-8\",\n        \"sku\": \"52815195\",\n        \"unit\": \"do\",\n        \"short_description\": \"Need especially change address not always according without.\",\n        \"featured_image_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/product.webp\",\n        \"media\": [],\n        \"brand\": {\n            \"id\": 46,\n            \"name\": \"Armstrong-Davis 5\",\n            \"slug\": \"armstrong-davis-5\",\n            \"logo_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/brand_placeholder.webp\"\n        },\n        \"tags\": [\n            \"laugh-5\"\n        ],\n        \"categories\": [\n            {\n                \"id\": 48,\n                \"name\": \"smile-7\",\n                \"slug\": \"smile-7\",\n                \"image_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/category_placeholder.webp\"\n            },\n            {\n                \"id\": 49,\n                \"name\": \"trade-8\",\n                \"slug\": \"trade-8\",\n                \"image_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/category_placeholder.webp\"\n            }\n        ],\n        \"price_info\": {\n            \"base_price\": 38827.47,\n            \"final_price\": 38827.47,\n            \"is_on_sale\": false,\n            \"discount_amount\": 0,\n            \"currency_code\": \"TOMAN\",\n            \"currency_symbol\": \"تومان\",\n            \"discount_percentage\": 0\n        },\n        \"inventory_info\": {\n            \"quantity\": 28,\n            \"max_quantity\": 28,\n            \"is_in_stock\": true,\n            \"allow_backorders\": false\n        }\n    },\n    {\n        \"id\": 138,\n        \"name\": \"Visionary asymmetric functionalities 7\",\n        \"slug\": \"visionary-asymmetric-functionalities-7\",\n        \"sku\": \"26807935\",\n        \"unit\": \"debate\",\n        \"short_description\": \"Argue seek near set factor bill.\",\n        \"featured_image_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/product.webp\",\n        \"media\": [],\n        \"brand\": {\n            \"id\": 41,\n            \"name\": \"Wells, Johnson and Preston 0\",\n            \"slug\": \"wells-johnson-and-preston-0\",\n            \"logo_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/brand_placeholder.webp\"\n        },\n        \"tags\": [\n            \"meet-8\"\n        ],\n        \"categories\": [\n            {\n                \"id\": 44,\n                \"name\": \"age-3\",\n                \"slug\": \"age-3\",\n                \"image_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/category_placeholder.webp\"\n            },\n            {\n                \"id\": 41,\n                \"name\": \"hit-0\",\n                \"slug\": \"hit-0\",\n                \"image_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/category_placeholder.webp\"\n            }\n        ],\n        \"price_info\": {\n            \"base_price\": 24670.23,\n            \"final_price\": 24670.23,\n            \"is_on_sale\": false,\n            \"discount_amount\": 0,\n            \"currency_code\": \"TOMAN\",\n            \"currency_symbol\": \"تومان\",\n            \"discount_percentage\": 0\n        },\n        \"inventory_info\": {\n            \"quantity\": 7,\n            \"max_quantity\": 7,\n            \"is_in_stock\": true,\n            \"allow_backorders\": false\n        }\n    },\n    {\n        \"id\": 137,\n        \"name\": \"Fundamental bottom-line secured line 6\",\n        \"slug\": \"fundamental-bottom-line-secured-line-6\",\n        \"sku\": \"63820188\",\n        \"unit\": \"do\",\n        \"short_description\": \"Run reality maybe behind water oil whose oil structure federal ago.\",\n        \"featured_image_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/product.webp\",\n        \"media\": [],\n        \"brand\": {\n            \"id\": 49,\n            \"name\": \"Moreno LLC 8\",\n            \"slug\": \"moreno-llc-8\",\n            \"logo_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/brand_placeholder.webp\"\n        },\n        \"tags\": [\n            \"meet-8\",\n            \"adult-9\"\n        ],\n        \"categories\": [\n            {\n                \"id\": 44,\n                \"name\": \"age-3\",\n                \"slug\": \"age-3\",\n                \"image_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/category_placeholder.webp\"\n            },\n            {\n                \"id\": 45,\n                \"name\": \"alone-4\",\n                \"slug\": \"alone-4\",\n                \"image_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/category_placeholder.webp\"\n            },\n            {\n                \"id\": 41,\n                \"name\": \"hit-0\",\n                \"slug\": \"hit-0\",\n                \"image_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/category_placeholder.webp\"\n            }\n        ],\n        \"price_info\": {\n            \"base_price\": 65626.48,\n            \"final_price\": 65626.48,\n            \"is_on_sale\": false,\n            \"discount_amount\": 0,\n            \"currency_code\": \"TOMAN\",\n            \"currency_symbol\": \"تومان\",\n            \"discount_percentage\": 0\n        },\n        \"inventory_info\": {\n            \"quantity\": 66,\n            \"max_quantity\": 66,\n            \"is_in_stock\": true,\n            \"allow_backorders\": false\n        }\n    },\n    {\n        \"id\": 136,\n        \"name\": \"Multi-tiered leadingedge structure 5\",\n        \"slug\": \"multi-tiered-leadingedge-structure-5\",\n        \"sku\": \"35657439\",\n        \"unit\": \"debate\",\n        \"short_description\": \"Whom number room item onto charge forward newspaper.\",\n        \"featured_image_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/product.webp\",\n        \"media\": [],\n        \"brand\": {\n            \"id\": 50,\n            \"name\": \"Kelly, Howard and Hall 9\",\n            \"slug\": \"kelly-howard-and-hall-9\",\n            \"logo_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/brand_placeholder.webp\"\n        },\n        \"tags\": [\n            \"both-11\",\n            \"partner-10\"\n        ],\n        \"categories\": [\n            {\n                \"id\": 41,\n                \"name\": \"hit-0\",\n                \"slug\": \"hit-0\",\n                \"image_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/category_placeholder.webp\"\n            }\n        ],\n        \"price_info\": {\n            \"base_price\": 22603.5,\n            \"final_price\": 22603.5,\n            \"is_on_sale\": false,\n            \"discount_amount\": 0,\n            \"currency_code\": \"TOMAN\",\n            \"currency_symbol\": \"تومان\",\n            \"discount_percentage\": 0\n        },\n        \"inventory_info\": {\n            \"quantity\": 21,\n            \"max_quantity\": 21,\n            \"is_in_stock\": true,\n            \"allow_backorders\": false\n        }\n    },\n    {\n        \"id\": 135,\n        \"name\": \"Persevering methodical Internet solution 4\",\n        \"slug\": \"persevering-methodical-internet-solution-4\",\n        \"sku\": \"26760629\",\n        \"unit\": \"difference\",\n        \"short_description\": \"Already scientist relationship wish value nearly on.\",\n        \"featured_image_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/product.webp\",\n        \"media\": [],\n        \"brand\": {\n            \"id\": 43,\n            \"name\": \"Bauer, Hamilton and Holden 2\",\n            \"slug\": \"bauer-hamilton-and-holden-2\",\n            \"logo_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/brand_placeholder.webp\"\n        },\n        \"tags\": [\n            \"meet-8\",\n            \"think-3\"\n        ],\n        \"categories\": [\n            {\n                \"id\": 50,\n                \"name\": \"bank-9\",\n                \"slug\": \"bank-9\",\n                \"image_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/category_placeholder.webp\"\n            },\n            {\n                \"id\": 42,\n                \"name\": \"so-1\",\n                \"slug\": \"so-1\",\n                \"image_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/category_placeholder.webp\"\n            },\n            {\n                \"id\": 49,\n                \"name\": \"trade-8\",\n                \"slug\": \"trade-8\",\n                \"image_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/category_placeholder.webp\"\n            }\n        ],\n        \"price_info\": {\n            \"base_price\": 63463.87,\n            \"final_price\": 63463.87,\n            \"is_on_sale\": false,\n            \"discount_amount\": 0,\n            \"currency_code\": \"TOMAN\",\n            \"currency_symbol\": \"تومان\",\n            \"discount_percentage\": 0\n        },\n        \"inventory_info\": {\n            \"quantity\": 0,\n            \"max_quantity\": 0,\n            \"is_in_stock\": false,\n            \"allow_backorders\": false\n        }\n    },\n    {\n        \"id\": 134,\n        \"name\": \"Devolved exuding help-desk 3\",\n        \"slug\": \"devolved-exuding-help-desk-3\",\n        \"sku\": \"05538614\",\n        \"unit\": \"do\",\n        \"short_description\": \"Hope trip material side task back heart owner idea president perhaps.\",\n        \"featured_image_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/product.webp\",\n        \"media\": [],\n        \"brand\": {\n            \"id\": 46,\n            \"name\": \"Armstrong-Davis 5\",\n            \"slug\": \"armstrong-davis-5\",\n            \"logo_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/brand_placeholder.webp\"\n        },\n        \"tags\": [\n            \"adult-9\",\n            \"benefit-2\"\n        ],\n        \"categories\": [\n            {\n                \"id\": 44,\n                \"name\": \"age-3\",\n                \"slug\": \"age-3\",\n                \"image_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/category_placeholder.webp\"\n            },\n            {\n                \"id\": 45,\n                \"name\": \"alone-4\",\n                \"slug\": \"alone-4\",\n                \"image_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/category_placeholder.webp\"\n            },\n            {\n                \"id\": 49,\n                \"name\": \"trade-8\",\n                \"slug\": \"trade-8\",\n                \"image_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/category_placeholder.webp\"\n            }\n        ],\n        \"price_info\": {\n            \"base_price\": 17003.46,\n            \"final_price\": 17003.46,\n            \"is_on_sale\": false,\n            \"discount_amount\": 0,\n            \"currency_code\": \"TOMAN\",\n            \"currency_symbol\": \"تومان\",\n            \"discount_percentage\": 0\n        },\n        \"inventory_info\": {\n            \"quantity\": 75,\n            \"max_quantity\": 75,\n            \"is_in_stock\": true,\n            \"allow_backorders\": false\n        }\n    },\n    {\n        \"id\": 133,\n        \"name\": \"Synergized logistical framework 2\",\n        \"slug\": \"synergized-logistical-framework-2\",\n        \"sku\": \"49311099\",\n        \"unit\": \"difference\",\n        \"short_description\": \"Always anyone former magazine magazine financial.\",\n        \"featured_image_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/product.webp\",\n        \"media\": [],\n        \"brand\": {\n            \"id\": 42,\n            \"name\": \"Thompson-Vargas 1\",\n            \"slug\": \"thompson-vargas-1\",\n            \"logo_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/brand_placeholder.webp\"\n        },\n        \"tags\": [\n            \"laugh-5\",\n            \"benefit-2\"\n        ],\n        \"categories\": [\n            {\n                \"id\": 46,\n                \"name\": \"lead-5\",\n                \"slug\": \"lead-5\",\n                \"image_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/category_placeholder.webp\"\n            },\n            {\n                \"id\": 43,\n                \"name\": \"subject-2\",\n                \"slug\": \"subject-2\",\n                \"image_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/category_placeholder.webp\"\n            }\n        ],\n        \"price_info\": {\n            \"base_price\": 48318.39,\n            \"final_price\": 48318.39,\n            \"is_on_sale\": false,\n            \"discount_amount\": 0,\n            \"currency_code\": \"TOMAN\",\n            \"currency_symbol\": \"تومان\",\n            \"discount_percentage\": 0\n        },\n        \"inventory_info\": {\n            \"quantity\": 87,\n            \"max_quantity\": 87,\n            \"is_in_stock\": true,\n            \"allow_backorders\": false\n        }\n    },\n    {\n        \"id\": 132,\n        \"name\": \"Phased zero tolerance utilization 1\",\n        \"slug\": \"phased-zero-tolerance-utilization-1\",\n        \"sku\": \"43344161\",\n        \"unit\": \"do\",\n        \"short_description\": \"Ever site way after free institution.\",\n        \"featured_image_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/product.webp\",\n        \"media\": [],\n        \"brand\": {\n            \"id\": 44,\n            \"name\": \"Nichols, Miller and Harris 3\",\n            \"slug\": \"nichols-miller-and-harris-3\",\n            \"logo_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/brand_placeholder.webp\"\n        },\n        \"tags\": [\n            \"adult-9\",\n            \"hundred-7\"\n        ],\n        \"categories\": [\n            {\n                \"id\": 42,\n                \"name\": \"so-1\",\n                \"slug\": \"so-1\",\n                \"image_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/category_placeholder.webp\"\n            }\n        ],\n        \"price_info\": {\n            \"base_price\": 92608.13,\n            \"final_price\": 92608.13,\n            \"is_on_sale\": false,\n            \"discount_amount\": 0,\n            \"currency_code\": \"TOMAN\",\n            \"currency_symbol\": \"تومان\",\n            \"discount_percentage\": 0\n        },\n        \"inventory_info\": {\n            \"quantity\": 40,\n            \"max_quantity\": 40,\n            \"is_in_stock\": true,\n            \"allow_backorders\": false\n        }\n    },\n    {\n        \"id\": 131,\n        \"name\": \"Mandatory uniform approach 0\",\n        \"slug\": \"mandatory-uniform-approach-0\",\n        \"sku\": \"66697909\",\n        \"unit\": \"debate\",\n        \"short_description\": \"Quality respond my left suggest market piece factor long call everybody.\",\n        \"featured_image_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/product.webp\",\n        \"media\": [],\n        \"brand\": {\n            \"id\": 45,\n            \"name\": \"Smith, Bartlett and Henderson 4\",\n            \"slug\": \"smith-bartlett-and-henderson-4\",\n            \"logo_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/brand_placeholder.webp\"\n        },\n        \"tags\": [\n            \"brother-6\"\n        ],\n        \"categories\": [\n            {\n                \"id\": 47,\n                \"name\": \"rise-6\",\n                \"slug\": \"rise-6\",\n                \"image_url\": \"http://127.0.0.1:8000/static/assets/images/placeholders/category_placeholder.webp\"\n            }\n        ],\n        \"price_info\": {\n            \"base_price\": 37331.85,\n            \"final_price\": 37331.85,\n            \"is_on_sale\": false,\n            \"discount_amount\": 0,\n            \"currency_code\": \"TOMAN\",\n            \"currency_symbol\": \"تومان\",\n            \"discount_percentage\": 0\n        },\n        \"inventory_info\": {\n            \"quantity\": 80,\n            \"max_quantity\": 80,\n            \"is_in_stock\": true,\n            \"allow_backorders\": false\n        }\n    }\n]"
+								}
+							]
+						},
+						{
+							"name": "Get Product by Slug",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/v1/products/:slug/",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"products",
+										":slug",
+										""
+									],
+									"variable": [
+										{
+											"key": "slug",
+											"value": "sour-cherry-jam"
+										}
+									]
+								},
+								"description": "Retrieves the detailed information for a single product by its slug."
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Categories",
+					"item": [
+						{
+							"name": "List All Categories",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/v1/categories/",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"categories",
+										""
+									]
+								},
+								"description": "API view to list all active categories."
+							},
+							"response": []
+						},
+						{
+							"name": "Get Category by Slug",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/v1/categories/:slug/",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"categories",
+										":slug",
+										""
+									],
+									"variable": [
+										{
+											"key": "slug",
+											"value": "sample-category-slug"
+										}
+									]
+								},
+								"description": "API view to retrieve a single category by its slug."
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Brands",
+					"item": [
+						{
+							"name": "List All Brands",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/v1/brands/",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"brands",
+										""
+									]
+								},
+								"description": "API view to list all active brands."
+							},
+							"response": []
+						},
+						{
+							"name": "Get Brand by Slug",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/v1/brands/:slug/",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"brands",
+										":slug",
+										""
+									],
+									"variable": [
+										{
+											"key": "slug",
+											"value": "sample-brand-slug"
+										}
+									]
+								},
+								"description": "API view to retrieve a single brand by its slug."
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Collections",
+					"item": [
+						{
+							"name": "List All Collections",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/v1/collections/",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"collections",
+										""
+									]
+								},
+								"description": "API view to list all active and current product collections."
+							},
+							"response": []
+						},
+						{
+							"name": "Get Collection by Slug",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/v1/collections/:slug/",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"collections",
+										":slug",
+										""
+									],
+									"query": [
+										{
+											"key": "brand",
+											"value": "apple",
+											"description": "Filter products within the collection by brand.",
+											"disabled": true
+										},
+										{
+											"key": "min_price",
+											"value": "500",
+											"description": "Filter products within the collection by minimum price.",
+											"disabled": true
+										}
+									],
+									"variable": [
+										{
+											"key": "slug",
+											"value": "seasonal-products"
+										}
+									]
+								},
+								"description": "Retrieves a single product collection and its products. You can filter the products within the collection using the same query parameters as the main product list."
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Shopping Cart",
+					"item": [
+						{
+							"name": "Get Cart Details",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{accessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/v1/cart/",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"cart",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Add Item to Cart",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{accessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "variant_id",
+											"value": "1",
+											"type": "text"
+										},
+										{
+											"key": "quantity",
+											"value": "1",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/v1/cart/",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"cart",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update Item Quantity",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "quantity",
+											"value": "0",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/v1/cart/items/:{item_id}/",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"cart",
+										"items",
+										":{item_id}",
+										""
+									],
+									"variable": [
+										{
+											"key": "{item_id}",
+											"value": "8"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Remove Item from Cart",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/v1/cart/items/:{item_id}/",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"cart",
+										"items",
+										":{item_id}",
+										""
+									],
+									"variable": [
+										{
+											"key": "{item_id}",
+											"value": "7"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Clear Entire Cart",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/v1/cart/clear/",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"cart",
+										"clear",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Orders",
+					"item": [
+						{
+							"name": "Checkout (Create Order from Cart)",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{accessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "shipping_address_id",
+											"value": "1",
+											"description": "The ID of the user's shipping address.",
+											"type": "text"
+										},
+										{
+											"key": "billing_address_id",
+											"value": "",
+											"description": "(Optional) The ID of the billing address. If not provided, shipping address is used.",
+											"type": "text"
+										},
+										{
+											"key": "notes",
+											"value": "Please deliver in the afternoon.",
+											"description": "(Optional) Customer notes for the order.",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/v1/checkout/",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"checkout",
+										""
+									]
+								},
+								"description": "Finalizes the shopping process by creating an order from the user's current cart. Requires authentication."
+							},
+							"response": []
+						},
+						{
+							"name": "List My Orders",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{accessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/v1/orders/",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"orders",
+										""
+									]
+								},
+								"description": "Retrieves a list of all orders placed by the authenticated user."
+							},
+							"response": []
+						},
+						{
+							"name": "Get Order Details",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{accessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/v1/orders/:order_number/",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"orders",
+										":order_number",
+										""
+									],
+									"variable": [
+										{
+											"key": "order_number",
+											"value": "ORD-20250823-91A53"
+										}
+									]
+								},
+								"description": "Retrieves the detailed information for a single order using its unique order number."
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "General",
+			"item": [
+				{
+					"name": "Get Site Configuration",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/site-config/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"site-config",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://127.0.0.1:8000"
+		},
+		{
+			"key": "accessToken",
+			"value": ""
+		},
+		{
+			"key": "refreshToken",
+			"value": ""
+		}
+	]
+}
