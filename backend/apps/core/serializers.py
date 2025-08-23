@@ -1,7 +1,8 @@
-from rest_framework import serializers
 from django.templatetags.static import static
+from rest_framework import serializers
 
 from apps.core.models import Currency, SiteConfiguration
+from apps.payments.serializers import PaymentGatewaySerializer
 
 
 class CurrencySerializer(serializers.ModelSerializer):
@@ -14,12 +15,13 @@ class CurrencySerializer(serializers.ModelSerializer):
 
 class SiteConfigurationSerializer(serializers.ModelSerializer):
     """Serializer for the SiteConfiguration model, providing site-wide settings."""
-    default_currency = CurrencySerializer(read_only=True)  # TODO: add default_payment_gateway when implemented
+    default_currency = CurrencySerializer(read_only=True)
+    default_payment_gateway = PaymentGatewaySerializer(read_only=True)
     site_logo_url = serializers.SerializerMethodField()
 
     class Meta:
         model = SiteConfiguration
-        fields = ('site_name', 'site_logo_url', 'default_currency', 'maintenance_mode',)
+        fields = ('site_name', 'site_logo_url', 'default_currency', 'default_payment_gateway', 'maintenance_mode',)
 
     def get_site_logo_url(self, obj):
         """Return the absolute URL for the site logo."""

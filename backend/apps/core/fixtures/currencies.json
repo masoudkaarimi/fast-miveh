@@ -3,7 +3,7 @@
         "model": "core.currency",
         "pk": 1,
         "fields": {
-            "code": "TOMAN",
+            "code": "IRT",
             "name": "Iranian Toman",
             "symbol": "تومان",
             "exchange_rate": "1.0",

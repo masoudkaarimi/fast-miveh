@@ -11,7 +11,7 @@ class SiteConfigurationAdmin(SingletonModelAdmin):
             'fields': ('site_name', 'site_logo', 'maintenance_mode')
         }),
         ('Localization & Payments', {
-            'fields': ('default_currency',)  # TODO: add default_payment_gateway when implemented
+            'fields': ('default_currency', 'default_payment_gateway')
         }),
         ('Notification Settings', {
             'description': "Select the active providers for sending notifications.",

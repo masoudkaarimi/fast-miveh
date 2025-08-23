@@ -56,7 +56,7 @@ class Category(MPTTModel, TimeStampedModel):
         ],
         verbose_name=_("image"),
         help_text=_(
-            'An image representing the category.<br />'
+            'An image representing the category. (Optional)<br />'
             'Supported formats: <b>{allowed_image_extensions}</b>.<br />'
             'Maximum file size: <b>{max_size}MB</b>.'
         ).format(
@@ -144,7 +144,7 @@ class Brand(TimeStampedModel):
         ],
         verbose_name=_("logo"),
         help_text=_(
-            'A logo image for the brand.<br />'
+            'A logo image for the brand. (Optional)<br />'
             'Supported formats: <b>{allowed_image_extensions}</b>.<br />'
             'Maximum file size: <b>{max_size}MB</b>.'
         ).format(
@@ -689,7 +689,7 @@ class ProductCollection(TimeStampedModel):
             FileExtensionValidator(allowed_extensions=settings.ALLOWED_IMAGE_EXTENSIONS)
         ],
         help_text=_(
-            'An image representing the collection.<br />'
+            'An image representing the collection. (Optional)<br />'
             'Supported formats: <b>{allowed_image_extensions}</b>.<br />'
             'Maximum file size: <b>{max_size}MB</b>.'
         ).format(

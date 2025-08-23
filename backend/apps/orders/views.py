@@ -7,7 +7,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from apps.accounts.models import Address
-from apps.orders.models import Order, CartItem
+from apps.orders.models import CartItem, Order
 from apps.orders.serializers import (
     CartItemAddSerializer,
     CartItemUpdateSerializer,

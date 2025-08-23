@@ -138,6 +138,7 @@ SITE_NAME = _("Fast Miveh")
 FRONTEND_URL = {
     'BASE': env.str("DJANGO_FRONTEND_URL"),
     'PASSWORD_RESET_CONFIRM': env.str("DJANGO_FRONTEND_URL_PASSWORD_RESET"),
+    'PAYMENT_VERIFICATION': env.str("DJANGO_FRONTEND_URL_PAYMENT_VERIFICATION"),
 }
 
 # --- OTP configuration ---
@@ -149,64 +150,72 @@ OTP_SETTINGS = {
 }
 
 # --- Notification configuration ---
-NOTIFICATION_PROVIDERS = {
-    # --- SMS Providers ---
-    'console_sms': {
-        'CHANNEL_CLASS': 'apps.notifications.channels.sms.ConsoleSMSChannel',
-        'CONFIG': {}
-    },
-    'kavenegar_sms': {
-        'CHANNEL_CLASS': 'apps.notifications.channels.sms.KavenegarSMSChannel',
-        'CONFIG': {
-            'API_KEY': env.str('DJANGO_KAVENEGAR_API_KEY', default=''),
-        }
-    },
-    # 'twilio_sms': {
-    #     'CHANNEL_CLASS': 'apps.notifications.channels.sms.TwilioSMSChannel',
-    #     'CONFIG': {
-    #         'ACCOUNT_SID': 'YOUR_TWILIO_ACCOUNT_SID',
-    #         'AUTH_TOKEN': 'YOUR_TWILIO_AUTH_TOKEN',
-    #         'FROM_NUMBER': 'YOUR_TWILIO_PHONE_NUMBER',
-    #     }
-    # },
+NOTIFICATION_SETTINGS = {
+    'PROVIDERS': {
+        # --- SMS Providers ---
+        'console_sms': {
+            'CLASS_PATH': 'apps.notifications.channels.sms.ConsoleSMSChannel',
+            'CONFIG': {}
+        },
+        'kavenegar_sms': {
+            'CLASS_PATH': 'apps.notifications.channels.sms.KavenegarSMSChannel',
+            'CONFIG': {
+                'API_KEY': env.str('DJANGO_KAVENEGAR_API_KEY', default=''),
+            }
+        },
+        # 'twilio_sms': {
+        #     'CLASS_PATH': 'apps.notifications.channels.sms.TwilioSMSChannel',
+        #     'CONFIG': {
+        #         'ACCOUNT_SID': 'YOUR_TWILIO_ACCOUNT_SID',
+        #         'AUTH_TOKEN': 'YOUR_TWILIO_AUTH_TOKEN',
+        #         'FROM_NUMBER': 'YOUR_TWILIO_PHONE_NUMBER',
+        #     }
+        # },
 
-    # --- Email Providers ---
-    'django_email': {
-        'CHANNEL_CLASS': 'apps.notifications.channels.email.DjangoEmailChannel',
-        'CONFIG': {
-            'FROM_EMAIL': env.str('DJANGO_DEFAULT_FROM_EMAIL', default='no-reply@example.com')
-        }
-    },
-    # 'sendgrid': {
-    #     'CHANNEL_CLASS': 'apps.notifications.channels.email.SendGridEmailChannel',
-    #     'CONFIG': {'API_KEY': 'YOUR_SENDGRID_API_KEY'}
-    # },
+        # --- Email Providers ---
+        'django_email': {
+            'CLASS_PATH': 'apps.notifications.channels.email.DjangoEmailChannel',
+            'CONFIG': {
+                'FROM_EMAIL': env.str('DJANGO_DEFAULT_FROM_EMAIL', default='no-reply@example.com')
+            }
+        },
+        # 'sendgrid': {
+        #     'CLASS_PATH': 'apps.notifications.channels.email.SendGridEmailChannel',
+        #     'CONFIG': {'API_KEY': 'YOUR_SENDGRID_API_KEY'}
+        # },
 
-    # --- Telegram Providers ---
-    'telegram_bot': {
-        'CHANNEL_CLASS': 'apps.notifications.channels.telegram.TelegramBotChannel',
-        'CONFIG': {
-            'TELEGRAM_BOT_TOKEN': env.str('DJANGO_TELEGRAM_BOT_TOKEN', default=''),
-        }
+        # --- Telegram Providers ---
+        'telegram_bot': {
+            'CLASS_PATH': 'apps.notifications.channels.telegram.TelegramBotChannel',
+            'CONFIG': {
+                'TELEGRAM_BOT_TOKEN': env.str('DJANGO_TELEGRAM_BOT_TOKEN', default=''),
+            }
+        },
     },
 }
 
 # --- Payment configuration ---
 PAYMENTS_SETTINGS = {
     'PROVIDERS': {
+        # --- Zarinpal Gateway ---
         'zarinpal': {
             'CLASS_PATH': 'apps.payments.gateways.zarinpal.ZarinpalGateway',
             'CONFIG': {
-                'MERCHANT_ID': env.str('ZARINPAL_MERCHANT_ID', default=''),
+                'MERCHANT_ID': env.str('ZARINPAL_MERCHANT_ID', ''),
+                # 'ACCESS_TOKEN': env.str('ZARINPAL_ACCESS_TOKEN', ''),
+                'SANDBOX': env.bool('ZARINPAL_SANDBOX', default=False),
             }
         },
+
+        # --- Stripe Gateway ---
         'stripe': {
             'CLASS_PATH': 'apps.payments.gateways.stripe.StripeGateway',
             'CONFIG': {
-                'API_KEY': env.str('STRIPE_API_KEY', default=''),
+                'API_KEY': os.environ.get('STRIPE_API_KEY'),
+                'WEBHOOK_SECRET': os.environ.get('STRIPE_WEBHOOK_SECRET'),
             }
         },
-    }
+    },
 }
 
 # --- Rosetta configuration ---
@@ -281,7 +290,7 @@ REST_FRAMEWORK = {
 
 # --- Simple JWT Configuration ---
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=15),
+    "ACCESS_TOKEN_LIFETIME": timedelta(days=30), # minutes=15
     "REFRESH_TOKEN_LIFETIME": timedelta(days=30),
 
     # # 'ROTATE_REFRESH_TOKENS': False,

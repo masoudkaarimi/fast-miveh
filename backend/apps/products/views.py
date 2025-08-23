@@ -8,12 +8,7 @@ from rest_framework.views import APIView
 
 from apps.products.exceptions import ProductNotFound
 from apps.products.filters import ProductFilter
-from apps.products.models import (
-    Brand,
-    Category,
-    Product,
-    ProductCollection,
-)
+from apps.products.models import Brand, Category, Product, ProductCollection
 from apps.products.serializers import (
     BackInStockSubscriptionSerializer,
     BrandSerializer,

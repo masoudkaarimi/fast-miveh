@@ -1,0 +1,44 @@
+[
+    {
+        "model": "payments.paymentgateway",
+        "pk": 1,
+        "fields": {
+            "name": "زرین‌پال",
+            "identifier": "zarinpal",
+            "logo": null,
+            "description": "پرداخت امن از طریق درگاه زرین‌پال",
+            "min_amount": 10000,
+            "display_order": 1,
+            "supported_countries": [
+                "IR"
+            ],
+            "is_active": true,
+            "created_at": "2025-08-23T15:00:00Z",
+            "updated_at": "2025-08-23T15:00:00Z"
+        }
+    },
+    {
+        "model": "payments.paymentgateway",
+        "pk": 2,
+        "fields": {
+            "name": "Stripe (Credit Card)",
+            "identifier": "stripe",
+            "logo": null,
+            "description": "Secure payment via Stripe.",
+            "min_amount": 5,
+            "display_order": 2,
+            "supported_countries": [
+                "US",
+                "CA",
+                "GB",
+                "AU",
+                "FR",
+                "DE",
+                "IN"
+            ],
+            "is_active": true,
+            "created_at": "2025-08-23T15:00:00Z",
+            "updated_at": "2025-08-23T15:00:00Z"
+        }
+    }
+]

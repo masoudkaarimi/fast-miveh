@@ -13,7 +13,7 @@ from apps.core.utils import get_provider_choices
 class Currency(TimeStampedModel):
     """A model representing a currency used in the application."""
     code = models.CharField(
-        max_length=3,
+        max_length=10,
         unique=True,
         verbose_name=_("Currency Code"),
         help_text=_("The ISO 4217 currency code, e.g., 'USD', 'EUR'.")
@@ -76,7 +76,7 @@ class SiteConfiguration(SingletonModel, TimeStampedModel):
         ],
         verbose_name=_("Site Logo"),
         help_text=_(
-            'A logo image for the site.<br />'
+            'A logo image for the site. (Optional)<br />'
             'Supported formats: <b>{allowed_image_extensions}</b>.<br />'
             'Maximum file size: <b>{max_size}MB</b>.'
         ).format(
@@ -84,7 +84,7 @@ class SiteConfiguration(SingletonModel, TimeStampedModel):
             max_size=settings.MAX_IMAGE_UPLOAD_SIZE_MB
         )
     )
-    default_currency = models.ForeignKey(
+    default_currency = models.ForeignKey(  # TODO: Remove null=True, blank=True
         "Currency",
         on_delete=models.PROTECT,
         related_name='+',
@@ -93,13 +93,15 @@ class SiteConfiguration(SingletonModel, TimeStampedModel):
         verbose_name=_("Default Currency"),
         help_text=_("The default currency used for displaying prices.")
     )
-    # default_payment_gateway = models.ForeignKey(
-    #     'payments.PaymentGateway',
-    #     on_delete=models.PROTECT,
-    #     related_name='+',
-    #     verbose_name=_("Default Payment Gateway"),
-    #     help_text=_("The payment gateway selected by default at checkout.")
-    # )
+    default_payment_gateway = models.ForeignKey(  # TODO: Remove null=True, blank=True
+        'payments.PaymentGateway',
+        on_delete=models.PROTECT,
+        related_name='+',
+        null=True,
+        blank=True,
+        verbose_name=_("Default Payment Gateway"),
+        help_text=_("The payment gateway selected by default at checkout.")
+    )
     active_sms_provider = models.CharField(
         max_length=50,
         choices=get_provider_choices('sms'),

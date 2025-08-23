@@ -5,7 +5,7 @@ from apps.media.models import Media, MediaLink
 
 
 class MediaService:
-    """A service class to handle business logic for creating and managing media."""
+    """Service to manage media files and their associations with content objects."""
 
     def __init__(self, content_object):
         self.content_object = content_object

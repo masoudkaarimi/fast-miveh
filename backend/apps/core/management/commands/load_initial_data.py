@@ -48,6 +48,8 @@ class Command(BaseCommand):
         fixtures = [
             'apps/core/fixtures/currencies.json',
 
+            'apps/payments/fixtures/payment_gateways.json',
+
             'apps/products/fixtures/brands.json',
             'apps/products/fixtures/categories.json',
             'apps/products/fixtures/tags.json',
@@ -57,7 +59,7 @@ class Command(BaseCommand):
             'apps/products/fixtures/product_type_attributes.json',
             'apps/products/fixtures/products_and_variants.json',
             'apps/products/fixtures/product_collections.json',
-            'apps/products/fixtures/back_in_stock.json'
+            'apps/products/fixtures/back_in_stock.json',
         ]
 
         for fixture_path in fixtures:

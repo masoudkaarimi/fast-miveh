@@ -16,7 +16,7 @@ User = get_user_model()
 
 
 class CartService:
-    """A service layer for managing the shopping cart functionality."""
+    """Service layer for managing shopping cart operations."""
 
     def __init__(self, user=None, session_key=None):
         if not user and not session_key:
@@ -140,7 +140,7 @@ class CartService:
 
 
 class OrderService:
-    """A service layer for handling the checkout process and order creation."""
+    """Service layer for managing order creation and processing."""
 
     def __init__(self, user):
         self.user = user

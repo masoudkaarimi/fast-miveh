@@ -70,7 +70,7 @@ class Notification(TimeStampedModel):
         null=True,
         blank=True,
         verbose_name=_("Object ID"),
-        help_text=_("The primary key of the related object.")
+        help_text=_("The primary key of the related object. (Optional)")
     )
     related_object = GenericForeignKey('content_type', 'object_id')
 

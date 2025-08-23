@@ -11,7 +11,7 @@ User = get_user_model()
 
 
 class ProductService:
-    """Handles the logic for fetching and preparing product data for display."""
+    """Service to handle product-related operations."""
 
     def __init__(self, product_slug, request=None):
         self.product_slug = product_slug
@@ -113,7 +113,7 @@ class ProductService:
 
 
 class InventoryService:
-    """Handles the logic for managing stock levels of product variants."""
+    """Service to manage inventory operations for product variants."""
 
     def __init__(self, variant):
         self.variant = variant
@@ -170,7 +170,7 @@ class InventoryService:
 
 
 class PricingService:
-    """Handles the logic for calculating and retrieving prices for product variants."""
+    """Service to handle pricing logic for product variants."""
 
     def __init__(self, variant, user=None):
         self.variant = variant

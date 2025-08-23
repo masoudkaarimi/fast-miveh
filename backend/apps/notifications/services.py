@@ -8,7 +8,7 @@ from apps.notifications.models import Notification
 
 
 class NotificationService:
-    """Handles the creation and management of notifications for a specific user."""
+    """Service to manage user notifications."""
 
     def __init__(self, recipient):
         if not recipient:
@@ -51,10 +51,7 @@ class NotificationService:
 
 
 class NotificationChannelService:
-    """
-    Handles the loading and management of notification channels.
-    notifications through them (e.g., email, sms).
-    """
+    """Service to manage notification channels (Email, SMS, Telegram)."""
 
     def __init__(self):
         self.channels = self._load_channels()
@@ -63,7 +60,7 @@ class NotificationChannelService:
         loaded_channels = {}
         try:
             config = SiteConfiguration.get_solo()
-            provider_map = settings.NOTIFICATION_PROVIDERS
+            provider_map = settings.NOTIFICATION_SETTINGS.get('PROVIDERS', {})
             active_providers = [
                 ('email', config.active_email_provider),
                 ('sms', config.active_sms_provider),
@@ -79,9 +76,9 @@ class NotificationChannelService:
 
     @staticmethod
     def _initialize_channel(provider_config):
-        channel_class_path = provider_config['CHANNEL_CLASS']
+        class_path = provider_config['CLASS_PATH']
         config_dict = provider_config.get('CONFIG', {})
-        ChannelClass = import_string(channel_class_path)
+        ChannelClass = import_string(class_path)
         return ChannelClass(**config_dict)
 
     def send_email(self, recipient, **kwargs):

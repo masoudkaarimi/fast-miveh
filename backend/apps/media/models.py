@@ -87,7 +87,8 @@ class MediaLink(models.Model):
         verbose_name=_("Content Type"),
         help_text=_("The model to which this media link is attached.")
     )
-    object_id = models.PositiveIntegerField(
+    object_id = models.CharField(
+        max_length=255,
         verbose_name=_("Object ID"),
         help_text=_("The primary key of the related object.")
     )

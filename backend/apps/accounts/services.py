@@ -9,6 +9,7 @@ from apps.accounts.models import OTP
 
 
 class OTPService:
+    """Service to handle OTP generation, sending, and verification."""
     def __init__(self, user):
         self.user = user
 
