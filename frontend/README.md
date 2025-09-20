@@ -1,36 +1,53 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Fast Miveh - Frontend
 
-## Getting Started
+The Next.js frontend for the Fast Miveh e-commerce platform. This application provides a modern, fast, and responsive user interface for customers to browse products, manage their accounts, and place orders.
 
-First, run the development server:
+## Screenshots
+
+![Screenshot](./screenshots/screenshot-1.png)
+![Screenshot](./screenshots/screenshot-2.png)
+
+## Technology Stack
+
+-   **Framework:** Next.js v14 (with App Router)
+-   **Language:** TypeScript
+-   **Styling:** Tailwind CSS
+-   **UI Components:** shadcn/ui
+-   **State Management:** Redux Toolkit / Zustand (Choose one or specify)
+-   **Data Fetching:** TanStack Query (React Query) / SWR
+-   **Form Handling:** React Hook Form
+-   **Icons:** lucide-react
+-   **Animations:** Framer Motion
+
+## Features
+
+-   **Modern UI/UX:** Clean, intuitive, and fully responsive design.
+-   **Server-Side Rendering (SSR) & Static Site Generation (SSG):** Optimized for performance and SEO.
+-   **Product Discovery:** Browse products by category, apply filters, and use the search functionality.
+-   **User Authentication:** Secure login, registration, and profile management pages.
+-   **Shopping Cart & Checkout:** A seamless, multi-step checkout process.
+-   **Customer Dashboard:** View order history, manage addresses, and update profile information.
+-   **API Integration:** Efficiently communicates with the Django backend REST API.
+
+## How to use
+
+1.  **Clone the project.**
+2.  **Install Node.js (v20.15.0 or later).**
+3.  **Navigate to the frontend directory:**
+    ```bash
+    cd frontend
+    ```
+4.  **Install dependencies:**
+    ```bash
+    npm install
+    ```
+5.  **Configure environment variables:**
+    -   Copy `.env.local.example` to `.env.local`.
+    -   Set `NEXT_PUBLIC_API_BASE_URL` to your backend's URL (e.g., `http://localhost:8000`).
+
+## Run the App
+
+In the `frontend` directory, you can run:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
