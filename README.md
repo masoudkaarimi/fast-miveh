@@ -54,7 +54,7 @@ The recommended way to run this project is by using Docker.
 
 1.  **Clone the project:**
     ```bash
-    git clone https://github.com/masoudkaarimi/fast-miveh/
+    git clone https://github.com/masoudkaarimi/fast-miveh.git
     cd fast-miveh
     ```
 
